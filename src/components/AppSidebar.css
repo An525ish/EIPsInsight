@@ -1,0 +1,24 @@
+.logoDesign {
+  background-image: url(../assets/logo2.gif);
+  background-size: cover;
+  width: 10rem;
+  height: 5rem;
+  background-position: -9px -45px;
+  margin-top: 1rem;
+}
+
+.clicked:focus{
+  color: black;
+  background-color: #e9ecef;
+}
+/* .clicked:hover{
+  color: black !important;
+  background-color: #e9ecef;
+  
+} */
+
+.clicked1:focus{
+  color: white;
+  
+}
+
