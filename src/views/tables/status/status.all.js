@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom'
 
 function statusAll(props) {
   const [post, getPost] = useState()
-  const API = 'https://eipsinsight.com/statusPage'
+  const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())

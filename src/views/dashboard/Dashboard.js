@@ -76,7 +76,7 @@ const Dashboard = (props) => {
 
   const [years, setYears] = useState()
 
-  const API = 'https://eipsinsight.com/overallData'
+  const API = 'https://eipsinsight.com/api/overallData'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())
@@ -89,6 +89,27 @@ const Dashboard = (props) => {
   const fetchDate = () => {
     let date = new Date().toDateString()
     setDate(date)
+  }
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  const sorter = (a, b) => {
+    if (a.year !== b.year) {
+      return a.year - b.year
+    } else {
+      return months.indexOf(a.name) - months.indexOf(b.name)
+    }
   }
   const allData = async () => {
     try {
@@ -142,6 +163,35 @@ const Dashboard = (props) => {
       }
     }
     return present
+  }
+  const sortLabel = (data, name) => {
+    data.sort(sorter)
+    const arr = []
+    for (let i = 0; i < data.length; i++) {
+      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+      arr.push(month)
+    }
+    return arr
+  }
+  const sortData = (data, name, section) => {
+    data.sort(sorter)
+    console.log(data)
+    const arr = []
+    for (let i = 0; i < data.length; i++) {
+      arr.push(data[i][name][section])
+    }
+
+    return arr
+  }
+  const sortRem = (data, name) => {
+    data.sort(sorter)
+    console.log(data)
+    const arr = []
+    for (let i = 0; i < data.length; i++) {
+      arr.push(data[i]['summary'][name])
+    }
+
+    return arr
   }
 
   useEffect(() => {
@@ -267,19 +317,7 @@ const Dashboard = (props) => {
             >
               <CChartBar
                 data={{
-                  labels: [
-                    'Aug 2021',
-                    'Sep 2021',
-                    'Oct 2021',
-                    'Nov 2021',
-                    'Dec 2021',
-                    'Jan 2022',
-                    'Feb 2022',
-                    'Mar 2022',
-                    'Apr 2022',
-                    'May 2022',
-                    'June 2022',
-                  ],
+                  labels: data === undefined ? [] : sortLabel(data, 'label'),
 
                   datasets: [
                     {
@@ -287,76 +325,28 @@ const Dashboard = (props) => {
                       backgroundColor: ['rgba(59, 201, 219, 0.3)'],
                       borderColor: ['rgba(59, 201, 219, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][3]}`,
-                        `${info === undefined ? '0' : info[47][3]}`,
-                        `${info === undefined ? '0' : info[48][3]}`,
-                        `${info === undefined ? '0' : info[49][3]}`,
-                        `${info === undefined ? '0' : info[50][3]}`,
-                        `${info === undefined ? '0' : info[51][3]}`,
-                        `${info === undefined ? '0' : info[52][3]}`,
-                        `${info === undefined ? '0' : info[53][3]}`,
-                        `${info === undefined ? '0' : info[54][3]}`,
-                        `${info === undefined ? '0' : info[55][3]}`,
-                        `${info === undefined ? '0' : info[56][3]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Draft', 'Core'),
                     },
                     {
                       label: 'ERC',
                       backgroundColor: ['rgba(250, 82, 82, 0.3)'],
                       borderColor: ['rgba(250, 82, 82, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][4]}`,
-                        `${info === undefined ? '0' : info[47][4]}`,
-                        `${info === undefined ? '0' : info[48][4]}`,
-                        `${info === undefined ? '0' : info[49][4]}`,
-                        `${info === undefined ? '0' : info[50][4]}`,
-                        `${info === undefined ? '0' : info[51][4]}`,
-                        `${info === undefined ? '0' : info[52][4]}`,
-                        `${info === undefined ? '0' : info[53][4]}`,
-                        `${info === undefined ? '0' : info[54][4]}`,
-                        `${info === undefined ? '0' : info[55][4]}`,
-                        `${info === undefined ? '0' : info[56][4]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Draft', 'ERC'),
                     },
                     {
                       label: 'Networking',
                       backgroundColor: ['rgba(252, 196, 25, 0.3)'],
                       borderColor: ['rgba(252, 196, 25, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][5]}`,
-                        `${info === undefined ? '0' : info[47][5]}`,
-                        `${info === undefined ? '0' : info[48][5]}`,
-                        `${info === undefined ? '0' : info[49][5]}`,
-                        `${info === undefined ? '0' : info[50][5]}`,
-                        `${info === undefined ? '0' : info[51][5]}`,
-                        `${info === undefined ? '0' : info[52][5]}`,
-                        `${info === undefined ? '0' : info[53][5]}`,
-                        `${info === undefined ? '0' : info[54][5]}`,
-                        `${info === undefined ? '0' : info[55][5]}`,
-                        `${info === undefined ? '0' : info[56][5]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Draft', 'Networking'),
                     },
                     {
                       label: 'Interface',
                       backgroundColor: ['rgba(55, 178, 77, 0.3)'],
                       borderColor: ['rgba(55, 178, 77, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][6]}`,
-                        `${info === undefined ? '0' : info[47][6]}`,
-                        `${info === undefined ? '0' : info[48][6]}`,
-                        `${info === undefined ? '0' : info[49][6]}`,
-                        `${info === undefined ? '0' : info[50][6]}`,
-                        `${info === undefined ? '0' : info[51][6]}`,
-                        `${info === undefined ? '0' : info[52][6]}`,
-                        `${info === undefined ? '0' : info[53][6]}`,
-                        `${info === undefined ? '0' : info[54][6]}`,
-                        `${info === undefined ? '0' : info[55][6]}`,
-                        `${info === undefined ? '0' : info[56][6]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Draft', 'Interface'),
                     },
                   ],
                 }}
@@ -420,95 +410,35 @@ const Dashboard = (props) => {
             >
               <CChartLine
                 data={{
-                  labels: [
-                    'Aug 2021',
-                    'Sep 2021',
-                    'Oct 2021',
-                    'Nov 2021',
-                    'Dec 2021',
-                    'Jan 2022',
-                    'Feb 2022',
-                    'Mar 2022',
-                    'Apr 2022',
-                    'May 2022',
-                    'June 2022',
-                  ],
+                  labels: data === undefined ? [] : sortLabel(data, 'label'),
                   datasets: [
                     {
                       label: 'Core',
                       backgroundColor: ['rgba(59, 201, 219, 0.3)'],
                       borderColor: ['rgba(59, 201, 219, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][8]}`,
-                        `${info === undefined ? '0' : info[47][8]}`,
-                        `${info === undefined ? '0' : info[48][8]}`,
-                        `${info === undefined ? '0' : info[49][8]}`,
-                        `${info === undefined ? '0' : info[50][8]}`,
-                        `${info === undefined ? '0' : info[51][8]}`,
-                        `${info === undefined ? '0' : info[52][8]}`,
-                        `${info === undefined ? '0' : info[53][8]}`,
-                        `${info === undefined ? '0' : info[54][8]}`,
-                        `${info === undefined ? '0' : info[55][8]}`,
-                        `${info === undefined ? '0' : info[56][8]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Final', 'Core'),
                     },
                     {
                       label: 'ERC',
                       backgroundColor: ['rgba(250, 82, 82, 0.3)'],
                       borderColor: ['rgba(250, 82, 82, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][9]}`,
-                        `${info === undefined ? '0' : info[47][9]}`,
-                        `${info === undefined ? '0' : info[48][9]}`,
-                        `${info === undefined ? '0' : info[49][9]}`,
-                        `${info === undefined ? '0' : info[50][9]}`,
-                        `${info === undefined ? '0' : info[51][9]}`,
-                        `${info === undefined ? '0' : info[52][9]}`,
-                        `${info === undefined ? '0' : info[53][9]}`,
-                        `${info === undefined ? '0' : info[54][9]}`,
-                        `${info === undefined ? '0' : info[55][9]}`,
-                        `${info === undefined ? '0' : info[56][9]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Final', 'ERC'),
                     },
                     {
                       label: 'Networking',
                       backgroundColor: ['rgba(252, 196, 25, 0.3)'],
                       borderColor: ['rgba(252, 196, 25, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][10]}`,
-                        `${info === undefined ? '0' : info[47][10]}`,
-                        `${info === undefined ? '0' : info[48][10]}`,
-                        `${info === undefined ? '0' : info[49][10]}`,
-                        `${info === undefined ? '0' : info[50][10]}`,
-                        `${info === undefined ? '0' : info[51][10]}`,
-                        `${info === undefined ? '0' : info[52][10]}`,
-                        `${info === undefined ? '0' : info[53][10]}`,
-                        `${info === undefined ? '0' : info[54][10]}`,
-                        `${info === undefined ? '0' : info[55][10]}`,
-                        `${info === undefined ? '0' : info[56][10]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Final', 'Networking'),
                     },
                     {
                       label: 'Interface',
                       backgroundColor: ['rgba(55, 178, 77, 0.3)'],
                       borderColor: ['rgba(55, 178, 77, 1)'],
                       borderWidth: 2,
-                      data: [
-                        `${info === undefined ? '0' : info[46][11]}`,
-                        `${info === undefined ? '0' : info[47][11]}`,
-                        `${info === undefined ? '0' : info[48][11]}`,
-                        `${info === undefined ? '0' : info[49][11]}`,
-                        `${info === undefined ? '0' : info[50][11]}`,
-                        `${info === undefined ? '0' : info[51][11]}`,
-                        `${info === undefined ? '0' : info[52][11]}`,
-                        `${info === undefined ? '0' : info[53][11]}`,
-                        `${info === undefined ? '0' : info[54][11]}`,
-                        `${info === undefined ? '0' : info[55][11]}`,
-                        `${info === undefined ? '0' : info[56][11]}`,
-                      ],
+                      data: data === undefined ? [] : sortData(data, 'Final', 'Interface'),
                     },
                   ],
                 }}
@@ -580,19 +510,7 @@ const Dashboard = (props) => {
               </div>
               <CChartDoughnut
                 data={{
-                  labels: [
-                    'Aug 2021',
-                    'Sep 2021',
-                    'Oct 2021',
-                    'Nov 2021',
-                    'Dec 2021',
-                    'Jan 2022',
-                    'Feb 2022',
-                    'Mar 2022',
-                    'Apr 2022',
-                    'May 2022',
-                    'June 2022',
-                  ],
+                  labels: data === undefined ? [] : sortLabel(data, 'label'),
                   datasets: [
                     {
                       label: 'Draft EIPs',
@@ -623,19 +541,7 @@ const Dashboard = (props) => {
                         '#ffec99',
                         '#ffd8a8',
                       ],
-                      data: [
-                        `${info === undefined ? '0' : info[46][2]}`,
-                        `${info === undefined ? '0' : info[47][2]}`,
-                        `${info === undefined ? '0' : info[48][2]}`,
-                        `${info === undefined ? '0' : info[49][2]}`,
-                        `${info === undefined ? '0' : info[50][2]}`,
-                        `${info === undefined ? '0' : info[51][2]}`,
-                        `${info === undefined ? '0' : info[52][2]}`,
-                        `${info === undefined ? '0' : info[53][2]}`,
-                        `${info === undefined ? '0' : info[54][2]}`,
-                        `${info === undefined ? '0' : info[55][2]}`,
-                        `${info === undefined ? '0' : info[56][2]}`,
-                      ],
+                      data: data === undefined ? [] : sortRem(data, 'Draft'),
                     },
                   ],
                 }}
@@ -724,19 +630,7 @@ const Dashboard = (props) => {
                         '#ffec99',
                         '#ffd8a8',
                       ],
-                      data: [
-                        `${info === undefined ? '0' : info[46][12]}`,
-                        `${info === undefined ? '0' : info[47][12]}`,
-                        `${info === undefined ? '0' : info[48][12]}`,
-                        `${info === undefined ? '0' : info[49][12]}`,
-                        `${info === undefined ? '0' : info[50][12]}`,
-                        `${info === undefined ? '0' : info[51][12]}`,
-                        `${info === undefined ? '0' : info[52][12]}`,
-                        `${info === undefined ? '0' : info[53][12]}`,
-                        `${info === undefined ? '0' : info[54][12]}`,
-                        `${info === undefined ? '0' : info[55][12]}`,
-                        `${info === undefined ? '0' : info[56][12]}`,
-                      ],
+                      data: data === undefined ? [] : sortRem(data, 'potentialProposal'),
                     },
                   ],
                 }}
@@ -780,19 +674,7 @@ const Dashboard = (props) => {
             >
               <CChartRadar
                 data={{
-                  labels: [
-                    'Aug 2021',
-                    'Sep 2021',
-                    'Oct 2021',
-                    'Nov 2021',
-                    'Dec 2021',
-                    'Jan 2022',
-                    'Feb 2022',
-                    'Mar 2022',
-                    'Apr 2022',
-                    'May 2022',
-                    'June 2022',
-                  ],
+                  labels: data === undefined ? [] : sortLabel(data, 'Draft'),
                   datasets: [
                     {
                       label: 'Draft',
@@ -802,19 +684,7 @@ const Dashboard = (props) => {
                       pointBorderColor: '#fff',
                       pointHighlightFill: '#fff',
                       pointHighlightStroke: 'rgba(220, 220, 220, 1)',
-                      data: [
-                        `${info === undefined ? '0' : info[46][2]}`,
-                        `${info === undefined ? '0' : info[47][2]}`,
-                        `${info === undefined ? '0' : info[48][2]}`,
-                        `${info === undefined ? '0' : info[49][2]}`,
-                        `${info === undefined ? '0' : info[50][2]}`,
-                        `${info === undefined ? '0' : info[51][2]}`,
-                        `${info === undefined ? '0' : info[52][2]}`,
-                        `${info === undefined ? '0' : info[53][2]}`,
-                        `${info === undefined ? '0' : info[54][2]}`,
-                        `${info === undefined ? '0' : info[55][2]}`,
-                        `${info === undefined ? '0' : info[56][2]}`,
-                      ],
+                      data: data === undefined ? [] : sortRem(data, 'Draft'),
                     },
                     {
                       label: 'Final',
@@ -824,19 +694,7 @@ const Dashboard = (props) => {
                       pointBorderColor: '#fff',
                       pointHighlightFill: '#fff',
                       pointHighlightStroke: 'rgba(151, 187, 205, 1)',
-                      data: [
-                        `${info === undefined ? '0' : info[46][7]}`,
-                        `${info === undefined ? '0' : info[47][7]}`,
-                        `${info === undefined ? '0' : info[48][7]}`,
-                        `${info === undefined ? '0' : info[49][7]}`,
-                        `${info === undefined ? '0' : info[50][7]}`,
-                        `${info === undefined ? '0' : info[51][7]}`,
-                        `${info === undefined ? '0' : info[52][7]}`,
-                        `${info === undefined ? '0' : info[53][7]}`,
-                        `${info === undefined ? '0' : info[54][7]}`,
-                        `${info === undefined ? '0' : info[55][7]}`,
-                        `${info === undefined ? '0' : info[56][7]}`,
-                      ],
+                      data: data === undefined ? [] : sortRem(data, 'Final'),
                     },
                   ],
                 }}

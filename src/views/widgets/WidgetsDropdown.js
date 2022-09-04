@@ -29,7 +29,7 @@ function WidgetsDropdown(props) {
   //   setInfo1(responseJson)
   // }
   const [post, getPost] = useState()
-  const API = 'https://eipsinsight.com/overallData'
+  const API = 'https://eipsinsight.com/api/overallData'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())
@@ -63,6 +63,7 @@ function WidgetsDropdown(props) {
   console.log(post)
 
   function percentage(val, original) {
+    console.log(info)
     let value = info === undefined ? 0 : parseInt(info[55][val])
     let value1 = info === undefined ? 0 : parseInt(info[54][val])
     console.log(value, value1)

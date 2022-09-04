@@ -15,7 +15,7 @@ import {
 
 function typeAll() {
   const [post, getPost] = useState()
-  const API = 'https://eipsinsight.com/typePage'
+  const API = 'https://eipsinsight.com/api/typePage'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())
