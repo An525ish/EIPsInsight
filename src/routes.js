@@ -49,6 +49,7 @@ const NovCharts = React.lazy(() => import('./views/charts/novCharts'))
 const OctCharts = React.lazy(() => import('./views/charts/octCharts'))
 const SepCharts = React.lazy(() => import('./views/charts/sepCharts'))
 const AugCharts = React.lazy(() => import('./views/charts/augCharts'))
+const tempCharts = React.lazy(() => import('./views/charts/tempCharts'))
 
 const draftStatusChart = React.lazy(() => import('./views/charts/draftStatus'))
 const finalStatusChart = React.lazy(() => import('./views/charts/finalStatus'))
@@ -240,6 +241,8 @@ const routes = [
 
   { path: '/form', name: 'New Form', element: mForm },
   { path: '/UpdateForm', name: 'Update Form', element: mForm2 },
+
+  { path: '/tempCharts', name: 'Chartsr', element: tempCharts },
 ]
 
 export default routes

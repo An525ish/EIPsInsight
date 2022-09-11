@@ -2,10 +2,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { CSmartTable, CMultiSelect } from '@coreui/react-pro'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
+import PropTypes from 'prop-types'
 import github from '../../assets/grey_logo.png'
 import {
   CAvatar,
+  CDataTable,
   CButton,
   CButtonGroup,
   CCard,
@@ -13,6 +17,7 @@ import {
   CCardFooter,
   CCardHeader,
   CCol,
+  CCollapse,
   CProgress,
   CRow,
   CTable,
@@ -21,6 +26,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CBadge,
 } from '@coreui/react'
 import {
   CChartBar,
@@ -30,6 +36,7 @@ import {
   CChartPolarArea,
   CChartPie,
 } from '@coreui/react-chartjs'
+import { ResponsivePie } from '@nivo/pie'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import {
@@ -67,7 +74,11 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { Chart } from 'react-google-charts'
 import { Link } from 'react-router-dom'
 import { ip } from 'src/constants'
-const Dashboard = (props) => {
+
+import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
+import { each, groupBy } from '@antv/util'
+import '../charts/mayCharts.styles.css'
+const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
   const [date, setDate] = useState()
@@ -149,7 +160,10 @@ const Dashboard = (props) => {
           sum += parseInt(data[j].summary[name])
         }
       }
-      arr.push(sum)
+      arr.push({
+        year: yearList[i],
+        value: sum,
+      })
     }
     console.log(arr)
     return arr
@@ -193,1525 +207,930 @@ const Dashboard = (props) => {
 
     return arr
   }
+  const annotations = []
+  const d1 = [
+    {
+      year: 'Standard Track',
+      value: post === undefined ? '' : post['Core'],
+      type: 'Core',
+    },
+    {
+      year: 'Standard Track',
+      value: post === undefined ? '' : post['ERC'],
+      type: 'ERC',
+    },
+    {
+      year: 'Standard Track',
+      value: post === undefined ? '' : post['Networking'],
+      type: 'Networking',
+    },
+    {
+      year: 'Standard Track',
+      value: post === undefined ? '' : post['Interface'],
+      type: 'Interface',
+    },
+    {
+      year: 'Meta',
+      value: post === undefined ? '' : post['Meta'],
+      type: 'Quantity',
+    },
+    {
+      year: 'Informational',
+      value: post === undefined ? '' : post['Informational'],
+      type: 'Quantity',
+    },
+  ]
+  each(groupBy(d1, 'year'), (values, k) => {
+    const value = values.reduce((a, b) => a + b.value, 0)
+    annotations.push({
+      type: 'text',
+      position: [k, value],
+      content: `${value}`,
+      style: {
+        textAlign: 'center',
+        fontSize: 12,
+        fill: 'rgba(0,0,0,0.6)',
+      },
+      offsetY: -10,
+    })
+  })
+  const config = {
+    data: d1,
+    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff', '#dee2e6'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+    legend: {
+      customContent: {
+        title: 'Standard Track',
+      },
+    },
+
+    annotations,
+  }
+
+  // monthly Insights
+
+  const draftDataFinding = (name, data) => {
+    data.sort(sorter)
+    let arr = []
+    for (let i = 0; i < data.length; i++) {
+      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+      arr.push(
+        {
+          name: 'Core',
+          year: month,
+          gdp: parseInt(data[i][name]['Core']),
+        },
+        {
+          name: 'ERC',
+          year: month,
+          gdp: parseInt(data[i][name]['ERC']),
+        },
+        {
+          name: 'Networking',
+          year: month,
+          gdp: parseInt(data[i][name]['Networking']),
+        },
+        {
+          name: 'Interface',
+          year: month,
+          gdp: parseInt(data[i][name]['Interface']),
+        },
+      )
+    }
+    return arr
+  }
+
+  const DraftvsPotentialData = (name, data) => {
+    data.sort(sorter)
+    let arr = []
+    for (let i = 0; i < data.length; i++) {
+      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+      arr.push(
+        {
+          name: 'Draft',
+          year: month,
+          value: parseInt(data[i]['summary']['Draft']),
+        },
+        {
+          name: 'Potential Proposal',
+          year: month,
+          value: parseInt(data[i]['summary']['potentialProposal']),
+        },
+      )
+    }
+    // console.log(arr)
+    return arr
+  }
+
+  const monthlyDraftConfig = {
+    data: draftDataFinding('Draft', data === undefined ? [] : data),
+    xField: 'year',
+    yField: 'gdp',
+    seriesField: 'name',
+    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
+    yAxis: {
+      label: {
+        // 数值格式化为千分位
+        formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+      },
+    },
+    legend: {
+      position: 'top',
+    },
+    smooth: true,
+    // @TODO 后续会换一种动画方式
+    animation: {
+      appear: {
+        animation: 'path-in',
+        duration: 5000,
+      },
+    },
+    slider: {
+      start: 0.0,
+      end: 1.0,
+    },
+  }
+  const monthlyFinalConfig = {
+    data: draftDataFinding('Final', data === undefined ? [] : data),
+    isGroup: true,
+    xField: 'year',
+    yField: 'gdp',
+    seriesField: 'name',
+    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
+
+    /** 设置颜色 */
+    //color: ['#1ca9e6', '#f88c24'],
+
+    /** 设置间距 */
+    // marginRatio: 0.1,
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: 'middle',
+      // 'top', 'middle', 'bottom'
+      // 可配置附加的布局方法
+      layout: [
+        // 柱形图数据标签位置自动调整
+        {
+          type: 'interval-adjust-position',
+        }, // 数据标签防遮挡
+        {
+          type: 'interval-hide-overlap',
+        }, // 数据标签文颜色自动调整
+        {
+          type: 'adjust-color',
+        },
+      ],
+    },
+    slider: {
+      start: 0.0,
+      end: 1.0,
+    },
+  }
+
+  const montlyDraftvsFinalconfig = {
+    data: DraftvsPotentialData('summary', data === undefined ? [] : data),
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'name',
+    color: ['#1864ab', '#74c0fc'],
+
+    // xAxis: {
+    //   type: 'time',
+    //   mask: 'YYYY',
+    // },
+    yAxis: {
+      label: {
+        // 数值格式化为千分位
+        formatter: (v) => v,
+      },
+    },
+    legend: {
+      position: 'top',
+    },
+    axis: {
+      minLimit: 0,
+    },
+    // meta: {
+    //   value: {
+    //     min: 0,
+    //     max: 10,
+    //   },
+    // },
+  }
+
+  const finalvsDraftData = (data) => {
+    data.sort(sorter)
+    let arr = []
+    for (let i = 0; i < data.length; i++) {
+      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+      arr.push({
+        year: month,
+        value: parseInt(data[i]['summary']['Final']),
+        type: 'Final',
+      })
+    }
+    for (let i = 0; i < data.length; i++) {
+      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+      arr.push({
+        year: month,
+        value: parseInt(data[i]['summary']['Draft']),
+        type: 'Draft',
+      })
+    }
+    console.log(arr)
+    return arr
+  }
+
+  const finalvsDraftconfig = {
+    data: finalvsDraftData(data === undefined ? [] : data),
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    color: ['#1864ab', '#74c0fc'],
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: 'middle', // 'top', 'bottom', 'middle'
+    },
+    interactions: [
+      {
+        type: 'active-region',
+        enable: false,
+      },
+    ],
+    connectedArea: {
+      style: (oldStyle, element) => {
+        return {
+          fill: 'rgba(0,0,0,0.25)',
+          stroke: oldStyle.fill,
+          lineWidth: 0.5,
+        }
+      },
+    },
+  }
+
+  const yearlyDraftConfig = {
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
+    xField: 'value',
+    yField: 'year',
+    seriesField: 'year',
+    legend: {
+      position: 'top-left',
+    },
+    color: ['#1864ab', '#74c0fc'],
+  }
+  const yearlyFinalConfig = {
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
+    xField: 'value',
+    yField: 'year',
+    seriesField: 'year',
+    legend: {
+      position: 'top-left',
+    },
+    color: ['#1864ab', '#74c0fc'],
+  }
+  const yearlyReviewConfig = {
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
+    xField: 'value',
+    yField: 'year',
+    seriesField: 'year',
+    legend: {
+      position: 'top-left',
+    },
+    color: ['#1864ab', '#74c0fc'],
+  }
+  const G = G2.getEngine('canvas')
+  const yearlyLastCallConfig = {
+    appendPadding: 10,
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
+    angleField: 'value',
+    colorField: 'year',
+    radius: 0.8,
+    legend: false,
+    label: {
+      type: 'spider',
+      labelHeight: 40,
+      formatter: (data, mappingData) => {
+        const group = new G.Group({})
+        group.addShape({
+          type: 'circle',
+          attrs: {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 50,
+            r: 5,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 10,
+            y: 8,
+            text: `${data.year}`,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 0,
+            y: 25,
+            text: `${data.value}`,
+            fill: 'rgba(0, 0, 0, 0.65)',
+            fontWeight: 700,
+          },
+        })
+        return group
+      },
+    },
+    interactions: [
+      {
+        type: 'element-selected',
+      },
+      {
+        type: 'element-active',
+      },
+    ],
+    color: ['#1864ab', '#74c0fc'],
+  }
+
+  const yearlyStagnantConfig = {
+    appendPadding: 10,
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
+    angleField: 'value',
+    colorField: 'year',
+    radius: 0.8,
+    legend: false,
+    label: {
+      type: 'spider',
+      labelHeight: 40,
+      formatter: (data, mappingData) => {
+        const group = new G.Group({})
+        group.addShape({
+          type: 'circle',
+          attrs: {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 50,
+            r: 5,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 10,
+            y: 8,
+            text: `${data.year}`,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 0,
+            y: 25,
+            text: `${data.value}`,
+            fill: 'rgba(0, 0, 0, 0.65)',
+            fontWeight: 700,
+          },
+        })
+        return group
+      },
+    },
+    interactions: [
+      {
+        type: 'element-selected',
+      },
+      {
+        type: 'element-active',
+      },
+    ],
+    color: ['#1864ab', '#74c0fc'],
+  }
+  const yearlyWithdrawnConfig = {
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
+    xField: 'value',
+    yField: 'year',
+    seriesField: 'year',
+    legend: {
+      position: 'top-left',
+    },
+    color: ['#1864ab', '#74c0fc'],
+  }
+  const yearlyLivingConfig = {
+    data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
+    xField: 'value',
+    yField: 'year',
+    seriesField: 'year',
+    legend: {
+      position: 'top-left',
+    },
+    color: ['#1864ab', '#74c0fc'],
+  }
 
   useEffect(() => {
     // fetchData()
+
     allData()
     fetchPost()
     fetchDate()
-    console.log(localStorage.getItem('count'))
-    if (localStorage.getItem('count') !== 'undefined') {
-      setInfo(JSON.parse(localStorage.getItem('count')))
-    }
   }, [])
 
-  useEffect(() => {
-    if (props.data !== undefined) {
-      console.log(props.data)
-      setInfo(props.data)
-      localStorage.setItem('count', JSON.stringify(props.data))
-    } else {
-      console.log(props.data)
-      localStorage.setItem('count', JSON.stringify(info))
-    }
-  }, [info])
-  CanvasJS.addColorSet('pieChartColor', ['#2F4F4F', '#008080', '#2E8B57', '#3CB371', '#90EE90'])
   console.log(info)
   console.log(post)
 
+  // temparary
+
   return (
     <>
-      <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                EIPs
-              </h4>
-              <div className="small text-medium-emphasis">{date}</div>
-            </CCol>
-          </CRow>
-          <CChartPie
-            style={{
-              visibility: `${
-                parseInt(`${post === undefined ? 0 : post['Standards Track']}`) === 0 &&
-                parseInt(`${post === undefined ? 0 : post['Meta']}`) === 0 &&
-                parseInt(`${post === undefined ? 0 : post['Informational']}`) === 0
-                  ? 'hidden'
-                  : 'visible'
-              }`,
-            }}
-            data={{
-              labels: ['Standard Track', 'Meta', 'Informational'],
-              datasets: [
-                {
-                  data: [
-                    `${post === undefined ? 0 : post['Standards Track']}`,
-                    `${post === undefined ? 0 : post['Meta']}`,
-                    `${post === undefined ? 0 : post['Informational']}`,
-                  ],
-                  backgroundColor: [
-                    'rgba(250, 82, 82, 0.3)',
-                    'rgba(252, 196, 25, 0.3)',
-                    'rgba(59, 201, 219, 0.3)',
-                    'rgba(55, 178, 77, 0.3)',
-                  ],
-                  borderColor: [
-                    'rgba(250, 82, 82, 1)',
-                    'rgba(252, 196, 25, 1)',
-                    'rgba(59, 201, 219, 1)',
-                    'rgba(55, 178, 77, 1)',
-                  ],
-                  borderWidth: 2,
-                },
-              ],
-            }}
-            options={{
-              aspectRatio: 2,
-              plugins: {
-                legend: {
-                  position: 'right',
-                  align: 'center',
-                  marginBottom: 50,
-                  labels: {
-                    usePointStyle: true,
-                    font: {
-                      family: 'Roboto',
-                    },
-                  },
-                },
-              },
-            }}
-          />
-        </CCardBody>
-      </CCard>
-      <WidgetsDropdown data={data} />
-      <hr />
-      <div
-        style={{
-          fontSize: '40px',
-          fontWeight: '800',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textTransform: 'uppercase',
-        }}
-      >
-        Monthly Insights
-      </div>
       <CRow>
         <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader className="cardHeader" style={{ fontFamily: 'Roboto', fontWeight: '800' }}>
-              Draft
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              EIPs{' '}
             </CCardHeader>
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <CChartBar
-                data={{
-                  labels: data === undefined ? [] : sortLabel(data, 'label'),
-
-                  datasets: [
-                    {
-                      label: 'Core',
-                      backgroundColor: ['rgba(59, 201, 219, 0.3)'],
-                      borderColor: ['rgba(59, 201, 219, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Draft', 'Core'),
-                    },
-                    {
-                      label: 'ERC',
-                      backgroundColor: ['rgba(250, 82, 82, 0.3)'],
-                      borderColor: ['rgba(250, 82, 82, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Draft', 'ERC'),
-                    },
-                    {
-                      label: 'Networking',
-                      backgroundColor: ['rgba(252, 196, 25, 0.3)'],
-                      borderColor: ['rgba(252, 196, 25, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Draft', 'Networking'),
-                    },
-                    {
-                      label: 'Interface',
-                      backgroundColor: ['rgba(55, 178, 77, 0.3)'],
-                      borderColor: ['rgba(55, 178, 77, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Draft', 'Interface'),
-                    },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  // maintainAspectRatio: false,
-                  aspectRatio: -2,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
+              <Column {...config} />
             </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
         <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader className="cardHeader" style={{ fontFamily: 'Roboto', fontWeight: '800' }}>
-              Final
+          <CCard style={{ border: '2px solid #a5d8ff' }}>
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              EIPs Types
             </CCardHeader>
             <CCardBody
               style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
               }}
             >
-              <CChartLine
-                data={{
-                  labels: data === undefined ? [] : sortLabel(data, 'label'),
-                  datasets: [
-                    {
-                      label: 'Core',
-                      backgroundColor: ['rgba(59, 201, 219, 0.3)'],
-                      borderColor: ['rgba(59, 201, 219, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Final', 'Core'),
+              <CSmartTable
+                cleaner
+                clickableRows
+                columns={[
+                  {
+                    key: 'name',
+                    _style: { width: '70%' },
+                  },
+                  {
+                    key: 'EIPs',
+                    _style: { width: '30%' },
+                    filter: (values, onChange) => {
+                      const unique = [...new Set(values)].sort()
+                      return (
+                        <CMultiSelect
+                          size="sm"
+                          onChange={(selected) => {
+                            const _selected = selected.map((element) => {
+                              return element.value
+                            })
+                            onChange((item) => {
+                              return Array.isArray(_selected) && _selected.length
+                                ? _selected.includes(item.toLowerCase())
+                                : true
+                            })
+                          }}
+                          options={unique.map((element) => {
+                            return {
+                              value: element.toLowerCase(),
+                              text: element,
+                            }
+                          })}
+                        />
+                      )
                     },
-                    {
-                      label: 'ERC',
-                      backgroundColor: ['rgba(250, 82, 82, 0.3)'],
-                      borderColor: ['rgba(250, 82, 82, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Final', 'ERC'),
-                    },
-                    {
-                      label: 'Networking',
-                      backgroundColor: ['rgba(252, 196, 25, 0.3)'],
-                      borderColor: ['rgba(252, 196, 25, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Final', 'Networking'),
-                    },
-                    {
-                      label: 'Interface',
-                      backgroundColor: ['rgba(55, 178, 77, 0.3)'],
-                      borderColor: ['rgba(55, 178, 77, 1)'],
-                      borderWidth: 2,
-                      data: data === undefined ? [] : sortData(data, 'Final', 'Interface'),
-                    },
-                  ],
-                }}
-                options={{
+                    sorter: false,
+                  },
+                ]}
+                columnFilter
+                columnSorter
+                footer
+                items={[
+                  { id: 0, name: 'Core', EIPs: `${post === undefined ? '' : post['Core']}` },
+                  { id: 1, name: 'ERC', EIPs: `${post === undefined ? '' : post['ERC']}` },
+                  {
+                    id: 2,
+                    name: 'Networking',
+                    EIPs: `${post === undefined ? '' : post['Networking']}`,
+                  },
+                  {
+                    id: 3,
+                    name: 'Interface',
+                    EIPs: `${post === undefined ? '' : post['Interface']}`,
+                  },
+                  { id: 4, name: 'Meta', EIPs: `${post === undefined ? '' : post['Meta']}` },
+                  {
+                    id: 5,
+                    name: 'Informational',
+                    EIPs: `${post === undefined ? '' : post['Informational']}`,
+                  },
+                ]}
+                itemsPerPageSelect
+                itemsPerPage={10}
+                pagination
+                tableFilter
+                tableProps={{
+                  hover: true,
                   responsive: true,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader className="cardHeader" style={{ fontFamily: 'Roboto', fontWeight: '800' }}>
-              Draft EIPs vs Potential Proposal
-            </CCardHeader>
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 30%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <div
-                style={{
-                  marginBottom: '10px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  fontFamily: 'Roboto',
-                  fontWeight: '800',
-                }}
-              >
-                Draft EIPs
-              </div>
-              <CChartDoughnut
-                data={{
-                  labels: data === undefined ? [] : sortLabel(data, 'label'),
-                  datasets: [
-                    {
-                      label: 'Draft EIPs',
-                      borderColor: [
-                        '#3bc9db',
-                        '#fa5252',
-                        '#e64980',
-                        '#be4bdb',
-                        '#7950f2',
-                        '#4c6ef5',
-                        '#15aabf',
-                        '#12b886',
-                        '#40c057',
-                        '#fab005',
-                        '#fd7e14',
-                        '#f76707',
-                      ],
-                      backgroundColor: [
-                        '#c5f6fa',
-                        '#ffc9c9',
-                        '#fcc2d7',
-                        '#eebefa',
-                        '#d0bfff',
-                        '#bac8ff',
-                        '#a5d8ff',
-                        '#b2f2bb',
-                        '#96f2d7',
-                        '#ffec99',
-                        '#ffd8a8',
-                      ],
-                      data: data === undefined ? [] : sortRem(data, 'Draft'),
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  responsive: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          return `Draft: ${context.parsed}`
-                        },
-                      },
-                    },
-                    legend: {
-                      position: 'top',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
-              />
-              <div
-                style={{
-                  marginBottom: '10px',
-                  marginTop: '10px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  fontFamily: 'Roboto',
-                  fontWeight: '800',
-                }}
-              >
-                Potential Proposal
-              </div>
-              <CChartDoughnut
-                data={{
-                  labels: [
-                    'Aug 2021',
-                    'Sep 2021',
-                    'Oct 2021',
-                    'Nov 2021',
-                    'Dec 2021',
-                    'Jan 2022',
-                    'Feb 2022',
-                    'Mar 2022',
-                    'Apr 2022',
-                    'May 2022',
-                    'June 2022',
-                  ],
-                  datasets: [
-                    {
-                      label: 'Potential Proposal',
-                      borderColor: [
-                        '#3bc9db',
-                        '#fa5252',
-                        '#e64980',
-                        '#be4bdb',
-                        '#7950f2',
-                        '#4c6ef5',
-                        '#15aabf',
-                        '#12b886',
-                        '#40c057',
-                        '#fab005',
-                        '#fd7e14',
-                        '#f76707',
-                      ],
-                      backgroundColor: [
-                        '#c5f6fa',
-                        '#ffc9c9',
-                        '#fcc2d7',
-                        '#eebefa',
-                        '#d0bfff',
-                        '#bac8ff',
-                        '#a5d8ff',
-                        '#b2f2bb',
-                        '#96f2d7',
-                        '#ffec99',
-                        '#ffd8a8',
-                      ],
-                      data: data === undefined ? [] : sortRem(data, 'potentialProposal'),
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          return `Potential Proposal: ${context.parsed}`
-                        },
-                      },
-                    },
-                    legend: {
-                      display: false,
-                    },
-                  },
-
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader className="cardHeader" style={{ fontFamily: 'Roboto', fontWeight: '800' }}>
-              Final vs Draft
-            </CCardHeader>
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 30%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <CChartRadar
-                data={{
-                  labels: data === undefined ? [] : sortLabel(data, 'Draft'),
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      backgroundColor: 'rgba(255, 245, 245, 0.4)',
-                      borderColor: '#ff8787',
-                      pointBackgroundColor: '#f03e3e',
-                      pointBorderColor: '#fff',
-                      pointHighlightFill: '#fff',
-                      pointHighlightStroke: 'rgba(220, 220, 220, 1)',
-                      data: data === undefined ? [] : sortRem(data, 'Draft'),
-                    },
-                    {
-                      label: 'Final',
-                      backgroundColor: 'rgba(255, 224, 102, 0.2)',
-                      borderColor: '#ffe066',
-                      pointBackgroundColor: '#fab005',
-                      pointBorderColor: '#fff',
-                      pointHighlightFill: '#fff',
-                      pointHighlightStroke: 'rgba(151, 187, 205, 1)',
-                      data: data === undefined ? [] : sortRem(data, 'Final'),
-                    },
-                  ],
-                }}
-                options={{
-                  scales: {
-                    r: {
-                      ticks: {
-                        display: false,
-                      },
-                      pointLabels: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      labels: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
                 }}
               />
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-      <hr />
-      <div
-        style={{
-          fontSize: '40px',
-          fontWeight: '800',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textTransform: 'uppercase',
-        }}
-      >
-        Yearly Insights
-      </div>
+
+      {/* Monthly Insights */}
       <CRow>
-        <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Draft </CCardHeader>
-            </Link>
+        <CCol xs={12} className="mb-4">
+          <CCard
+            style={{
+              backgroundColor: '#dee2e6',
+            }}
+          >
             <CCardBody
-              className="childChartContainer"
               style={{
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                color: '#212529',
+                fontWeight: '800',
+                fontSize: '18px',
               }}
             >
-              {checkDataPresent(fetchArrayYearWise(years === undefined ? [] : years, 'Draft')) ===
-              0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: (context) => {
-                          return ''
-                        },
-                        label: (context) => {
-                          console.log(context)
-                          return `${context.label}: ${context.parsed.y}`
-                        },
-                      },
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayFinalTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Final </CCardHeader>
-            </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {checkDataPresent(fetchArrayYearWise(years === undefined ? [] : years, 'Final')) ===
-              0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartPie
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayReviewTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Review </CCardHeader>
-            </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {checkDataPresent(fetchArrayYearWise(years === undefined ? [] : years, 'Review')) ===
-              0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartBar
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      pointBorderColor: '#000000',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayLastCallTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Last Call </CCardHeader>
-            </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {checkDataPresent(
-                fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartPolarArea
+              Monthly Insights
+              <hr
                 style={{
-                  visibility: `${
-                    checkDataPresent(
-                      fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                      },
-                    },
-                    r: {
-                      ticks: {
-                        display: false,
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
+                  height: '2px',
+                  color: '#212529',
                 }}
               />
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayStagnantTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Stagnant </CCardHeader>
-            </Link>
+        <CCol xs={12}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Draft{' '}
+            </CCardHeader>
             <CCardBody
-              className="childChartContainer"
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              {checkDataPresent(
-                fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartPie
+              <Line {...monthlyDraftConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+
+        <CCol xs={12}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Final{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Column {...monthlyFinalConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              DraftEIPs vs Potential Proposal{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Area {...montlyDraftvsFinalconfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Final vs Draft{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Column {...finalvsDraftconfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
+      <CRow>
+        <CCol xs={12} className="mb-4">
+          <CCard
+            style={{
+              backgroundColor: '#dee2e6',
+            }}
+          >
+            <CCardBody
+              style={{
+                color: '#212529',
+                fontWeight: '800',
+                fontSize: '18px',
+              }}
+            >
+              Yearly Insights
+              <hr
                 style={{
-                  visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Core) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.ERC) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Networking) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Interface) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                // plugins={[ChartDataLabels]}
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
+                  height: '2px',
+                  color: '#212529',
                 }}
               />
             </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={4}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Draft{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Bar {...yearlyDraftConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={4}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Final{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Bar {...yearlyFinalConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={4}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Review{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Bar {...yearlyReviewConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
         <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayWithdrawnTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">Withdrawn </CCardHeader>
-            </Link>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Last-Call{' '}
+            </CCardHeader>
             <CCardBody
-              className="childChartContainer"
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              {checkDataPresent(
-                fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartBar
-                style={{
-                  visibility: `${
-                    checkDataPresent(
-                      fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      label: 'Withdrawn',
-                      pointBorderColor: '#000000',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
+              <Pie {...yearlyLastCallConfig} />
             </CCardBody>
-          </CCard>
-        </CCol>
-        {/* <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">Draft EIPs vs Potential Proposal</CCardHeader>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
             >
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                data={{
-                  labels: ['Draft', 'Potential Proposal'],
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [parseInt(data === undefined ? 0 : data[0].summary.Draft), 0],
-                    },
-                  ],
-                }}
-                options={{
-                  maintainAspectRatio: true,
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
-            </CCardBody>
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
-
         <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">Final vs Draft</CCardHeader>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Stagnant{' '}
+            </CCardHeader>
             <CCardBody
-              className="childChartContainer"
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].summary.Final) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartDoughnut
-                data={{
-                  labels: ['Final', 'Draft'],
-                  datasets: [
-                    {
-                      label: 'Draft EIPs',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].summary.Draft),
-                        parseInt(data === undefined ? 0 : data[0].summary.Final),
-                      ],
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  maintainAspectRatio: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          return `${context.label}: ${context.parsed}`
-                        },
-                      },
-                    },
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
-              />
+              <Pie {...yearlyStagnantConfig} />
             </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
-        </CCol> */}
+        </CCol>
         <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">Living </CCardHeader>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Withdrawn{' '}
+            </CCardHeader>
             <CCardBody
-              className="childChartContainer"
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              {checkDataPresent(fetchArrayYearWise(years === undefined ? [] : years, 'Living')) ===
-              0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <CChartPie
-                // plugins={[ChartDataLabels]}
-                style={{
-                  visibility: `${
-                    checkDataPresent(
-                      fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                data={{
-                  labels: years === undefined ? [] : years,
-                  datasets: [
-                    {
-                      data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
+              <Bar {...yearlyWithdrawnConfig} />
             </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
-        {/* <CCol xs={6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">General Stats </CCardHeader>
-            </Link>
+        <CCol xs={6}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              Living{' '}
+            </CCardHeader>
             <CCardBody
-              className="childChartContainer"
               style={{
                 // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  labels: ['Open PR', 'Merged PR', 'Closed Issues', 'New Issues'],
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.MergedPR),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues),
-                      ],
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: (context) => {
-                          return ''
-                        },
-                        label: (context) => {
-                          console.log(context)
-                          return `${context.label}: ${context.parsed.y}`
-                        },
-                      },
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
-              />
+              <Bar {...yearlyLivingConfig} />
             </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
-        <CTable align="middle">
-          <CTableHead color="dark">
-            <CTableRow>
-              <CTableHeaderCell scope="col">Other Stats</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            <CTableRow>
-              <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
-              </CTableDataCell>
-            </CTableRow>
-
-            <CTableRow>
-              <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
-              </CTableDataCell>
-            </CTableRow>
-
-            <CTableRow>
-              <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
-              </CTableDataCell>
-            </CTableRow>
-
-            <CTableRow>
-              <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
-              </CTableDataCell>
-            </CTableRow>
-          </CTableBody>
-        </CTable> */}
       </CRow>
     </>
   )

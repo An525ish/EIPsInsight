@@ -1,21 +1,19 @@
 .cardHeader {
   transition: all 0.7s;
   cursor: pointer;
-  border-radius: 2px;
-  border-bottom: 2px solid rgba(220, 52, 85, 0.5);
+  border-radius: none !important;
+  border-bottom: none;
   font-family: 'Roboto', sans-serif;
+}
+.cardFooter{
+  display: flex;
+  justify-content: flex-end;
 
 }
 
-.cardHeader:hover {
-  background-color: rgba(220, 52, 85, 0.5);
-  color: white;
-  border: none;
-
-}
 
 .cardBorder{
-  border: 2px solid rgba(220, 52, 85, 0.5);
+  border: 2px solid #e7f5ff;
 }
 
 
