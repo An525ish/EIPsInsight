@@ -65,7 +65,7 @@ const Login = () => {
     try {
       await logIn(email, password)
       await setImageFunction1()
-      navigate('/Dashboard')
+      navigate('/')
     } catch (err) {
       setError(err.message)
       addToast(exampleToast(err.message, '#fa5252'))
@@ -87,7 +87,7 @@ const Login = () => {
     try {
       await googleSignIn()
       await setImageFunction1()
-      navigate('/Dashboard')
+      navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
       console.log(err.message)
@@ -98,7 +98,7 @@ const Login = () => {
     try {
       await githubSignIn()
       await setImageFunction1()
-      navigate('/Dashboard')
+      navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
       console.log(err.message)
@@ -193,7 +193,7 @@ const Login = () => {
                         Github
                       </div>
                     </div>
-                    <Link to="/dashboard">
+                    <Link to="/">
                       <CButton
                         color="primary"
                         style={{

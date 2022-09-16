@@ -10,7 +10,7 @@ const ProtectedLogin = ({ children }) => {
 
   console.log('Check user in Private: ', user)
   if (user) {
-    return <Navigate to="/dashboard" />
+    return <Navigate to="/" />
   }
   return children
 }

@@ -4,6 +4,7 @@ import ProtectedLogin from './components/protectedLogin'
 import ProtectedRoute from './components/ProtectedRoutes'
 import { UserAuthContextProvider } from './Context/AuthContext'
 import './scss/style.scss'
+import Dashboard from './views/dashboard/Dashboard'
 import ForgotPassword from './views/pages/ForgotPassword/ForgotPassword'
 import ResetPassword from './views/pages/ResetPassword/resetPassword'
 
@@ -31,7 +32,7 @@ class App extends Component {
             <Routes>
               <Route
                 exact
-                path="/"
+                path="/login"
                 name="Login Page"
                 element={
                   <ProtectedLogin>

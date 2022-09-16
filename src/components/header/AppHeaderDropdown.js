@@ -36,7 +36,7 @@ const AppHeaderDropdown = () => {
     try {
       await logOut()
       await setImageFunction1()
-      await navigate('/')
+      await navigate('/login')
     } catch (err) {
       console.log(err.message)
     }

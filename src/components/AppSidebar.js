@@ -36,7 +36,27 @@ const AppSidebar = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [data, setData] = useState()
   const [navii, setNavii] = useState()
-
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  const sorter = (a, b) => {
+    if (a.year !== b.year) {
+      return a.year - b.year
+    } else {
+      return months.indexOf(a.name) - months.indexOf(b.name)
+    }
+  }
   const allData = async () => {
     try {
       const res = await fetch(`${ip}/register`, {
@@ -57,7 +77,7 @@ const AppSidebar = () => {
       completeList.push({
         component: CNavItem,
         name: 'Dashboard',
-        to: '/dashboard',
+        to: '/',
         icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
         badge: {
           color: 'info',
@@ -78,6 +98,8 @@ const AppSidebar = () => {
             })
           }
         }
+        list.sort(sorter)
+        list.reverse()
         completeList.push({
           component: CNavGroup,
           name: `${yearArr[j]}`,

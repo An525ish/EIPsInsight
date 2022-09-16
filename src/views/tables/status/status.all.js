@@ -13,9 +13,16 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
+import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
+import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
+import { each, groupBy } from '@antv/util'
+
+import '../type/type.css'
 
 function statusAll(props) {
   const [post, getPost] = useState()
+  const [date, setDate] = useState()
+
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
     fetch(API)
@@ -25,9 +32,86 @@ function statusAll(props) {
         getPost(res)
       })
   }
+  const fetchAnnotations = (d) => {
+    const annotations = []
+    each(groupBy(d, 'type'), (values, k) => {
+      const value = values.reduce((a, b) => a + b.value, 0)
+      console.log(value)
+      annotations.push({
+        type: 'text',
+        position: [k, value],
+        content: `${value}`,
+        style: {
+          textAlign: 'center',
+          fontSize: 12,
+          fill: 'rgba(0,0,0,0.6)',
+        },
+        offsetY: -10,
+      })
+    })
+    return annotations
+  }
+  const fetchDate = () => {
+    let date = new Date().toDateString()
+    setDate(date)
+  }
+
+  const fetchData = (data, name) => {
+    let arr = []
+
+    arr.push(
+      {
+        name: 'Core',
+        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Core'],
+        type: 'Standard Track',
+      },
+      {
+        name: 'ERC',
+        value: data[name] === undefined ? 0 : data[name]['Standards Track']['ERC'],
+        type: 'Standard Track',
+      },
+      {
+        name: 'Networking',
+        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Networking'],
+        type: 'Standard Track',
+      },
+      {
+        name: 'Interface',
+        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Interface'],
+        type: 'Standard Track',
+      },
+      {
+        name: 'Meta',
+        value: data[name] === undefined ? 0 : data[name]['Meta'],
+        type: 'Meta',
+      },
+      {
+        name: 'Informational',
+        value: data[name] === undefined ? 0 : data[name]['Informational'],
+        type: 'Informational',
+      },
+    )
+    console.log(arr)
+    return arr
+  }
+  const fetchChartData = (name) => {
+    const config = {
+      data: fetchData(post === undefined ? [] : post, name),
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      isStack: true,
+      xField: 'type',
+      yField: 'value',
+      seriesField: 'name',
+      label: false,
+
+      annotations: fetchAnnotations(fetchData(post === undefined ? [] : post, name)),
+    }
+    return config
+  }
 
   useEffect(() => {
     fetchPost()
+    fetchDate()
   }, [])
 
   console.log(post)
@@ -39,6 +123,13 @@ function statusAll(props) {
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '10rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
         }}
       >
         <Link to="/draftStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -64,63 +155,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Draft']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Draft']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Draft']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Draft']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Draft']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Draft']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Draft')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Draft']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '10rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/finalStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -146,63 +299,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Final']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Final']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Final']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Final']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Final']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Final']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Final')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Final']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '11rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/reviewStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -228,63 +443,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Review']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Review']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Review']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Review']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Review']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Review']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Review')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Review']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '12rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/lastCallStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -310,63 +587,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Last Call']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Last Call']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Last Call']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Last Call']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Last Call']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Last Call']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Last Call')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Last Call']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '13rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/stagnantStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -392,63 +731,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col"></CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Stagnant']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Stagnant']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Stagnant']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Stagnant']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Stagnant']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Stagnant']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Stagnant')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Stagnant']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '14rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/withdrawnStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -474,62 +875,125 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Withdrawn']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Withdrawn']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Withdrawn']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Withdrawn')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Withdrawn']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
+
       <div
         style={{
           fontSize: '30px',
           fontWeight: '400',
           marginBottom: '00px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '9rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+          marginTop: '2rem',
         }}
       >
         <Link to="/livingStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -555,57 +1019,111 @@ function statusAll(props) {
           </label>
         </Link>
       </div>
-      <CTable>
-        <CTableHead color="dark">
-          <CTableRow>
-            <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-            <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-            <CTableDataCell>Core</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Living']['Standards Track']['Core']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>ERC</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Living']['Standards Track']['ERC']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Networking</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Living']['Standards Track']['Networking']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row"></CTableHeaderCell>
-            <CTableDataCell>Interface</CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Living']['Standards Track']['Interface']}
-            </CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>{post === undefined ? 0 : post['Living']['Meta']}</CTableDataCell>
-          </CTableRow>
-          <CTableRow>
-            <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
-            <CTableDataCell></CTableDataCell>
-            <CTableDataCell>
-              {post === undefined ? 0 : post['Living']['Informational']}
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <CRow>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                height: '300px',
+                borderLeft: '2px solid #74c0fc',
+              }}
+            >
+              <Column {...fetchChartData('Living')} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderLeft: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                height: '300px',
+                fontFamily: 'Roboto',
+                fontSize: '12px',
+                borderRight: '2px solid #74c0fc',
+              }}
+              className="scrollbarDesign"
+            >
+              <CTable>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
+                    <CTableDataCell>Core</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Standards Track']['Core']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>ERC</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Standards Track']['ERC']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Networking</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Standards Track']['Networking']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row"></CTableHeaderCell>
+                    <CTableDataCell>Interface</CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Standards Track']['Interface']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Meta']}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                    <CTableDataCell></CTableDataCell>
+                    <CTableDataCell>
+                      {post === undefined ? 0 : post['Living']['Informational']}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
     </>
   )
 }

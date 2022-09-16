@@ -53,12 +53,12 @@ const AppHeader = () => {
         >
           <img src={changeIcon ? rightIcon : leftIcon} alt="" onClick={() => changeIconSet()} />
         </CHeaderToggler>
-        <CHeaderBrand className="mx-auto d-md-none" to="/">
+        <CHeaderBrand className="mx-auto d-md-none">
           <img src={logo} height={48} alt="Logo" style={{ width: '87px', height: '100%' }} />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
+            <CNavLink to="#" component={NavLink}>
               <Link to="/typeAll" style={{ textDecoration: 'none', color: 'inherit' }}>
                 Type
               </Link>
@@ -131,7 +131,7 @@ const AppHeader = () => {
           {imageOpen === 'enable' ? (
             <AppHeaderDropdown />
           ) : (
-            <Link to="/" style={{ textDecoration: 'none' }}>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
               <div className="loginButton1 github1">Login</div>
             </Link>
           )}

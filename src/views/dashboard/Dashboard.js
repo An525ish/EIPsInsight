@@ -152,18 +152,42 @@ const Dashboard = () => {
   const fetchArrayYearWise = (yearList, name) => {
     let arr = []
     for (let i = 0; i < yearList.length; i++) {
-      let sum = 0
+      let sumCore = 0
+      let sumERC = 0
+      let sumNetworking = 0
+      let sumInterface = 0
       for (let j = 0; j < data.length; j++) {
         if (yearList[i] === data[j].year) {
           console.log(data[j].summary)
 
-          sum += parseInt(data[j].summary[name])
+          sumCore += parseInt(data[j][name]['Core'])
+          sumERC += parseInt(data[j][name]['ERC'])
+          sumNetworking += parseInt(data[j][name]['Networking'])
+          sumInterface += parseInt(data[j][name]['Interface'])
         }
       }
-      arr.push({
-        year: yearList[i],
-        value: sum,
-      })
+      arr.push(
+        {
+          year: yearList[i],
+          value: parseInt(sumCore),
+          type: 'Core',
+        },
+        {
+          year: yearList[i],
+          value: parseInt(sumERC),
+          type: 'ERC',
+        },
+        {
+          year: yearList[i],
+          value: parseInt(sumNetworking),
+          type: 'Networking',
+        },
+        {
+          year: yearList[i],
+          value: parseInt(sumInterface),
+          type: 'Interface',
+        },
+      )
     }
     console.log(arr)
     return arr
@@ -208,6 +232,7 @@ const Dashboard = () => {
     return arr
   }
   const annotations = []
+
   const d1 = [
     {
       year: 'Standard Track',
@@ -232,16 +257,17 @@ const Dashboard = () => {
     {
       year: 'Meta',
       value: post === undefined ? '' : post['Meta'],
-      type: 'Quantity',
+      type: 'Meta',
     },
     {
       year: 'Informational',
       value: post === undefined ? '' : post['Informational'],
-      type: 'Quantity',
+      type: 'Informational',
     },
   ]
   each(groupBy(d1, 'year'), (values, k) => {
     const value = values.reduce((a, b) => a + b.value, 0)
+    console.log(value)
     annotations.push({
       type: 'text',
       position: [k, value],
@@ -254,19 +280,33 @@ const Dashboard = () => {
       offsetY: -10,
     })
   })
+  const fetchAnnotations = (d) => {
+    const annotations = []
+    each(groupBy(d, 'year'), (values, k) => {
+      const value = values.reduce((a, b) => a + b.value, 0)
+      console.log(value)
+      annotations.push({
+        type: 'text',
+        position: [k, value],
+        content: `${value}`,
+        style: {
+          textAlign: 'center',
+          fontSize: 12,
+          fill: 'rgba(0,0,0,0.6)',
+        },
+        offsetY: -10,
+      })
+    })
+    return annotations
+  }
   const config = {
     data: d1,
-    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff', '#dee2e6'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
     isStack: true,
     xField: 'year',
     yField: 'value',
     seriesField: 'type',
     label: false,
-    legend: {
-      customContent: {
-        title: 'Standard Track',
-      },
-    },
 
     annotations,
   }
@@ -331,7 +371,8 @@ const Dashboard = () => {
     xField: 'year',
     yField: 'gdp',
     seriesField: 'name',
-    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+    // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
     yAxis: {
       label: {
         // 数值格式化为千分位
@@ -360,7 +401,8 @@ const Dashboard = () => {
     xField: 'year',
     yField: 'gdp',
     seriesField: 'name',
-    color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+    // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
 
     /** 设置颜色 */
     //color: ['#1ca9e6', '#f88c24'],
@@ -396,7 +438,8 @@ const Dashboard = () => {
     xField: 'year',
     yField: 'value',
     seriesField: 'name',
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#ffa8a8', '#ffe066', '#e599f7'],
+    // color: ['#1864ab', '#74c0fc'],
 
     // xAxis: {
     //   type: 'time',
@@ -451,6 +494,7 @@ const Dashboard = () => {
     xField: 'year',
     yField: 'value',
     seriesField: 'type',
+    // color: ['#ffa8a8', '#ffe066', '#e599f7'],
     color: ['#1864ab', '#74c0fc'],
     label: {
       // 可手动配置 label 数据标签位置
@@ -475,165 +519,90 @@ const Dashboard = () => {
 
   const yearlyDraftConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
-    xField: 'value',
-    yField: 'year',
-    seriesField: 'year',
-    legend: {
-      position: 'top-left',
-    },
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Draft')),
   }
   const yearlyFinalConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
-    xField: 'value',
-    yField: 'year',
-    seriesField: 'year',
-    legend: {
-      position: 'top-left',
-    },
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Final')),
   }
   const yearlyReviewConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
-    xField: 'value',
-    yField: 'year',
-    seriesField: 'year',
-    legend: {
-      position: 'top-left',
-    },
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Review')),
   }
-  const G = G2.getEngine('canvas')
+
   const yearlyLastCallConfig = {
-    appendPadding: 10,
     data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-    angleField: 'value',
-    colorField: 'year',
-    radius: 0.8,
-    legend: false,
-    label: {
-      type: 'spider',
-      labelHeight: 40,
-      formatter: (data, mappingData) => {
-        const group = new G.Group({})
-        group.addShape({
-          type: 'circle',
-          attrs: {
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 50,
-            r: 5,
-            fill: mappingData.color,
-          },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 10,
-            y: 8,
-            text: `${data.year}`,
-            fill: mappingData.color,
-          },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 0,
-            y: 25,
-            text: `${data.value}`,
-            fill: 'rgba(0, 0, 0, 0.65)',
-            fontWeight: 700,
-          },
-        })
-        return group
-      },
-    },
-    interactions: [
-      {
-        type: 'element-selected',
-      },
-      {
-        type: 'element-active',
-      },
-    ],
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'LastCall')),
   }
 
   const yearlyStagnantConfig = {
-    appendPadding: 10,
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
-    angleField: 'value',
-    colorField: 'year',
-    radius: 0.8,
-    legend: false,
-    label: {
-      type: 'spider',
-      labelHeight: 40,
-      formatter: (data, mappingData) => {
-        const group = new G.Group({})
-        group.addShape({
-          type: 'circle',
-          attrs: {
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 50,
-            r: 5,
-            fill: mappingData.color,
-          },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 10,
-            y: 8,
-            text: `${data.year}`,
-            fill: mappingData.color,
-          },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 0,
-            y: 25,
-            text: `${data.value}`,
-            fill: 'rgba(0, 0, 0, 0.65)',
-            fontWeight: 700,
-          },
-        })
-        return group
-      },
-    },
-    interactions: [
-      {
-        type: 'element-selected',
-      },
-      {
-        type: 'element-active',
-      },
-    ],
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant')),
   }
   const yearlyWithdrawnConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-    xField: 'value',
-    yField: 'year',
-    seriesField: 'year',
-    legend: {
-      position: 'top-left',
-    },
-    color: ['#1864ab', '#74c0fc'],
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    label: false,
+
+    annotations: fetchAnnotations(
+      fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
+    ),
   }
   const yearlyLivingConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
-    xField: 'value',
-    yField: 'year',
-    seriesField: 'year',
-    legend: {
-      position: 'top-left',
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    isStack: true,
+    xField: 'year',
+    yField: 'value',
+    seriesField: 'type',
+    meta: {
+      formatter({ value }) {
+        return Math.round(value)
+      },
     },
-    color: ['#1864ab', '#74c0fc'],
+    label: false,
+
+    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Living')),
   }
 
   useEffect(() => {
@@ -768,6 +737,12 @@ const Dashboard = () => {
                 }}
               />
             </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
@@ -775,27 +750,23 @@ const Dashboard = () => {
       {/* Monthly Insights */}
       <CRow>
         <CCol xs={12} className="mb-4">
-          <CCard
+          <div
             style={{
-              backgroundColor: '#dee2e6',
+              fontSize: '30px',
+              fontWeight: '400',
+              marginBottom: '00px',
+              backgroundColor: 'white',
+              border: 'none',
+              width: '17rem',
+              padding: '14px',
+              borderRadius: '5px',
+              borderLeft: '4px solid #339af0',
+              borderBottom: '2px solid #339af0',
+              marginTop: '2rem',
             }}
           >
-            <CCardBody
-              style={{
-                color: '#212529',
-                fontWeight: '800',
-                fontSize: '18px',
-              }}
-            >
-              Monthly Insights
-              <hr
-                style={{
-                  height: '2px',
-                  color: '#212529',
-                }}
-              />
-            </CCardBody>
-          </CCard>
+            Monthly Insights
+          </div>
         </CCol>
         <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
@@ -854,34 +825,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              DraftEIPs vs Potential Proposal{' '}
-            </CCardHeader>
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Area {...montlyDraftvsFinalconfig} />
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
+
         <CCol xs={6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
@@ -910,30 +854,54 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
+        <CCol xs={6}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              DraftEIPs vs Potential Proposal{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Area {...montlyDraftvsFinalconfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
       </CRow>
       <CRow>
         <CCol xs={12} className="mb-4">
-          <CCard
+          <div
             style={{
-              backgroundColor: '#dee2e6',
+              fontSize: '30px',
+              fontWeight: '400',
+              marginBottom: '00px',
+              backgroundColor: 'white',
+              border: 'none',
+              width: '17rem',
+              padding: '14px',
+              borderRadius: '5px',
+              borderLeft: '4px solid #339af0',
+              borderBottom: '2px solid #339af0',
+              marginTop: '2rem',
             }}
           >
-            <CCardBody
-              style={{
-                color: '#212529',
-                fontWeight: '800',
-                fontSize: '18px',
-              }}
-            >
-              Yearly Insights
-              <hr
-                style={{
-                  height: '2px',
-                  color: '#212529',
-                }}
-              />
-            </CCardBody>
-          </CCard>
+            Yearly Insights
+          </div>
         </CCol>
         <CCol xs={4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
@@ -953,7 +921,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Bar {...yearlyDraftConfig} />
+              <Column {...yearlyDraftConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -981,7 +949,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Bar {...yearlyFinalConfig} />
+              <Column {...yearlyFinalConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -1009,7 +977,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Bar {...yearlyReviewConfig} />
+              <Column {...yearlyReviewConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -1037,7 +1005,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Pie {...yearlyLastCallConfig} />
+              <Column {...yearlyLastCallConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -1065,7 +1033,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Pie {...yearlyStagnantConfig} />
+              <Column {...yearlyStagnantConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -1093,7 +1061,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Bar {...yearlyWithdrawnConfig} />
+              <Column {...yearlyWithdrawnConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
@@ -1121,7 +1089,7 @@ const Dashboard = () => {
                 // backgroundPosition: 'right -12px bottom -40px',
               }}
             >
-              <Bar {...yearlyLivingConfig} />
+              <Column {...yearlyLivingConfig} />
             </CCardBody>
             <CCardFooter
               className="cardFooter"
