@@ -16,12 +16,15 @@ import { Link } from 'react-router-dom'
 import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
+import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
 
 function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
+
+  const matches = useMediaQuery("(max-width: 600px)")
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
@@ -156,7 +159,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -179,7 +182,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -300,7 +303,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -323,7 +326,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -444,7 +447,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -467,7 +470,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -588,7 +591,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -611,7 +614,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -732,7 +735,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -755,7 +758,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -876,7 +879,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -899,7 +902,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -1020,7 +1023,7 @@ function statusAll(props) {
         </Link>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{
@@ -1043,7 +1046,7 @@ function statusAll(props) {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard>
             <CCardBody
               style={{

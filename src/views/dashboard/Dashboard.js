@@ -75,6 +75,8 @@ import { Chart } from 'react-google-charts'
 import { Link } from 'react-router-dom'
 import { ip } from 'src/constants'
 
+import useMediaQuery from 'src/scss/useMediaQuery'
+
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import '../charts/mayCharts.styles.css'
@@ -86,6 +88,8 @@ const Dashboard = () => {
   const [post, getPost] = useState()
 
   const [years, setYears] = useState()
+
+  const matches = useMediaQuery("(max-width: 600px)")
 
   const API = 'https://eipsinsight.com/api/overallData'
   const fetchPost = () => {
@@ -621,7 +625,7 @@ const Dashboard = () => {
   return (
     <>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -649,7 +653,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }}>
             <CCardHeader
               className="cardHeader"
@@ -826,7 +830,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
 
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -854,7 +858,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -903,7 +907,7 @@ const Dashboard = () => {
             Yearly Insights
           </div>
         </CCol>
-        <CCol xs={4}>
+        <CCol xs={matches ? 12: 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -931,7 +935,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={4}>
+        <CCol xs={matches ? 12: 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -959,7 +963,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={4}>
+        <CCol xs={matches ? 12: 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -987,7 +991,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1015,7 +1019,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1043,7 +1047,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1071,7 +1075,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12: 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"

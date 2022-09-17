@@ -16,10 +16,13 @@ import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
 import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import './type.css'
+import useMediaQuery from 'src/scss/useMediaQuery'
 
 function typeAll() {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
+
+  const matches = useMediaQuery('(max-width: 600px)')
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
@@ -266,7 +269,7 @@ function typeAll() {
         </label>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
@@ -293,7 +296,7 @@ function typeAll() {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
@@ -422,7 +425,7 @@ function typeAll() {
         </label>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
@@ -449,7 +452,7 @@ function typeAll() {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
@@ -566,7 +569,7 @@ function typeAll() {
         </label>
       </div>
       <CRow>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
@@ -593,7 +596,7 @@ function typeAll() {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
