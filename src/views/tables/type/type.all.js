@@ -169,7 +169,7 @@ function typeAll() {
     const config = {
       appendPadding: 10,
       data: fetchChartData(post === undefined ? [] : post, name),
-      color: ['#ffa8a8', '#c0eb75', '#e599f7', '#ffe066', '#228be6', '#66d9e8'],
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
       angleField: 'value',
       colorField: 'type',
       radius: 1,

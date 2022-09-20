@@ -24,6 +24,7 @@ import rightIcon from 'src/assets/right.png'
 import { ReactComponent as left } from 'src/assets/brand/left.svg'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
+import { ip } from 'src/constants'
 
 const AppHeader = () => {
   const [changeIcon, setChangeIcon] = useState(0)
@@ -33,6 +34,74 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  const [data, setData] = useState()
+  const [years, setYears] = useState()
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  const sorter = (a, b) => {
+    if (a.year !== b.year) {
+      return a.year - b.year
+    } else {
+      return months.indexOf(a.name) - months.indexOf(b.name)
+    }
+  }
+  const allData = async () => {
+    try {
+      const res = await fetch(`${ip}/register`, {
+        // method: 'GET',
+        // headers: {
+        //   Accept: 'application/json',
+        //   'Content-Type': 'application',
+        // },
+        // credentials: 'include',
+      })
+      let datas = []
+      datas = await res.json()
+      console.log(datas)
+      setData(datas)
+
+      const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
+      setYears(yearArr)
+      console.log(yearArr)
+
+      if (!res.status === 200) {
+        const error = new Error(res.error)
+        throw error
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getMonth = (d) => {
+    if (d.length !== 0) {
+      d.sort(sorter)
+      console.log(d)
+      return d[0].name.toLowerCase()
+    }
+  }
+
+  const getYear = (d) => {
+    if (d.length !== 0) {
+      d.sort(sorter)
+      console.log(d)
+      return d[0].year
+    }
+  }
+
   const changeIconSet = () => {
     if (changeIcon === 0) {
       setChangeIcon(1)
@@ -40,6 +109,12 @@ const AppHeader = () => {
       setChangeIcon(0)
     }
   }
+
+  useEffect(() => {
+    allData()
+  }, [])
+
+  console.log(data)
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -73,7 +148,14 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">
-              <Link to="/juneCharts" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link
+                to="/autoCharts"
+                state={{
+                  from: `/${getMonth(data === undefined ? [] : data)}`,
+                  year: getYear(data === undefined ? [] : data),
+                }}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
                 Insight
               </Link>
             </CNavLink>

@@ -51,11 +51,11 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
   let location = useLocation()
-  const matches = useMediaQuery("(max-width: 600px)")
+  const matches = useMediaQuery('(max-width: 600px)')
 
   let [data, setData] = useState() // i set the data here
 
-  const allData = async (d) => {
+  const allData = async (d, y) => {
     try {
       const res = await fetch(`${ip}/register`, {
         // method: 'GET',
@@ -67,12 +67,14 @@ const autoCharts = (props) => {
       })
       let datas = await res.json()
       console.log(datas) // fine
-
+      console.log(location)
+      console.log(d)
       let att = d.substring(1)
       console.log(att) // this taking the name of the month we are fetching
       let filterData = datas.filter((e) => {
-        return e.name.toLowerCase() === att.toLowerCase()
+        return e.name.toLowerCase() === att.toLowerCase() && e.year === y
       }) // we filter from here
+
       console.log(filterData)
       setData(filterData)
 
@@ -86,9 +88,9 @@ const autoCharts = (props) => {
   }
 
   useEffect(() => {
-    allData(location.state.from)
+    allData(location.state.from, location.state.year)
     // setInfo(localStorage.getItem('count'))
-  }, [location.state.from])
+  }, [location.state.from, location.state.year])
 
   console.log(data)
 
@@ -230,7 +232,7 @@ const autoCharts = (props) => {
 
       <hr />
       <CRow>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -362,7 +364,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayFinalTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -465,7 +467,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayReviewTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -580,7 +582,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayLastCallTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -703,7 +705,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayStagnantTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -815,7 +817,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayWithdrawnTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">
@@ -941,7 +943,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <CCardHeader className="cardHeader">Draft EIPs vs Potential Proposal</CCardHeader>
             <CCardBody
@@ -1015,7 +1017,7 @@ const autoCharts = (props) => {
           </CCard>
         </CCol>
 
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <CCardHeader className="cardHeader">Final vs Draft</CCardHeader>
             <CCardBody
@@ -1109,7 +1111,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <CCardHeader className="cardHeader">
               Living{' '}
@@ -1219,7 +1221,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
               <CCardHeader className="cardHeader">General Stats </CCardHeader>

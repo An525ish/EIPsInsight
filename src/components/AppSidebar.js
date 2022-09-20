@@ -70,7 +70,7 @@ const AppSidebar = () => {
       const datas = await res.json()
 
       console.log(datas)
-      const yearArr = ['2022', '2021']
+      const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
       console.log(yearArr)
       let list = []
       const completeList = []
@@ -94,6 +94,7 @@ const AppSidebar = () => {
               to: `/autoCharts`,
               state: {
                 from: `/${datas[i].name.toLowerCase()}`,
+                year: datas[i].year,
               },
             })
           }
