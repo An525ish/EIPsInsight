@@ -34,22 +34,19 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
 import { Link, useLocation } from 'react-router-dom'
 import './mayCharts.styles.css'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts'
+
 import { element } from 'prop-types'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
+import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
+import { each, groupBy } from '@antv/util'
+import { cilBold } from '@coreui/icons'
+
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
+
+  const G = G2.getEngine('canvas')
   let location = useLocation()
   const matches = useMediaQuery('(max-width: 600px)')
 
@@ -87,6 +84,391 @@ const autoCharts = (props) => {
     }
   }
 
+  const dataCapture = (name, data) => {
+    let a = 0
+    let b = 0
+    let c = 0
+    let d = 0
+    let arr = []
+
+    for (let i = 0; i < data.length; i++) {
+      a += parseInt(data[i][name].Core)
+      b += parseInt(data[i][name].ERC)
+      c += parseInt(data[i][name].Networking)
+      d += parseInt(data[i][name].Interface)
+    }
+
+    arr.push(
+      {
+        type: 'Core',
+        value: a,
+      },
+      {
+        type: 'ERC',
+        value: b,
+      },
+      {
+        type: 'Networking',
+        value: c,
+      },
+      {
+        type: 'Interface',
+        value: d,
+      },
+    )
+
+    return arr
+  }
+
+  const configColumnCharts = (name, data) => {
+    const config = {
+      data: dataCapture(name, data),
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      isStack: true,
+      xField: 'type',
+      yField: 'value',
+      seriesField: 'type',
+      label: {
+        position: 'middle',
+
+        style: {
+          fill: '#FFFFFF',
+          opacity: 0.8,
+          fontSize: 14,
+          fontWeight: 800,
+        },
+      },
+      legend: {
+        position: 'top-right',
+      },
+    }
+
+    return config
+  }
+
+  const configPieCharts = (name, data) => {
+    const config = {
+      appendPadding: 10,
+      data: dataCapture(name, data),
+      angleField: 'value',
+      colorField: 'type',
+      radius: 0.75,
+      legend: false,
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      label: {
+        type: 'spider',
+        labelHeight: 40,
+        formatter: (data, mappingData) => {
+          const group = new G.Group({})
+          group.addShape({
+            type: 'circle',
+            attrs: {
+              x: 0,
+              y: 0,
+              width: 40,
+              height: 50,
+              r: 5,
+              fill: mappingData.color,
+            },
+          })
+          group.addShape({
+            type: 'text',
+            attrs: {
+              x: 10,
+              y: 8,
+              text: `${data.type}`,
+              fill: mappingData.color,
+            },
+          })
+          group.addShape({
+            type: 'text',
+            attrs: {
+              x: 0,
+              y: 25,
+              text: `${data.value}`,
+              fill: 'rgba(0, 0, 0, 0.65)',
+              fontWeight: 700,
+            },
+          })
+          return group
+        },
+      },
+      interactions: [
+        {
+          type: 'element-selected',
+        },
+        {
+          type: 'element-active',
+        },
+      ],
+    }
+
+    return config
+  }
+  function renderStatistic(containerWidth, text, style) {
+    const { width: textWidth, height: textHeight } = measureTextWidth(text, style)
+    const R = containerWidth / 2 // r^2 = (w / 2)^2 + (h - offsetY)^2
+
+    let scale = 1
+
+    if (containerWidth < textWidth) {
+      scale = Math.min(
+        Math.sqrt(
+          Math.abs(Math.pow(R, 2) / (Math.pow(textWidth / 2, 2) + Math.pow(textHeight, 2))),
+        ),
+        1,
+      )
+    }
+
+    const textStyleStr = `width:${containerWidth}px;`
+    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
+      scale < 1 ? 1 : 'inherit'
+    };">${text}</div>`
+  }
+  const configDougnutChart = (name, data) => {
+    const config = {
+      appendPadding: 10,
+      data: dataCapture(name, data),
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      angleField: 'value',
+      colorField: 'type',
+      radius: 1,
+      innerRadius: 0.64,
+      meta: {
+        value: {
+          formatter: (v) => `${v} ¥`,
+        },
+      },
+      label: {
+        type: 'inner',
+        offset: '-50%',
+        style: {
+          textAlign: 'center',
+        },
+        autoRotate: false,
+        content: '{value}',
+      },
+      statistic: {
+        title: {
+          offsetY: -4,
+
+          customHtml: (container, view, datum) => {
+            const { width, height } = container.getBoundingClientRect()
+            const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2))
+            const text = datum ? datum.type : 'Total'
+            return renderStatistic(d, text, {
+              fontSize: 8,
+            })
+          },
+        },
+        content: {
+          offsetY: 4,
+          style: {
+            fontSize: '32px',
+          },
+          customHtml: (container, view, datum, data) => {
+            const { width } = container.getBoundingClientRect()
+            const text = datum ? `${datum.value}` : `${data.reduce((r, d) => r + d.value, 0)}`
+            return renderStatistic(width, text, {
+              fontSize: 32,
+            })
+          },
+        },
+      },
+      interactions: [
+        {
+          type: 'element-selected',
+        },
+        {
+          type: 'element-active',
+        },
+        {
+          type: 'pie-statistic-active',
+        },
+      ],
+    }
+    return config
+  }
+  const configAreaCharts = (name, data) => {
+    const config = {
+      data: dataCapture(name, data),
+      xField: 'type',
+      yField: 'value',
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      xAxis: {
+        range: [0, 1],
+        tickCount: 5,
+      },
+      areaStyle: () => {
+        return {
+          fill: 'l(270) 0:#ffffff 0.5:#66d9e8 1:#228be6',
+        }
+      },
+    }
+    return config
+  }
+
+  const configDraftvsPotentialCharts = (data) => {
+    const config = {
+      data: [
+        {
+          type: 'Draft',
+          value: data.length === 0 ? 0 : parseInt(data[0].summary.Draft),
+        },
+        {
+          type: 'Potential Proposal',
+          value: data.length === 0 ? 0 : parseInt(data[0].summary.potentialProposal),
+        },
+      ],
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      isStack: true,
+      xField: 'type',
+      yField: 'value',
+      seriesField: 'type',
+      label: {
+        position: 'middle',
+
+        style: {
+          fill: '#FFFFFF',
+          opacity: 0.8,
+          fontSize: 14,
+          fontWeight: 800,
+        },
+      },
+      legend: {
+        position: 'top-right',
+      },
+    }
+
+    return config
+  }
+  const configDraftvsFinalCharts = (data) => {
+    const config = {
+      appendPadding: 10,
+      data: [
+        {
+          type: 'Draft',
+          value: data.length === 0 ? 0 : parseInt(data[0].summary.Draft),
+        },
+        {
+          type: 'Final',
+          value: data.length === 0 ? 0 : parseInt(data[0].summary.Final),
+        },
+      ],
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      angleField: 'value',
+      colorField: 'type',
+      radius: 1,
+      innerRadius: 0.64,
+      meta: {
+        value: {
+          formatter: (v) => `${v} ¥`,
+        },
+      },
+      label: {
+        type: 'inner',
+        offset: '-50%',
+        style: {
+          textAlign: 'center',
+        },
+        autoRotate: false,
+        content: '{value}',
+      },
+      statistic: {
+        title: {
+          offsetY: -4,
+
+          customHtml: (container, view, datum) => {
+            const { width, height } = container.getBoundingClientRect()
+            const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2))
+            const text = datum ? datum.type : 'Total'
+            return renderStatistic(d, text, {
+              fontSize: 8,
+            })
+          },
+        },
+        content: {
+          offsetY: 4,
+          style: {
+            fontSize: '32px',
+          },
+          customHtml: (container, view, datum, data) => {
+            const { width } = container.getBoundingClientRect()
+            const text = datum ? `${datum.value}` : `${data.reduce((r, d) => r + d.value, 0)}`
+            return renderStatistic(width, text, {
+              fontSize: 32,
+            })
+          },
+        },
+      },
+      interactions: [
+        {
+          type: 'element-selected',
+        },
+        {
+          type: 'element-active',
+        },
+        {
+          type: 'pie-statistic-active',
+        },
+      ],
+    }
+    return config
+  }
+  const configgeneralStatsCharts = (data) => {
+    const config = {
+      data: [
+        {
+          type: 'Open PR',
+          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.OpenPR),
+        },
+        {
+          type: 'Merged PR',
+          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.MergedPR),
+        },
+        {
+          type: 'New Issues',
+          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.NewIssues),
+        },
+        {
+          type: 'closed Issues',
+          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.ClosedIssues),
+        },
+      ],
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      isStack: true,
+      xField: 'type',
+      yField: 'value',
+      seriesField: 'type',
+      label: {
+        position: 'middle',
+
+        style: {
+          fill: '#FFFFFF',
+          opacity: 0.8,
+          fontSize: 14,
+          fontWeight: 800,
+        },
+      },
+      legend: {
+        position: 'top-right',
+      },
+    }
+
+    return config
+  }
+
+  const findTotalValueZero = (data, name) => {
+    if (data.length !== 0) {
+      return (
+        parseInt(data === undefined ? 0 : data[0][name].Core) +
+        parseInt(data === undefined ? 0 : data[0][name].ERC) +
+        parseInt(data === undefined ? 0 : data[0][name].Networking) +
+        parseInt(data === undefined ? 0 : data[0][name].Interface)
+      )
+    }
+    return 0
+  }
   useEffect(() => {
     allData(location.state.from, location.state.year)
     // setInfo(localStorage.getItem('count'))
@@ -107,108 +489,146 @@ const autoCharts = (props) => {
           textTransform: 'uppercase',
         }}
       >
-        {data === undefined ? '' : data[0].name + ' ' + data[0].year} Insights
+        <CCard
+          style={{
+            display: 'inline-block',
+            padding: '2rem',
+
+            borderBottom: '4px solid #339af0',
+            borderLeft: '2px solid #339af0',
+            borderRight: '2px solid #339af0',
+            // borderBottomLeftRadius: '2rem',
+            // borderBottomRightRadius: '2rem',
+            fontFamily: 'colombo',
+            borderRadius: '2rem',
+            borderTop: '4px solid #339af0',
+          }}
+        >
+          {data === undefined ? '' : data[0].name + ' ' + data[0].year} Insights
+        </CCard>
       </div>
-      <p className="h3">Summary</p>
-      <hr />
+      <CCol xs={12} className="mb-1">
+        <div
+          style={{
+            fontSize: '30px',
+            fontWeight: '400',
+            marginBottom: '00px',
+            backgroundColor: 'white',
+            border: 'none',
+            width: '17rem',
+            padding: '14px',
+            borderRadius: '5px',
+            borderLeft: '4px solid #339af0',
+            borderBottom: '2px solid #339af0',
+            marginTop: '2rem',
+            marginLeft: '8px',
+          }}
+        >
+          Monthly Insights
+        </div>
+      </CCol>
+
       <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          <CTable align="middle">
-            <CTableHead color="dark">
-              <CTableRow>
-                <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Draft
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Draft)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                width: '100%',
+                fontFamily: 'Roboto',
+                fontSize: '15px',
+                borderRight: '2px solid #74c0fc',
+              }}
+            >
+              <CTable align="middle" responsive>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                      Status
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                      Number
+                    </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Draft</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Draft)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
 
-              {parseInt(data === undefined ? 0 : data[0].summary.Final) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Final
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Final)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
+                  {parseInt(data === undefined ? 0 : data[0].summary.Final) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Final</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Final)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
 
-              {parseInt(data === undefined ? 0 : data[0].summary.Review) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Review
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Review)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
-              {parseInt(data === undefined ? 0 : data[0].summary.LastCall) === 0 ? (
-                ''
-              ) : (
-                <CTableRow style={{ fontSize: '34px' }}>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Last Call
-                  </CTableHeaderCell>
-                  <CTableDataCell>
-                    {parseInt(data === undefined ? 0 : data[0].summary.LastCall)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
-              {parseInt(data === undefined ? 0 : data[0].summary.Stagnant) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Stagnant
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Stagnant)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
-              {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Withdrawn
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
-              {parseInt(data === undefined ? 0 : data[0].summary.Living) === 0 ? (
-                ''
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell scope="row" style={{ fontSize: '34px' }}>
-                    Living
-                  </CTableHeaderCell>
-                  <CTableDataCell style={{ fontSize: '34px' }}>
-                    {parseInt(data === undefined ? 0 : data[0].summary.Living)}
-                  </CTableDataCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
+                  {parseInt(data === undefined ? 0 : data[0].summary.Review) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Review</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Review)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                  {parseInt(data === undefined ? 0 : data[0].summary.LastCall) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Last Call</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.LastCall)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                  {parseInt(data === undefined ? 0 : data[0].summary.Stagnant) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Stagnant</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Stagnant)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                  {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Withdrawn</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                  {parseInt(data === undefined ? 0 : data[0].summary.Living) === 0 ? (
+                    ''
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Living</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0].summary.Living)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
           {data === undefined ? null : data[0].summary.SummaryInfo === '' ? null : (
@@ -242,10 +662,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].Draft.Core) +
-                          parseInt(data[0].Draft.ERC) +
-                          parseInt(data[0].Draft.Networking) +
-                          parseInt(data[0].Draft.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'Draft'),
                   )}
                   {')'}
                 </label>
@@ -261,10 +678,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Draft.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Draft.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Draft.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Draft.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Draft') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -286,80 +700,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Draft.Core),
-                        parseInt(data === undefined ? 0 : data[0].Draft.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Draft.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Draft.Interface),
-                      ],
-                    },
-                  ],
+              <Column
+                style={{
+                  visibility: `${
+                    findTotalValueZero(data === undefined ? [] : data, 'Draft') === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: (context) => {
-                          return ''
-                        },
-                        label: (context) => {
-                          console.log(context)
-                          return `${context.label}: ${context.parsed.y}`
-                        },
-                      },
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
+                {...configColumnCharts('Draft', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -374,10 +723,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].Final.Core) +
-                          parseInt(data[0].Final.ERC) +
-                          parseInt(data[0].Final.Networking) +
-                          parseInt(data[0].Final.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'Final'),
                   )}
                   {')'}
                 </label>
@@ -393,10 +739,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Final.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Final.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Final.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Final.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Final') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -418,51 +761,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartPie
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Final.Core),
-                        parseInt(data === undefined ? 0 : data[0].Final.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Final.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Final.Interface),
-                      ],
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
+              <Pie
+                style={{
+                  visibility: `${
+                    findTotalValueZero(data === undefined ? [] : data, 'Final') === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
+                {...configPieCharts('Final', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -477,10 +784,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].Review.Core) +
-                          parseInt(data[0].Review.ERC) +
-                          parseInt(data[0].Review.Networking) +
-                          parseInt(data[0].Review.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'Review'),
                   )}
                   {')'}
                 </label>
@@ -496,10 +800,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Review.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Review.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Review.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Review.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Review') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -521,63 +822,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartBar
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      pointBorderColor: '#000000',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Review.Core),
-                        parseInt(data === undefined ? 0 : data[0].Review.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Review.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Review.Interface),
-                      ],
-                    },
-                  ],
+              <Pie
+                style={{
+                  visibility: `${
+                    findTotalValueZero(data === undefined ? [] : data, 'Review') === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
+                {...configDougnutChart('Review', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -592,10 +845,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].LastCall.Core) +
-                          parseInt(data[0].LastCall.ERC) +
-                          parseInt(data[0].LastCall.Networking) +
-                          parseInt(data[0].LastCall.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'LastCall'),
                   )}
                   {')'}
                 </label>
@@ -611,10 +861,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].LastCall.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].LastCall.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].LastCall.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].LastCall.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'LastCall') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -636,71 +883,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartPolarArea
+              <Area
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].LastCall.Core) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].LastCall.ERC) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].LastCall.Networking) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].LastCall.Interface) === 0
+                    findTotalValueZero(data === undefined ? [] : data, 'LastCall') === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
                 }}
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].LastCall.Core),
-                        parseInt(data === undefined ? 0 : data[0].LastCall.ERC),
-                        parseInt(data === undefined ? 0 : data[0].LastCall.Networking),
-                        parseInt(data === undefined ? 0 : data[0].LastCall.Interface),
-                      ],
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                      },
-                    },
-                    r: {
-                      ticks: {
-                        display: false,
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
+                {...configAreaCharts('LastCall', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -715,10 +906,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].Stagnant.Core) +
-                          parseInt(data[0].Stagnant.ERC) +
-                          parseInt(data[0].Stagnant.Networking) +
-                          parseInt(data[0].Stagnant.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'Stagnant'),
                   )}
                   {')'}
                 </label>
@@ -734,10 +922,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Stagnant.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Stagnant.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Stagnant.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Stagnant.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Stagnant') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -759,60 +944,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartPie
+              <Pie
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Core) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.ERC) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Networking) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Stagnant.Interface) === 0
+                    findTotalValueZero(data === undefined ? [] : data, 'Stagnant') === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
                 }}
-                // plugins={[ChartDataLabels]}
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Stagnant.Core),
-                        parseInt(data === undefined ? 0 : data[0].Stagnant.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Stagnant.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Stagnant.Interface),
-                      ],
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
+                {...configPieCharts('Stagnant', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -827,10 +967,7 @@ const autoCharts = (props) => {
                   {parseInt(
                     data === undefined
                       ? 0
-                      : parseInt(data[0].Withdrawn.Core) +
-                          parseInt(data[0].Withdrawn.ERC) +
-                          parseInt(data[0].Withdrawn.Networking) +
-                          parseInt(data[0].Withdrawn.Interface),
+                      : findTotalValueZero(data === undefined ? [] : data, 'Withdrawn'),
                   )}
                   {')'}
                 </label>
@@ -846,10 +983,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Withdrawn.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Withdrawn.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Withdrawn.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Withdrawn.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Withdrawn') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -871,74 +1005,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartBar
+              <Column
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].Withdrawn.Core) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Withdrawn.ERC) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Withdrawn.Networking) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Withdrawn.Interface) === 0
+                    findTotalValueZero(data === undefined ? [] : data, 'Withdrawn') === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
                 }}
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      label: 'Withdrawn',
-                      pointBorderColor: '#000000',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Withdrawn.Core),
-                        parseInt(data === undefined ? 0 : data[0].Withdrawn.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Withdrawn.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Withdrawn.Interface),
-                      ],
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
+                {...configColumnCharts('Withdrawn', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -956,62 +1031,39 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                data={{
-                  labels: ['Draft', 'Potential Proposal'],
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [parseInt(data === undefined ? 0 : data[0].summary.Draft), 0],
-                    },
-                  ],
+              {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].summary.potentialProposal) === 0 ? (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    left: '0',
+                    top: '83px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'rgba(220, 52, 85, 0.5)',
+                    zIndex: '1',
+                    fontSize: '26px',
+                  }}
+                >
+                  <b>No data for you today!</b>
+                </div>
+              ) : (
+                ''
+              )}
+              <Column
+                style={{
+                  visibility: `${
+                    parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].summary.potentialProposal) === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  maintainAspectRatio: true,
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
+                {...configDraftvsPotentialCharts(data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -1053,60 +1105,16 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartDoughnut
-                data={{
-                  labels: ['Final', 'Draft'],
-                  datasets: [
-                    {
-                      label: 'Draft EIPs',
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].summary.Draft),
-                        parseInt(data === undefined ? 0 : data[0].summary.Final),
-                      ],
-                    },
-                  ],
+              <Pie
+                style={{
+                  visibility: `${
+                    parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].summary.Final) === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  aspectRatio: 2,
-                  maintainAspectRatio: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          return `${context.label}: ${context.parsed}`
-                        },
-                      },
-                    },
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
+                {...configDraftvsFinalCharts(data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -1120,10 +1128,7 @@ const autoCharts = (props) => {
                 {parseInt(
                   data === undefined
                     ? 0
-                    : parseInt(data[0].Living.Core) +
-                        parseInt(data[0].Living.ERC) +
-                        parseInt(data[0].Living.Networking) +
-                        parseInt(data[0].Living.Interface),
+                    : findTotalValueZero(data === undefined ? [] : data, 'Living'),
                 )}
                 {')'}
               </label>
@@ -1138,10 +1143,7 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].Living.Core) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Living.ERC) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Living.Networking) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].Living.Interface) === 0 ? (
+              {findTotalValueZero(data === undefined ? [] : data, 'Living') === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -1163,60 +1165,15 @@ const autoCharts = (props) => {
               ) : (
                 ''
               )}
-              <CChartPie
-                // plugins={[ChartDataLabels]}
+              <Column
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].Living.Core) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Living.ERC) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Living.Networking) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].Living.Interface) === 0
+                    findTotalValueZero(data === undefined ? [] : data, 'Living') === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
                 }}
-                data={{
-                  labels: ['Core', 'ERC', 'Networking', 'Interface'],
-                  datasets: [
-                    {
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].Living.Core),
-                        parseInt(data === undefined ? 0 : data[0].Living.ERC),
-                        parseInt(data === undefined ? 0 : data[0].Living.Networking),
-                        parseInt(data === undefined ? 0 : data[0].Living.Interface),
-                      ],
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  aspectRatio: 2,
-                  plugins: {
-                    legend: {
-                      position: 'right',
-                      align: 'center',
-                      marginBottom: 50,
-                      labels: {
-                        usePointStyle: true,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
+                {...configColumnCharts('Living', data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
@@ -1236,121 +1193,103 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              <CChartBar
-                // plugins={[ChartDataLabels]}
-                colours="[ { fillColor: '#ffff00' }, { fillColor: '#0066ff' } ]"
-                data={{
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  // backgroundImage: 'url(../../assets/images/github.png)',
-                  labels: ['Open PR', 'Merged PR', 'Closed Issues', 'New Issues'],
-                  datasets: [
-                    {
-                      label: 'Draft',
-                      tension: 0,
-                      backgroundColor: [
-                        'rgba(59, 201, 219, 0.3)',
-                        'rgba(250, 82, 82, 0.3)',
-                        'rgba(252, 196, 25, 0.3)',
-                        'rgba(55, 178, 77, 0.3)',
-                      ],
-                      borderColor: [
-                        'rgba(59, 201, 219, 1)',
-                        'rgba(250, 82, 82, 1)',
-                        'rgba(252, 196, 25, 1)',
-                        'rgba(55, 178, 77, 1)',
-                      ],
-                      borderWidth: 2,
-                      data: [
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.MergedPR),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues),
-                        parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues),
-                      ],
-                    },
-                  ],
+              {parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0 ? (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    left: '0',
+                    top: '83px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'rgba(220, 52, 85, 0.5)',
+                    zIndex: '1',
+                    fontSize: '26px',
+                  }}
+                >
+                  <b>No data for you today!</b>
+                </div>
+              ) : (
+                ''
+              )}
+              <Column
+                style={{
+                  visibility: `${
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
                 }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: (context) => {
-                          return ''
-                        },
-                        label: (context) => {
-                          console.log(context)
-                          return `${context.label}: ${context.parsed.y}`
-                        },
-                      },
-                    },
-                  },
-
-                  scales: {
-                    yAxis: {
-                      ticks: {
-                        stepSize: 1,
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                      grid: {
-                        display: false,
-                      },
-                    },
-
-                    XAxis: {
-                      ticks: {
-                        font: {
-                          family: 'Roboto',
-                        },
-                      },
-                    },
-                  },
-                }}
-                labels="months"
+                {...configgeneralStatsCharts(data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>
         </CCol>
-        <CTable align="middle">
-          <CTableHead color="dark">
-            <CTableRow>
-              <CTableHeaderCell scope="col">Other Stats</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            <CTableRow>
-              <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
-              </CTableDataCell>
-            </CTableRow>
+        <CCol xs={12}>
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                width: '100%',
+                fontFamily: 'Roboto',
+                fontSize: '15px',
+                borderRight: '2px solid #74c0fc',
+              }}
+            >
+              <CTable align="middle" responsive>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                      Other Stats
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                      Number
+                    </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
+                    </CTableDataCell>
+                  </CTableRow>
 
-            <CTableRow>
-              <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
-              </CTableDataCell>
-            </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Users</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
+                    </CTableDataCell>
+                  </CTableRow>
 
-            <CTableRow>
-              <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
-              </CTableDataCell>
-            </CTableRow>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
+                    </CTableDataCell>
+                  </CTableRow>
 
-            <CTableRow>
-              <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-              <CTableDataCell>
-                {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
-              </CTableDataCell>
-            </CTableRow>
-          </CTableBody>
-        </CTable>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Files</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
       </CRow>
     </>
   )

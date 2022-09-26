@@ -25,6 +25,7 @@ import { ReactComponent as left } from 'src/assets/brand/left.svg'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import { ip } from 'src/constants'
+import { ResponsiveStream } from 'nivo/lib/components/charts/stream'
 
 const AppHeader = () => {
   const [changeIcon, setChangeIcon] = useState(0)
@@ -89,6 +90,7 @@ const AppHeader = () => {
   const getMonth = (d) => {
     if (d.length !== 0) {
       d.sort(sorter)
+      d.reverse()
       console.log(d)
       return d[0].name.toLowerCase()
     }
@@ -97,6 +99,7 @@ const AppHeader = () => {
   const getYear = (d) => {
     if (d.length !== 0) {
       d.sort(sorter)
+      d.reverse()
       console.log(d)
       return d[0].year
     }

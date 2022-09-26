@@ -1,5 +1,10 @@
 body,
 html {
   font-family: 'Roboto', sans-serif;
- 
+}
+
+@font-face {
+  font-family: 'colombo';
+  src: local('colombo'), url('./fonts/Colombo\ Sans\ Font.ttf') format('truetype');
+  font-weight: bold;
 }

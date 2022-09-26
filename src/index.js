@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store'
 import './index.css'
+import './fonts/Colombo Sans Font.ttf'
 
 ReactDOM.render(
   <Provider store={store}>
