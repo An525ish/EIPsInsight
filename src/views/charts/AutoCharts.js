@@ -63,25 +63,20 @@ const autoCharts = (props) => {
         // credentials: 'include',
       })
       let datas = await res.json()
-      console.log(datas) // fine
-      console.log(location)
-      console.log(d)
+
       let att = d.substring(1)
-      console.log(att) // this taking the name of the month we are fetching
+
       let filterData = datas.filter((e) => {
         return e.name.toLowerCase() === att.toLowerCase() && e.year === y
       }) // we filter from here
 
-      console.log(filterData)
       setData(filterData)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   const dataCapture = (name, data) => {
@@ -474,8 +469,6 @@ const autoCharts = (props) => {
     // setInfo(localStorage.getItem('count'))
   }, [location.state.from, location.state.year])
 
-  console.log(data)
-
   return (
     <>
       <div
@@ -652,6 +645,118 @@ const autoCharts = (props) => {
 
       <hr />
       <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4 cardBorder">
+            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <CCardHeader className="cardHeader">General Stats </CCardHeader>
+            </Link>
+            <CCardBody
+              className="childChartContainer"
+              style={{
+                // backgroundColor: '#fff9db',
+                backgroundImage: `url(${github})`,
+                backgroundSize: '33% 90%',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right -16px top -32px',
+              }}
+            >
+              {parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
+              parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0 ? (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    left: '0',
+                    top: '83px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'rgba(220, 52, 85, 0.5)',
+                    zIndex: '1',
+                    fontSize: '26px',
+                  }}
+                >
+                  <b>No data for you today!</b>
+                </div>
+              ) : (
+                ''
+              )}
+              <Column
+                style={{
+                  visibility: `${
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
+                }}
+                {...configgeneralStatsCharts(data === undefined ? [] : data)}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={12} className="mb-4">
+          <CCard>
+            <CCardBody
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                width: '100%',
+                fontFamily: 'Roboto',
+                fontSize: '15px',
+                borderRight: '2px solid #74c0fc',
+              }}
+            >
+              <CTable align="middle" responsive>
+                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                      Other Stats
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                      Number
+                    </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
+                    </CTableDataCell>
+                  </CTableRow>
+
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Users</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
+                    </CTableDataCell>
+                  </CTableRow>
+
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
+                    </CTableDataCell>
+                  </CTableRow>
+
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">Files</CTableHeaderCell>
+                    <CTableDataCell>
+                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
+                    </CTableDataCell>
+                  </CTableRow>
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -1175,118 +1280,6 @@ const autoCharts = (props) => {
                 }}
                 {...configColumnCharts('Living', data === undefined ? [] : data)}
               />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">General Stats </CCardHeader>
-            </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configgeneralStatsCharts(data === undefined ? [] : data)}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={12}>
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                width: '100%',
-                fontFamily: 'Roboto',
-                fontSize: '15px',
-                borderRight: '2px solid #74c0fc',
-              }}
-            >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
-                      Other Stats
-                    </CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
-                      Number
-                    </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
             </CCardBody>
           </CCard>
         </CCol>

@@ -22,7 +22,7 @@ function WidgetsDropdown() {
   //     'https://sheet.best/api/sheets/03682d10-57f7-4947-a6c9-32ee1cfc4e11',
   //   )
   //   const responseJson = await fullResponse.json()
-  //   console.log(responseJson)
+  //
   //   setInfo1(responseJson)
   // }
   const [post, getPost] = useState()
@@ -31,7 +31,6 @@ function WidgetsDropdown() {
     fetch(API)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         getPost(res)
       })
   }
@@ -40,8 +39,6 @@ function WidgetsDropdown() {
     fetchPost()
     // fetchData()
   }, [])
-
-  console.log(post)
 
   function percentage(val, original) {
     const increasePercentage = 45

@@ -238,9 +238,6 @@ const routes = [
   { path: '/withdrawnStatusChart', name: 'Withdrawn status', element: withdrawnStatusChart },
   { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
-  { path: '/form', name: 'New Form', element: mForm },
-  { path: '/UpdateForm', name: 'Update Form', element: mForm2 },
-
   { path: '/tempCharts', name: 'Chartsr', element: tempCharts },
 ]
 

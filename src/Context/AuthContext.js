@@ -25,6 +25,27 @@ const userAuthContext = createContext()
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState('')
   const [imageOpen, setImageOpen] = useState('enable')
+  const [adminLogin, setAdminLogin] = useState(false)
+
+  // admin Check
+  // function adminCheck() {
+  //   const set = () => {
+  //     setAdminLogin(true)
+
+  //     setUser({
+  //       displayName: 'Admin',
+  //       email: 'Admin@avarch.com',
+  //     })
+  //   }
+  //   return set()
+  // }
+  // function adminCheckAgain() {
+  //   const set = () => {
+  //     setAdminLogin(!adminLogin)
+  //     setUser('')
+  //   }
+  //   return set()
+  // }
 
   function signUp(email, password) {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -48,7 +69,7 @@ export function UserAuthContextProvider({ children }) {
 
   function setImageFunction() {
     const set = () => {
-      setImageOpen('disable')
+      setImageOpen('enable')
     }
     return set()
   }
@@ -61,7 +82,7 @@ export function UserAuthContextProvider({ children }) {
 
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: 'http://localhost:3000/login',
+      url: 'https://eipsinsight.com/#/login',
     })
   }
 
@@ -91,6 +112,9 @@ export function UserAuthContextProvider({ children }) {
         githubSignIn,
         forgotPassword,
         ResetPassword,
+        adminLogin,
+        // adminCheck,
+        // adminCheckAgain,
       }}
     >
       {children}

@@ -23,8 +23,6 @@ const mayCharts = (props) => {
   }, [])
 
   useEffect(() => {
-    console.log('jkfdlj')
-
     if (props.data !== undefined) {
       setInfo(props.data)
       localStorage.setItem('count', JSON.stringify(props.data))
@@ -32,9 +30,6 @@ const mayCharts = (props) => {
       localStorage.setItem('count', JSON.stringify(info))
     }
   }, [info])
-
-  console.log(info)
-  console.log(info)
 
   return (
     <CRow>
@@ -560,7 +555,6 @@ const mayCharts = (props) => {
                     },
                   },
                   afterDraw: function (chart) {
-                    console.log(chart)
                     if (chart.data.datasets[0].data.length < 1) {
                       let ctx = chart.ctx
                       let width = chart.width

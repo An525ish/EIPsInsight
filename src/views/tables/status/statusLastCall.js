@@ -37,26 +37,49 @@ function statusLastCall(props) {
       setInfo(props.data)
       setLastCallCore(props.data.filter(filterLastCallCore))
       localStorage.setItem('count', JSON.stringify(props.data))
-      localStorage.setItem('statusLastCallCore', JSON.stringify(props.data.filter(filterLastCallCore)))
-      localStorage.setItem('statusLastCallNetworking', JSON.stringify(props.data.filter(filterLastCallNetworking)))
-      localStorage.setItem('statusLastCallERC', JSON.stringify(props.data.filter(filterLastCallERC)))
-      localStorage.setItem('statusLastCallInterface', JSON.stringify(props.data.filter(filterLastCallInterface)))
-      localStorage.setItem('statusLastCallMeta', JSON.stringify(props.data.filter(filterLastCallMeta)))
-      localStorage.setItem('statusLastCallInformational', JSON.stringify(props.data.filter(filterLastCallInformational)))
+      localStorage.setItem(
+        'statusLastCallCore',
+        JSON.stringify(props.data.filter(filterLastCallCore)),
+      )
+      localStorage.setItem(
+        'statusLastCallNetworking',
+        JSON.stringify(props.data.filter(filterLastCallNetworking)),
+      )
+      localStorage.setItem(
+        'statusLastCallERC',
+        JSON.stringify(props.data.filter(filterLastCallERC)),
+      )
+      localStorage.setItem(
+        'statusLastCallInterface',
+        JSON.stringify(props.data.filter(filterLastCallInterface)),
+      )
+      localStorage.setItem(
+        'statusLastCallMeta',
+        JSON.stringify(props.data.filter(filterLastCallMeta)),
+      )
+      localStorage.setItem(
+        'statusLastCallInformational',
+        JSON.stringify(props.data.filter(filterLastCallInformational)),
+      )
     } else {
       localStorage.setItem('count', JSON.stringify(info))
       localStorage.setItem('statusLastCallCore', JSON.stringify(info.filter(filterLastCallCore)))
-      localStorage.setItem('statusLastCallNetworking', JSON.stringify(info.filter(filterLastCallNetworking)))
+      localStorage.setItem(
+        'statusLastCallNetworking',
+        JSON.stringify(info.filter(filterLastCallNetworking)),
+      )
       localStorage.setItem('statusLastCallERC', JSON.stringify(info.filter(filterLastCallERC)))
-      localStorage.setItem('statusLastCallInterface', JSON.stringify(info.filter(filterLastCallInterface)))
+      localStorage.setItem(
+        'statusLastCallInterface',
+        JSON.stringify(info.filter(filterLastCallInterface)),
+      )
       localStorage.setItem('statusLastCallMeta', JSON.stringify(info.filter(filterLastCallMeta)))
-      localStorage.setItem('statusLastCallInformational', JSON.stringify(info.filter(filterLastCallInformational)))
+      localStorage.setItem(
+        'statusLastCallInformational',
+        JSON.stringify(info.filter(filterLastCallInformational)),
+      )
     }
   }, [info])
-
-  console.log(info)
-  console.log(lastCallCore)
-  console.log(lastCallInformational)
 
   function filterLastCallCore(item, index) {
     if (index >= 246 && item[1] === 'Last Call' && item[5] === 'Core') {
@@ -103,41 +126,44 @@ function statusLastCall(props) {
 
   return (
     <>
-    {lastCallCore.length === 0 ? null : <><div
-              style={{
-                  fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+      {lastCallCore.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Core
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallCore !== undefined ? (
-                          lastCallCore.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Core
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallCore !== undefined ? (
+                lastCallCore.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -151,44 +177,49 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {lastCallNetworking.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {lastCallNetworking.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Networking
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallNetworking !== undefined ? (
-                          lastCallNetworking.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Networking
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallNetworking !== undefined ? (
+                lastCallNetworking.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -202,44 +233,49 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-    {lastCallERC.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {lastCallERC.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              ERC
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallERC !== undefined ? (
-                          lastCallERC.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            ERC
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallERC !== undefined ? (
+                lastCallERC.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -253,44 +289,49 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {lastCallInterface.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {lastCallInterface.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Interface
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallInterface !== undefined ? (
-                          lastCallInterface.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Interface
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallInterface !== undefined ? (
+                lastCallInterface.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -304,44 +345,49 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {lastCallMeta.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {lastCallMeta.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Meta
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallMeta !== undefined ? (
-                          lastCallMeta.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Meta
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallMeta !== undefined ? (
+                lastCallMeta.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -355,44 +401,49 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {lastCallInformational.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {lastCallInformational.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Informational
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {lastCallInformational !== undefined ? (
-                          lastCallInformational.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Informational
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {lastCallInformational !== undefined ? (
+                lastCallInformational.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -406,9 +457,10 @@ function statusLastCall(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
+            </CTableBody>
+          </CTable>
+        </>
+      )}
     </>
   )
 }

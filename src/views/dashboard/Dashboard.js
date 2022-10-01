@@ -80,24 +80,32 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import '../charts/mayCharts.styles.css'
+import './Dashboard.css'
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
   const [date, setDate] = useState()
-
+  const [eips, setEips] = useState()
   const [post, getPost] = useState()
 
   const [years, setYears] = useState()
 
-  const matches = useMediaQuery("(max-width: 600px)")
+  const matches = useMediaQuery('(max-width: 600px)')
 
   const API = 'https://eipsinsight.com/api/overallData'
+  const API2 = 'https://eipsinsight.com/api/allinfo'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         getPost(res)
+      })
+  }
+  const fetchAllEIPs = () => {
+    fetch(API2)
+      .then((res) => res.json())
+      .then((res) => {
+        setEips(res)
       })
   }
 
@@ -138,20 +146,17 @@ const Dashboard = () => {
       })
       let datas = []
       datas = await res.json()
-      console.log(datas)
+
       setData(datas)
 
       const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
       setYears(yearArr)
-      console.log(yearArr)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
   const fetchArrayYearWise = (yearList, name) => {
     let arr = []
@@ -162,8 +167,6 @@ const Dashboard = () => {
       let sumInterface = 0
       for (let j = 0; j < data.length; j++) {
         if (yearList[i] === data[j].year) {
-          console.log(data[j].summary)
-
           sumCore += parseInt(data[j][name]['Core'])
           sumERC += parseInt(data[j][name]['ERC'])
           sumNetworking += parseInt(data[j][name]['Networking'])
@@ -193,7 +196,7 @@ const Dashboard = () => {
         },
       )
     }
-    console.log(arr)
+
     return arr
   }
 
@@ -217,7 +220,7 @@ const Dashboard = () => {
   }
   const sortData = (data, name, section) => {
     data.sort(sorter)
-    console.log(data)
+
     const arr = []
     for (let i = 0; i < data.length; i++) {
       arr.push(data[i][name][section])
@@ -227,7 +230,7 @@ const Dashboard = () => {
   }
   const sortRem = (data, name) => {
     data.sort(sorter)
-    console.log(data)
+
     const arr = []
     for (let i = 0; i < data.length; i++) {
       arr.push(data[i]['summary'][name])
@@ -271,7 +274,7 @@ const Dashboard = () => {
   ]
   each(groupBy(d1, 'year'), (values, k) => {
     const value = values.reduce((a, b) => a + b.value, 0)
-    console.log(value)
+
     annotations.push({
       type: 'text',
       position: [k, value],
@@ -288,7 +291,7 @@ const Dashboard = () => {
     const annotations = []
     each(groupBy(d, 'year'), (values, k) => {
       const value = values.reduce((a, b) => a + b.value, 0)
-      console.log(value)
+
       annotations.push({
         type: 'text',
         position: [k, value],
@@ -366,7 +369,7 @@ const Dashboard = () => {
         },
       )
     }
-    // console.log(arr)
+    //
     return arr
   }
 
@@ -488,7 +491,7 @@ const Dashboard = () => {
         type: 'Draft',
       })
     }
-    console.log(arr)
+
     return arr
   }
 
@@ -609,23 +612,146 @@ const Dashboard = () => {
     annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Living')),
   }
 
+  // smart chart
+  const [details, setDetails] = useState([])
+  const columns = [
+    {
+      key: 'Number',
+      _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+      _props: { className: 'fw-semibold' },
+      sorter: true,
+    },
+    {
+      key: 'Title',
+      _style: {
+        width: '60%',
+        color: '#1c7ed6',
+      },
+    },
+    { key: 'Type', _style: { width: '20%', color: '#1c7ed6' } },
+    { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+  ]
+  const getBadge = (status) => {
+    switch (status) {
+      case 'Final':
+        return 'success'
+      case 'Inactive':
+        return 'secondary'
+      case 'Pending':
+        return 'warning'
+      case 'Banned':
+        return 'danger'
+      default:
+        return 'primary'
+    }
+  }
+  const toggleDetails = (index) => {
+    const position = details.indexOf(index)
+    let newDetails = details.slice()
+    if (position !== -1) {
+      newDetails.splice(position, 1)
+    } else {
+      newDetails = [...details, index]
+    }
+    setDetails(newDetails)
+  }
+
+  const eipData = (eips) => {
+    let arr = []
+    if (eips[0] !== undefined) {
+      let inc = 0
+      for (let i = 0; i < eips[0]['Final'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[0]['Final'][i].eip,
+          Title: eips[0]['Final'][i].title,
+          Type: eips[0]['Final'][i].type,
+          status: eips[0]['Final'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[1]['Draft'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[1]['Draft'][i].eip,
+          Title: eips[1]['Draft'][i].title,
+          Type: eips[1]['Draft'][i].type,
+          status: eips[1]['Draft'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[2]['Review'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[2]['Review'][i].eip,
+          Title: eips[2]['Review'][i].title,
+          Type: eips[2]['Review'][i].type,
+          status: eips[2]['Review'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[3]['Last Call'][i].eip,
+          Title: eips[3]['Last Call'][i].title,
+          Type: eips[3]['Last Call'][i].type,
+          status: eips[3]['Last Call'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[3]['Last Call'][i].eip,
+          Title: eips[3]['Last Call'][i].title,
+          Type: eips[3]['Last Call'][i].type,
+          status: eips[3]['Last Call'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[4]['Stagnant'][i].eip,
+          Title: eips[4]['Stagnant'][i].title,
+          Type: eips[4]['Stagnant'][i].type,
+          status: eips[4]['Stagnant'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[5]['Withdrawn'][i].eip,
+          Title: eips[5]['Withdrawn'][i].title,
+          Type: eips[5]['Withdrawn'][i].type,
+          status: eips[5]['Withdrawn'][i].status,
+        })
+      }
+      for (let i = 0; i < eips[6]['Living'].length; i++) {
+        arr.push({
+          id: inc++,
+          Number: eips[6]['Living'][i].eip,
+          Title: eips[6]['Living'][i].title,
+          Type: eips[6]['Living'][i].type,
+          status: eips[6]['Living'][i].status,
+        })
+      }
+      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
+    }
+    return arr
+  }
   useEffect(() => {
     // fetchData()
 
     allData()
     fetchPost()
     fetchDate()
+    fetchAllEIPs()
   }, [])
 
-  console.log(info)
-  console.log(post)
-
+  console.log(eips)
   // temparary
 
   return (
     <>
       <CRow>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -669,73 +795,28 @@ const Dashboard = () => {
                 fontFamily: 'Roboto',
                 fontSize: '12px',
               }}
+              className="scrollbarDesign"
             >
               <CSmartTable
-                cleaner
+                items={eipData(eips === undefined ? [] : eips)}
+                activePage={3}
                 clickableRows
-                columns={[
-                  {
-                    key: 'name',
-                    _style: { width: '70%' },
-                  },
-                  {
-                    key: 'EIPs',
-                    _style: { width: '30%' },
-                    filter: (values, onChange) => {
-                      const unique = [...new Set(values)].sort()
-                      return (
-                        <CMultiSelect
-                          size="sm"
-                          onChange={(selected) => {
-                            const _selected = selected.map((element) => {
-                              return element.value
-                            })
-                            onChange((item) => {
-                              return Array.isArray(_selected) && _selected.length
-                                ? _selected.includes(item.toLowerCase())
-                                : true
-                            })
-                          }}
-                          options={unique.map((element) => {
-                            return {
-                              value: element.toLowerCase(),
-                              text: element,
-                            }
-                          })}
-                        />
-                      )
-                    },
-                    sorter: false,
-                  },
-                ]}
+                columns={columns}
                 columnFilter
                 columnSorter
-                footer
-                items={[
-                  { id: 0, name: 'Core', EIPs: `${post === undefined ? '' : post['Core']}` },
-                  { id: 1, name: 'ERC', EIPs: `${post === undefined ? '' : post['ERC']}` },
-                  {
-                    id: 2,
-                    name: 'Networking',
-                    EIPs: `${post === undefined ? '' : post['Networking']}`,
-                  },
-                  {
-                    id: 3,
-                    name: 'Interface',
-                    EIPs: `${post === undefined ? '' : post['Interface']}`,
-                  },
-                  { id: 4, name: 'Meta', EIPs: `${post === undefined ? '' : post['Meta']}` },
-                  {
-                    id: 5,
-                    name: 'Informational',
-                    EIPs: `${post === undefined ? '' : post['Informational']}`,
-                  },
-                ]}
-                itemsPerPageSelect
-                itemsPerPage={10}
+                itemsPerPage={50}
                 pagination
-                tableFilter
+                scopedColumns={{
+                  status: (item) => (
+                    <td>
+                      <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+                    </td>
+                  ),
+                }}
+                sorterValue={{ column: 'name', state: 'asc' }}
+                tableHeadProps={{}}
                 tableProps={{
+                  striped: true,
                   hover: true,
                   responsive: true,
                 }}
@@ -830,7 +911,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
 
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -858,7 +939,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -907,7 +988,7 @@ const Dashboard = () => {
             Yearly Insights
           </div>
         </CCol>
-        <CCol xs={matches ? 12: 4}>
+        <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -935,7 +1016,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 4}>
+        <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -963,7 +1044,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 4}>
+        <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -991,7 +1072,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1019,7 +1100,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1047,7 +1128,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"
@@ -1075,7 +1156,7 @@ const Dashboard = () => {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12: 6}>
+        <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
             <CCardHeader
               className="cardHeader"

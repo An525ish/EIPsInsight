@@ -29,17 +29,17 @@ import { useUserAuth } from 'src/Context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 const AppHeaderDropdown = () => {
-  const { user, logOut, setImageFunction1 } = useUserAuth()
+  const { user, logOut, setImageFunction1, adminCheckAgain, adminLogin } = useUserAuth()
   const navigate = useNavigate()
-  console.log(user)
+
   const handleLogOut = async () => {
     try {
       await logOut()
       await setImageFunction1()
+      // await adminCheckAgain()
+
       await navigate('/login')
-    } catch (err) {
-      console.log(err.message)
-    }
+    } catch (err) {}
   }
   return (
     <CDropdown variant="nav-item">
@@ -82,7 +82,7 @@ const AppHeaderDropdown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader> */}
         <CDropdownItem style={{ cursor: 'pointer' }}>
           <CIcon icon={cilUser} className="me-2" />
-          {user === null ? 'Robot' : user.displayName === null ? user.email : user.displayName}
+          {user === null ? 'Guest User' : user.displayName === null ? user.email : user.displayName}
         </CDropdownItem>
         {/* <CDropdownItem href="#">
           <CIcon icon={cilSettings} className="me-2" />
@@ -105,7 +105,7 @@ const AppHeaderDropdown = () => {
         <CDropdownDivider />
         <CDropdownItem href="#" onClick={handleLogOut}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Log Out
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

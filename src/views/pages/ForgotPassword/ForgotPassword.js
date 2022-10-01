@@ -60,7 +60,6 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      console.log(email)
       addToast(
         exampleToast(`An email is sent to ${email} for password reset instructions.`, '#12b886'),
       )
@@ -68,7 +67,6 @@ const ForgotPassword = () => {
       navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err)
     }
   }
 

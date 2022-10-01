@@ -42,9 +42,7 @@ const navi = () => {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
   useEffect(() => {
     allData()

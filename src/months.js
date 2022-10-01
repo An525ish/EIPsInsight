@@ -16,7 +16,7 @@ const monthData = () => {
         credentials: 'include',
       })
       const datas = await res.json()
-      console.log(datas)
+
       const arr = []
       for (let i = 0; i < datas.length; i++) {
         arr.push({
@@ -25,22 +25,18 @@ const monthData = () => {
           to: '/juneCharts',
         })
       }
-      console.log(arr)
+
       setData(arr)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
   useEffect(() => {
     allData()
   }, [])
-
-  console.log(data)
 
   return [data]
 }

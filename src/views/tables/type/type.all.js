@@ -29,7 +29,6 @@ function typeAll() {
     fetch(API)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         getPost(res)
       })
   }
@@ -37,7 +36,7 @@ function typeAll() {
     const annotations = []
     each(groupBy(d, 'type'), (values, k) => {
       const value = values.reduce((a, b) => a + b.value, 0)
-      console.log(value)
+
       annotations.push({
         type: 'text',
         position: [k, value],
@@ -162,7 +161,7 @@ function typeAll() {
             : fetchTableDataExtra(post, name, 'Living'),
       },
     )
-    console.log(arr)
+
     return arr
   }
   const getChartInfo = (post, name) => {
@@ -229,8 +228,6 @@ function typeAll() {
     }
     return config
   }
-
-  console.log(post)
 
   return (
     <>

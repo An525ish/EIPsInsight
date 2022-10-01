@@ -31,7 +31,6 @@ function statusAll(props) {
     fetch(API)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         getPost(res)
       })
   }
@@ -39,7 +38,7 @@ function statusAll(props) {
     const annotations = []
     each(groupBy(d, 'type'), (values, k) => {
       const value = values.reduce((a, b) => a + b.value, 0)
-      console.log(value)
+
       annotations.push({
         type: 'text',
         position: [k, value],
@@ -94,7 +93,7 @@ function statusAll(props) {
         type: 'Informational',
       },
     )
-    console.log(arr)
+
     return arr
   }
   const fetchChartData = (name) => {
@@ -290,8 +289,6 @@ function statusAll(props) {
     fetchPost()
     fetchDate()
   }, [])
-
-  console.log(post)
 
   return (
     <>

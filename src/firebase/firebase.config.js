@@ -28,9 +28,9 @@ export default app
 // export const signInWithGoogle = () => {
 //   signInWithPopup(auth, provider)
 //     .then((result) => {
-//       console.log(result)
+//
 //     })
 //     .catch((err) => {
-//       console.log(err)
+//
 //     })
 // }

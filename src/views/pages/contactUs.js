@@ -30,13 +30,8 @@ const Contact = () => {
     e.preventDefault()
 
     emailjs.sendForm('service_kqi3ebj', 'template_1hpufpx', form.current, 'Nj6W0EIDlUtD8ip0-').then(
-      (result) => {
-        console.log(result.text)
-        console.log('message sent')
-      },
-      (error) => {
-        console.log(error.text)
-      },
+      (result) => {},
+      (error) => {},
     )
     e.target.reset()
   }

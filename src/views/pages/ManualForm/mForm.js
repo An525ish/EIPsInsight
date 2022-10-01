@@ -95,11 +95,10 @@ const mForm = () => {
   })
   let name, value, id
   const handleInputs = (e) => {
-    console.log(e)
     name = e.target.name
     value = e.target.value
     id = e.target.id
-    console.log(e.target.id)
+
     if (name === 'name') {
       setUser({ ...user, name: value })
     } else if (name === 'year') {
@@ -227,7 +226,6 @@ const mForm = () => {
     }
   }
   const PostData = async () => {
-    console.log(user)
     const {
       name,
       year,
@@ -350,15 +348,12 @@ const mForm = () => {
         // credentials: 'include',
       })
       const data = await res.json()
-      console.log(data)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
   useEffect(() => {
     allData()

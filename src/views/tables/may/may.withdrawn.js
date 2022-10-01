@@ -34,9 +34,6 @@ function mayWithdrawn(props) {
     }
   }, [info])
 
-  console.log(info)
-  console.log(Withdrawn)
-
   function filterDraft(item, index) {
     if (index >= 130 && item[1] === 'mayWithdrawn') {
       return true

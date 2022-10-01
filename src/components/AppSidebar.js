@@ -69,9 +69,8 @@ const AppSidebar = () => {
       })
       const datas = await res.json()
 
-      console.log(datas)
       const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
-      console.log(yearArr)
+
       let list = []
       const completeList = []
       completeList.push({
@@ -113,20 +112,16 @@ const AppSidebar = () => {
       const _nav = completeList
       setData(_nav)
 
-      console.log(completeList)
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   useEffect(() => {
     allData()
   }, [])
-  console.log(data)
 
   return (
     <CSidebar

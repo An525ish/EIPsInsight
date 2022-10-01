@@ -41,6 +41,8 @@ const Login = () => {
     setImageFunction1,
     githubSignIn,
     forgotPassword,
+    adminCheck,
+    adminLogin,
   } = useUserAuth()
 
   const [toast, addToast] = useState(0)
@@ -61,6 +63,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     setError('')
     try {
       await logIn(email, password)
@@ -69,7 +72,6 @@ const Login = () => {
     } catch (err) {
       setError(err.message)
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err.message)
     }
   }
 
@@ -78,7 +80,6 @@ const Login = () => {
       await setImageFunction()
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err.message)
     }
   }
 
@@ -90,7 +91,6 @@ const Login = () => {
       navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err.message)
     }
   }
   const handleSignInWithGithub = async (e) => {
@@ -101,7 +101,6 @@ const Login = () => {
       navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err.message)
     }
   }
 

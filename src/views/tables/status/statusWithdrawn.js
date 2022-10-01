@@ -37,26 +37,49 @@ function statusWithdrawn(props) {
       setInfo(props.data)
       setWithdrawnCore(props.data.filter(filterWithdrawnCore))
       localStorage.setItem('count', JSON.stringify(props.data))
-      localStorage.setItem('statusWithdrawnCore', JSON.stringify(props.data.filter(filterWithdrawnCore)))
-      localStorage.setItem('statusWithdrawnNetworking', JSON.stringify(props.data.filter(filterWithdrawnNetworking)))
-      localStorage.setItem('statusWithdrawnERC', JSON.stringify(props.data.filter(filterWithdrawnERC)))
-      localStorage.setItem('statusWithdrawnInterface', JSON.stringify(props.data.filter(filterWithdrawnInterface)))
-      localStorage.setItem('statusWithdrawnMeta', JSON.stringify(props.data.filter(filterWithdrawnMeta)))
-      localStorage.setItem('statusWithdrawnInformational', JSON.stringify(props.data.filter(filterWithdrawnInformational)))
+      localStorage.setItem(
+        'statusWithdrawnCore',
+        JSON.stringify(props.data.filter(filterWithdrawnCore)),
+      )
+      localStorage.setItem(
+        'statusWithdrawnNetworking',
+        JSON.stringify(props.data.filter(filterWithdrawnNetworking)),
+      )
+      localStorage.setItem(
+        'statusWithdrawnERC',
+        JSON.stringify(props.data.filter(filterWithdrawnERC)),
+      )
+      localStorage.setItem(
+        'statusWithdrawnInterface',
+        JSON.stringify(props.data.filter(filterWithdrawnInterface)),
+      )
+      localStorage.setItem(
+        'statusWithdrawnMeta',
+        JSON.stringify(props.data.filter(filterWithdrawnMeta)),
+      )
+      localStorage.setItem(
+        'statusWithdrawnInformational',
+        JSON.stringify(props.data.filter(filterWithdrawnInformational)),
+      )
     } else {
       localStorage.setItem('count', JSON.stringify(info))
       localStorage.setItem('statusWithdrawnCore', JSON.stringify(info.filter(filterWithdrawnCore)))
-      localStorage.setItem('statusWithdrawnNetworking', JSON.stringify(info.filter(filterWithdrawnNetworking)))
+      localStorage.setItem(
+        'statusWithdrawnNetworking',
+        JSON.stringify(info.filter(filterWithdrawnNetworking)),
+      )
       localStorage.setItem('statusWithdrawnERC', JSON.stringify(info.filter(filterWithdrawnERC)))
-      localStorage.setItem('statusWithdrawnInterface', JSON.stringify(info.filter(filterWithdrawnInterface)))
+      localStorage.setItem(
+        'statusWithdrawnInterface',
+        JSON.stringify(info.filter(filterWithdrawnInterface)),
+      )
       localStorage.setItem('statusWithdrawnMeta', JSON.stringify(info.filter(filterWithdrawnMeta)))
-      localStorage.setItem('statusWithdrawnInformational', JSON.stringify(info.filter(filterWithdrawnInformational)))
+      localStorage.setItem(
+        'statusWithdrawnInformational',
+        JSON.stringify(info.filter(filterWithdrawnInformational)),
+      )
     }
   }, [info])
-
-  console.log(info)
-  console.log(withdrawnCore)
-  console.log(withdrawnInformational)
 
   function filterWithdrawnCore(item, index) {
     if (index >= 246 && item[1] === 'Withdrawn' && item[5] === 'Core') {
@@ -103,41 +126,44 @@ function statusWithdrawn(props) {
 
   return (
     <>
-    {withdrawnCore.length === 0 ? null : <><div
-              style={{
-                  fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+      {withdrawnCore.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Core
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnCore !== undefined ? (
-                          withdrawnCore.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Core
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnCore !== undefined ? (
+                withdrawnCore.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -151,44 +177,49 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {withdrawnNetworking.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {withdrawnNetworking.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Networking
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnNetworking !== undefined ? (
-                          withdrawnNetworking.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Networking
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnNetworking !== undefined ? (
+                withdrawnNetworking.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -202,44 +233,49 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-    {withdrawnERC.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {withdrawnERC.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              ERC
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnERC !== undefined ? (
-                          withdrawnERC.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            ERC
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnERC !== undefined ? (
+                withdrawnERC.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -253,44 +289,49 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {withdrawnInterface.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {withdrawnInterface.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Interface
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnInterface !== undefined ? (
-                          withdrawnInterface.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Interface
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnInterface !== undefined ? (
+                withdrawnInterface.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -304,44 +345,49 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {withdrawnMeta.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {withdrawnMeta.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Meta
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnMeta !== undefined ? (
-                          withdrawnMeta.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Meta
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnMeta !== undefined ? (
+                withdrawnMeta.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -355,44 +401,49 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
-      {withdrawnInformational.length === 0 ? null : <><div
-              style={{
-                fontSize: '40px',
-                  fontWeight: '800',
-                  marginBottom: '10px'
-              }}
+            </CTableBody>
+          </CTable>
+        </>
+      )}
+
+      {withdrawnInformational.length === 0 ? null : (
+        <>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '10px',
+            }}
           >
-              Informational
-          </div><CTable>
-                  <CTableHead color="dark">
-                      <CTableRow>
-                          <CTableHeaderCell scope="col">Number</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">Author</CTableHeaderCell>
-                      </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                      {withdrawnInformational !== undefined ? (
-                          withdrawnInformational.map((item) => (
-                              <CTableRow>
-                                  <CTableHeaderCell scope="row">
-                                      {item[2] !== null ? parseInt(item[2]) : 1}
-                                  </CTableHeaderCell>
-                                  <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
-                                  <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
-                              </CTableRow>
-                          ))
-                      ) : (
-                          <CTableRow>
-                              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                              <CTableDataCell>Mark</CTableDataCell>
-                              <CTableDataCell>Otto</CTableDataCell>
-                          </CTableRow>
-                      )}
-                      {/* <CTableRow>
+            Informational
+          </div>
+          <CTable>
+            <CTableHead color="dark">
+              <CTableRow>
+                <CTableHeaderCell scope="col">Number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Author</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {withdrawnInformational !== undefined ? (
+                withdrawnInformational.map((item) => (
+                  <CTableRow>
+                    <CTableHeaderCell scope="row">
+                      {item[2] !== null ? parseInt(item[2]) : 1}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{item[3] != null ? item[3] : 1}</CTableDataCell>
+                    <CTableDataCell>{item[4] !== null ? item[4] : 1}</CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Mark</CTableDataCell>
+                  <CTableDataCell>Otto</CTableDataCell>
+                </CTableRow>
+              )}
+              {/* <CTableRow>
       <CTableHeaderCell scope="row">1</CTableHeaderCell>
       <CTableDataCell>Mark</CTableDataCell>
       <CTableDataCell>Otto</CTableDataCell>
@@ -406,9 +457,10 @@ function statusWithdrawn(props) {
       <CTableHeaderCell scope="row">3</CTableHeaderCell>
       <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
     </CTableRow> */}
-                  </CTableBody>
-              </CTable></>}
-      
+            </CTableBody>
+          </CTable>
+        </>
+      )}
     </>
   )
 }

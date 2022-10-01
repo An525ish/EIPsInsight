@@ -32,8 +32,6 @@ const mayCharts = (props) => {
     }
   }, [info])
 
-  console.log(info)
-
   return (
     <>
       <div
@@ -152,7 +150,6 @@ const mayCharts = (props) => {
                           return ''
                         },
                         label: (context) => {
-                          console.log(context)
                           return `${context.label}: ${context.parsed.y}`
                         },
                       },

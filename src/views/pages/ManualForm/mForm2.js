@@ -103,11 +103,10 @@ const mForm2 = () => {
   })
   let name, value, id
   const handleInputs = (e) => {
-    console.log(e)
     name = e.target.name
     value = e.target.value
     id = e.target.id
-    console.log(e.target.id)
+
     if (name === 'name') {
       setUser({ ...user, name: value })
     } else if (name === 'year') {
@@ -237,7 +236,7 @@ const mForm2 = () => {
 
   const updateData = async (id) => {
     // e.preventDefault()
-    // console.log(id)
+    //
 
     const res = await fetch(`${ip}/register`, {
       method: 'PATCH',
@@ -331,11 +330,11 @@ const mForm2 = () => {
   const [fd, setFD] = useState()
   const fetchData = (e) => {
     const val = e.target.value
-    console.log(val)
+
     const fData = data.filter((item, ind) => {
       return data[ind].name.toLowerCase() === val.toLowerCase()
     })
-    console.log(fData)
+
     setFD(fData)
     setUser({
       name: fData[0].name,
@@ -364,15 +363,12 @@ const mForm2 = () => {
       })
       const datas = await res.json()
       setData(datas)
-      console.log(data)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
   useEffect(() => {
     allData()

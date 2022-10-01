@@ -193,9 +193,6 @@ function livingStatusChart(props) {
     }
   }, [info])
 
-  console.log(info)
-  console.log(draftCore)
-
   function filterDraft(item, index) {
     if (index >= 130 && item[1] === 'mayDraft') {
       return true
@@ -211,7 +208,7 @@ function livingStatusChart(props) {
         ans += parseInt(data[i][3 + ind])
       }
     }
-    console.log(ans)
+
     return ans
   }
 
@@ -222,7 +219,7 @@ function livingStatusChart(props) {
         ans += parseInt(data[i][8 + ind])
       }
     }
-    console.log(ans)
+
     return ans
   }
 

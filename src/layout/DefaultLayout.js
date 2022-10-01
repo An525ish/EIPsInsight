@@ -8,10 +8,8 @@ import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/inde
 
 const DefaultLayout = () => {
   const { user } = useUserAuth()
-  console.log(user)
-  const [data, setInfo] = useState()
 
-  console.log(data)
+  const [data, setInfo] = useState()
 
   return (
     <div>

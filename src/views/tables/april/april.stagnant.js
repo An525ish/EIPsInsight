@@ -34,9 +34,6 @@ function aprilStagnant(props) {
     }
   }, [info])
 
-  console.log(info)
-  console.log(Stagnant)
-
   function filterDraft(item, index) {
     if (index >= 130 && item[1] === 'aprilStagnant') {
       return true

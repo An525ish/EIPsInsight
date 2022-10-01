@@ -71,7 +71,6 @@ const ResetPassword = () => {
       navigate('/')
     } catch (err) {
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err)
     }
   }
   return (

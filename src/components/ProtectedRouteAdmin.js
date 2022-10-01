@@ -1,16 +1,14 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
-
 import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { Route, Redirect, Navigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
-
 const ProtectedRoute = ({ children }) => {
-  const { user } = useUserAuth()
+  const { adminLogin, user } = useUserAuth()
 
-  if (user === null) {
-    return <Navigate to="/login" />
+  if (user.email !== 'contact@etherworld.co') {
+    return <Navigate to="/" />
   }
+
   return children
 }
 

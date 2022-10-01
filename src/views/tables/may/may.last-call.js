@@ -34,9 +34,6 @@ function mayLastCall(props) {
     }
   }, [info])
 
-  console.log(info)
-  console.log(lastCall)
-
   function filterDraft(item, index) {
     if (index >= 130 && item[1] === 'mayLastCall') {
       return true

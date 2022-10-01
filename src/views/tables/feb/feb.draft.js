@@ -34,9 +34,6 @@ function febDraft(props) {
     }
   }, [info])
 
-  console.log(info)
-  console.log(draft)
-
   function filterDraft(item, index) {
     if (index >= 130 && item[1] === 'febDraft') {
       return true

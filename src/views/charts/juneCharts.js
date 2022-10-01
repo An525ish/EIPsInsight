@@ -61,31 +61,26 @@ const juneCharts = (props) => {
         credentials: 'include',
       })
       const datas = await res.json()
-      console.log(datas)
 
       const att = location.state.from.substring(1)
-      console.log(att)
+
       const filterData = datas.filter((e) => {
         return e.name.toLowerCase() === att.toLowerCase()
       })
-      console.log(filterData)
+
       setData(filterData)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
         throw error
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   useEffect(() => {
     allData()
     // setInfo(localStorage.getItem('count'))
   }, [])
-
-  console.log(data)
 
   return (
     <>
@@ -392,7 +387,6 @@ const juneCharts = (props) => {
                           return ''
                         },
                         label: (context) => {
-                          console.log(context)
                           return `${context.label}: ${context.parsed.y}`
                         },
                       },
@@ -1342,7 +1336,6 @@ const juneCharts = (props) => {
                           return ''
                         },
                         label: (context) => {
-                          console.log(context)
                           return `${context.label}: ${context.parsed.y}`
                         },
                       },

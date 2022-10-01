@@ -56,7 +56,6 @@ const Register = () => {
     } catch (err) {
       setError(err.message)
       addToast(exampleToast(err.message, '#fa5252'))
-      console.log(err.message)
     }
   }
 
