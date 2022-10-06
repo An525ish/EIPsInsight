@@ -137,21 +137,25 @@ const AppHeader = () => {
           <img src={logo} height={48} alt="Logo" style={{ width: '87px', height: '100%' }} />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem className="border-b-[4px]  border-b-[black]">
+          <CNavItem className="headerSection">
             <CNavLink to="#" component={NavLink}>
-              <Link to="/typeAll" style={{ textDecoration: 'none', color: 'inherit' }} className="">
+              <Link
+                to="/typeAll"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                className="hover:text-black"
+              >
                 Type
               </Link>
             </CNavLink>
           </CNavItem>
-          <CNavItem>
+          <CNavItem className="headerSection">
             <CNavLink href="#">
               <Link to="/statusAll" style={{ textDecoration: 'none', color: 'inherit' }}>
                 Status
               </Link>
             </CNavLink>
           </CNavItem>
-          <CNavItem>
+          <CNavItem className="headerSection">
             <CNavLink href="#">
               <Link
                 to="/autoCharts"
@@ -186,7 +190,7 @@ const AppHeader = () => {
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
-          {user.email === 'contact@etherworld.co' ? (
+          {user === null ? null : user.email === 'contact@etherworld.co' ? (
             <CNavItem>
               <CNavLink href="/#/form">
                 <label className="relative cursor-pointer">

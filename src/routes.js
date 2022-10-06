@@ -105,6 +105,7 @@ const statusWithdrawn = React.lazy(() => import('./views/tables/status/statusWit
 const statusLiving = React.lazy(() => import('./views/tables/status/statusLiving'))
 
 const typeAll = React.lazy(() => import('./views/tables/type/type.all'))
+const table = React.lazy(() => import('./views/tables/ExplicitTable/table'))
 
 // Icons
 const CoreUIIcons = React.lazy(() => import('./views/icons/coreui-icons/CoreUIIcons'))
@@ -239,6 +240,7 @@ const routes = [
   { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
   { path: '/tempCharts', name: 'Chartsr', element: tempCharts },
+  { path: '/ChartTable', name: 'Chart Table', element: table },
 ]
 
 export default routes

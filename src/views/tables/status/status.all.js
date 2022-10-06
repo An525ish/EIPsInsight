@@ -12,7 +12,7 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
@@ -130,16 +130,22 @@ function statusAll(props) {
             display: 'inline-block',
           }}
         >
-          <Link to="/livingStatusChart" style={{ textDecoration: 'none', color: 'inherit' }}>
-            {title}{' '}
-            <label
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: '800',
-              }}
+          {title}{' '}
+          <label
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: '800',
+            }}
+          >
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{ type: '', status: name, category: '' }}
             >
-              <Link to="/statusLiving" style={{ textDecoration: 'underline', color: 'inherit' }}>
-                (
+              <div
+                className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+              >
                 {post === undefined
                   ? 0
                   : post[name]['Standards Track']['Core'] +
@@ -148,10 +154,9 @@ function statusAll(props) {
                     post[name]['Standards Track']['Interface'] +
                     post[name]['Meta'] +
                     post[name]['Informational']}
-                )
-              </Link>
-            </label>
-          </Link>
+              </div>
+            </Link>
+          </label>
         </div>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
@@ -200,40 +205,124 @@ function statusAll(props) {
                   </CTableHead>
                   <CTableBody>
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Standard Track</CTableHeaderCell>
-                      <CTableDataCell>Core</CTableDataCell>
+                      <CTableHeaderCell scope="row">
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Standards Track', status: name, category: '' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Standard Track{' '}
+                          </label>
+                        </NavLink>
+                      </CTableHeaderCell>{' '}
+                      <CTableDataCell>
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Standards Track', status: name, category: 'Core' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Core
+                          </label>
+                        </NavLink>
+                      </CTableDataCell>
                       <CTableDataCell>
                         {post === undefined ? 0 : post[name]['Standards Track']['Core']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
-                      <CTableDataCell>ERC</CTableDataCell>
+                      <CTableDataCell>
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Standards Track', status: name, category: 'ERC' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            ERC
+                          </label>
+                        </NavLink>
+                      </CTableDataCell>
                       <CTableDataCell>
                         {post === undefined ? 0 : post[name]['Standards Track']['ERC']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
-                      <CTableDataCell>Networking</CTableDataCell>
+                      <CTableDataCell>
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Standards Track', status: name, category: 'Networking' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Networking
+                          </label>
+                        </NavLink>
+                      </CTableDataCell>
                       <CTableDataCell>
                         {post === undefined ? 0 : post[name]['Standards Track']['Networking']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
-                      <CTableDataCell>Interface</CTableDataCell>
+                      <CTableDataCell>
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Standards Track', status: name, category: 'Interface' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Interface
+                          </label>
+                        </NavLink>
+                      </CTableDataCell>
                       <CTableDataCell>
                         {post === undefined ? 0 : post[name]['Standards Track']['Interface']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Meta</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Meta', status: name, category: '' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Meta
+                          </label>
+                        </NavLink>
+                      </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>{post === undefined ? 0 : post[name]['Meta']}</CTableDataCell>
                     </CTableRow>
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Informational</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <NavLink
+                          to="/chartTable"
+                          state={{ type: 'Informational', status: name, category: '' }}
+                        >
+                          <label
+                            className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out"
+                          >
+                            Informational
+                          </label>
+                        </NavLink>
+                      </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>
                         {post === undefined ? 0 : post[name]['Informational']}

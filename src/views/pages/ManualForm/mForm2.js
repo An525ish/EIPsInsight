@@ -27,6 +27,7 @@ import { async } from '@firebase/util'
 import { Axios } from 'axios'
 import { React, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { CCard } from '@coreui/react-pro'
 
 const mForm2 = () => {
   const [data, setData] = useState()
@@ -374,7 +375,7 @@ const mForm2 = () => {
     allData()
   }, [])
   return (
-    <>
+    <div className="m-9">
       <div
         style={{
           fontSize: '40px',
@@ -386,7 +387,23 @@ const mForm2 = () => {
           textTransform: 'uppercase',
         }}
       >
-        Months Form
+        <CCard
+          style={{
+            display: 'inline-block',
+            padding: '2rem',
+
+            borderBottom: '4px solid #339af0',
+            borderLeft: '2px solid #339af0',
+            borderRight: '2px solid #339af0',
+            // borderBottomLeftRadius: '2rem',
+            // borderBottomRightRadius: '2rem',
+            fontFamily: 'colombo',
+            borderRadius: '2rem',
+            borderTop: '4px solid #339af0',
+          }}
+        >
+          Months Form
+        </CCard>
       </div>
       <div
         style={{
@@ -422,10 +439,24 @@ const mForm2 = () => {
               })}
         </CFormSelect>
       </div>
-      <p className="h3" style={{ fontWeight: '700', fontFamily: 'Roboto' }}>
+      <p
+        className="h3 drop-shadow-md mt-10"
+        style={{
+          fontSize: '30px',
+          fontWeight: '400',
+          marginBottom: '20px',
+          backgroundColor: 'white',
+          border: 'none',
+          width: '18rem',
+          padding: '10px',
+          borderRadius: '5px',
+          borderLeft: '4px solid #339af0',
+          borderBottom: '2px solid #339af0',
+        }}
+      >
         Summary
       </p>
-      <hr />
+
       <CForm method="POST" className="row g-3 align-items-center">
         <CCol md={6}>
           <CFormInput
@@ -538,10 +569,23 @@ const mForm2 = () => {
           onChange={handleInputs}
         ></CFormTextarea>
 
-        <p className="h3" style={{ fontWeight: '700', fontFamily: 'Roboto' }}>
+        <p
+          className="h3 drop-shadow-md mt-5"
+          style={{
+            fontSize: '30px',
+            fontWeight: '400',
+            marginBottom: '20px',
+            backgroundColor: 'white',
+            border: 'none',
+            width: '18rem',
+            padding: '10px',
+            borderRadius: '5px',
+            borderLeft: '4px solid #339af0',
+            borderBottom: '2px solid #339af0',
+          }}
+        >
           Charts Data
         </p>
-        <hr />
 
         <p className="h5" style={{ fontWeight: '600', fontFamily: 'Roboto' }}>
           Draft
@@ -939,6 +983,7 @@ const mForm2 = () => {
               e.preventDefault()
               setVisible(!visible)
             }}
+            className="text-[#1c7ed6] bg-[#e7f5ff] hover:bg-[#1c7ed6] hover:text-[#e7f5ff]"
           >
             Submit
           </CButton>
@@ -953,6 +998,7 @@ const mForm2 = () => {
                 onClick={() => {
                   setVisible(false)
                 }}
+                className="text-[#fa5252] bg-[#ffe3e3] hover:bg-[#fa5252] hover:text-[#ffe3e3] border-[#fa5252]"
               >
                 No
               </CButton>
@@ -962,6 +1008,7 @@ const mForm2 = () => {
                   setVisible(false)
                   updateData(fd[0]._id)
                 }}
+                className="text-[#1c7ed6] bg-[#e7f5ff] hover:bg-[#1c7ed6] hover:text-[#e7f5ff]"
               >
                 Yes
               </CButton>
@@ -969,7 +1016,7 @@ const mForm2 = () => {
           </CModal>
         </CCol>
       </CForm>
-    </>
+    </div>
   )
 }
 

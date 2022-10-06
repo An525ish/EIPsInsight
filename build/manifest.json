@@ -6,6 +6,11 @@
       "src": "./assets/img/favicon.png",
       "sizes": "100x100",
       "type": "image/png"
+    },
+    {
+      "src": "t_logo.gif",
+      "type": "image/gif",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

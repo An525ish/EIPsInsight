@@ -624,25 +624,55 @@ const Dashboard = () => {
     {
       key: 'Title',
       _style: {
-        width: '60%',
+        width: '50%',
         color: '#1c7ed6',
       },
     },
-    { key: 'Type', _style: { width: '20%', color: '#1c7ed6' } },
+    {
+      key: 'Author',
+      _style: {
+        width: '20%',
+        color: '#1c7ed6',
+        backgroundColor: '#e7f5ff',
+      },
+    },
+    { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
-        return 'success'
-      case 'Inactive':
-        return 'secondary'
-      case 'Pending':
-        return 'warning'
-      case 'Banned':
-        return 'danger'
+        return '#c3fae8'
+      case 'Last Call':
+        return '#d3f9d8'
+      case 'Draft':
+        return '#fff3bf'
+      case 'Stagnant':
+        return '#ffe8cc'
+      case 'Withdrawn':
+        return '#ffe3e3'
+      case 'Review':
+        return '#d0ebff'
       default:
-        return 'primary'
+        return '#c5f6fa'
+    }
+  }
+  const getBadgeColor = (status) => {
+    switch (status) {
+      case 'Final':
+        return '#0ca678'
+      case 'Last Call':
+        return '#37b24d'
+      case 'Draft':
+        return '#f08c00'
+      case 'Stagnant':
+        return '#e8590c'
+      case 'Withdrawn':
+        return '#e03131'
+      case 'Review':
+        return '#1971c2'
+      default:
+        return '#0c8599'
     }
   }
   const toggleDetails = (index) => {
@@ -667,6 +697,7 @@ const Dashboard = () => {
           Title: eips[0]['Final'][i].title,
           Type: eips[0]['Final'][i].type,
           status: eips[0]['Final'][i].status,
+          Author: eips[0]['Final'][i].author,
         })
       }
       for (let i = 0; i < eips[1]['Draft'].length; i++) {
@@ -676,6 +707,7 @@ const Dashboard = () => {
           Title: eips[1]['Draft'][i].title,
           Type: eips[1]['Draft'][i].type,
           status: eips[1]['Draft'][i].status,
+          Author: eips[1]['Draft'][i].author,
         })
       }
       for (let i = 0; i < eips[2]['Review'].length; i++) {
@@ -685,6 +717,7 @@ const Dashboard = () => {
           Title: eips[2]['Review'][i].title,
           Type: eips[2]['Review'][i].type,
           status: eips[2]['Review'][i].status,
+          Author: eips[2]['Review'][i].author,
         })
       }
       for (let i = 0; i < eips[3]['Last Call'].length; i++) {
@@ -694,6 +727,7 @@ const Dashboard = () => {
           Title: eips[3]['Last Call'][i].title,
           Type: eips[3]['Last Call'][i].type,
           status: eips[3]['Last Call'][i].status,
+          Author: eips[3]['Last Call'][i].author,
         })
       }
       for (let i = 0; i < eips[3]['Last Call'].length; i++) {
@@ -703,6 +737,7 @@ const Dashboard = () => {
           Title: eips[3]['Last Call'][i].title,
           Type: eips[3]['Last Call'][i].type,
           status: eips[3]['Last Call'][i].status,
+          Author: eips[3]['Last Call'][i].author,
         })
       }
       for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
@@ -712,6 +747,7 @@ const Dashboard = () => {
           Title: eips[4]['Stagnant'][i].title,
           Type: eips[4]['Stagnant'][i].type,
           status: eips[4]['Stagnant'][i].status,
+          Author: eips[4]['Stagnant'][i].author,
         })
       }
       for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
@@ -721,6 +757,7 @@ const Dashboard = () => {
           Title: eips[5]['Withdrawn'][i].title,
           Type: eips[5]['Withdrawn'][i].type,
           status: eips[5]['Withdrawn'][i].status,
+          Author: eips[5]['Withdrawn'][i].author,
         })
       }
       for (let i = 0; i < eips[6]['Living'].length; i++) {
@@ -730,6 +767,7 @@ const Dashboard = () => {
           Title: eips[6]['Living'][i].title,
           Type: eips[6]['Living'][i].type,
           status: eips[6]['Living'][i].status,
+          Author: eips[6]['Living'][i].author,
         })
       }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
@@ -799,7 +837,7 @@ const Dashboard = () => {
             >
               <CSmartTable
                 items={eipData(eips === undefined ? [] : eips)}
-                activePage={3}
+                activePage={1}
                 clickableRows
                 columns={columns}
                 columnFilter
@@ -809,7 +847,14 @@ const Dashboard = () => {
                 scopedColumns={{
                   status: (item) => (
                     <td>
-                      <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+                      <CBadge
+                        style={{
+                          color: `${getBadgeColor(item.status)}`,
+                          backgroundColor: `${getBadge(item.status)}`,
+                        }}
+                      >
+                        {item.status}
+                      </CBadge>
                     </td>
                   ),
                 }}

@@ -35,3 +35,12 @@
   background-color: black;
   translate: all 0.2s;
 }
+
+.headerSection:active,
+.headerSection:hover,
+.headerSection:focus {
+  border-top-color: #1c7ed6 !important;
+  border-top-width: 4px !important;
+  border-top-left-radius: -6px;
+  border-top-right-radius: -8px;
+}
