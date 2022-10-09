@@ -131,6 +131,7 @@ const AppHeader = () => {
             src={changeIcon ? (matches ? midIcon : rightIcon) : matches ? midIcon : leftIcon}
             alt=""
             onClick={() => changeIconSet()}
+            className={`${changeIcon && 'rotate-[360deg]'}`}
           />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none">

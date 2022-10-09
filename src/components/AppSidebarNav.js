@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable react/prop-types */
 import React from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
@@ -44,7 +45,8 @@ export const AppSidebarNav = ({ items, d }) => {
     const Component = component
     return (
       <Component
-        className={rest.to === '/dashboard' ? 'clicked1' : 'clicked'}
+        className="hover:border-[white]  hover:rounded-[2rem]  hover:text-[white] hover:transition-all hover:duration-100 hover:ease-in-out focus:border-[white] focus:border-l-[2rem] focus:text-[white]  focus:font-black transition-transform duration-500 transform
+        hover:opacity-90 hover:shadow-md hover:scale-110"
         {...(rest.to &&
           !rest.items && {
             component: Link,

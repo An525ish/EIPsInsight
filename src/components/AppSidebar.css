@@ -7,7 +7,7 @@
   margin-top: 1rem;
 }
 
-.clicked:focus{
+.clicked:focus {
   color: black;
   background-color: #e9ecef;
 }
@@ -17,8 +17,6 @@
   
 } */
 
-.clicked1:focus{
+.clicked1:focus {
   color: white;
-  
 }
-

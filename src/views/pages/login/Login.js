@@ -27,8 +27,10 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import './login.styles.css'
 import { GoogleButton } from 'react-google-button'
 import { useUserAuth } from 'src/Context/AuthContext'
-
+import useMediaQuery from 'src/scss/useMediaQuery'
 const Login = () => {
+  const matches = useMediaQuery('(max-width: 600px)')
+
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [password, setPassword] = useState('')
@@ -114,7 +116,9 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={handleSubmit}>
-                    <h1 style={{ color: '#0c2461' }}>Sign in</h1>
+                    <h1 style={{ color: '#0c2461' }} className="text-[30px] font-black mb-4">
+                      Sign in
+                    </h1>
                     <p className="text-medium">Email</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -166,7 +170,7 @@ const Login = () => {
                             color="primary"
                             className="mt-0"
                             style={{
-                              width: '254px',
+                              width: `${matches ? '100%' : 'auto'}`,
                               marginLeft: '-3rem',
                               backgroundColor: '#e5dbff',
                               borderColor: '#e5dbff',
@@ -179,9 +183,8 @@ const Login = () => {
                         </Link>
                       </CCol>
                     </CRow>
-                    <hr />
 
-                    <div className="extraButton">
+                    <div className="extraButton flex">
                       <div className="loginButton google" onClick={handleSignInWithGoogle}>
                         <img src={Google} alt="" className="icon1" />
                         Google

@@ -29,7 +29,6 @@ import {
   cisSpeedometer,
   cidSpeedometer,
   cilStar,
-  cilChart,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 // sidebar nav config
@@ -110,7 +109,7 @@ const AppSidebar = () => {
           component: CNavGroup,
           name: `${yearArr[j]}`,
           to: '/base',
-          icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+          icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
           items: list,
         })
       }

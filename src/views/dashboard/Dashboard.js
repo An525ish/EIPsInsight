@@ -720,7 +720,7 @@ const Dashboard = () => {
           Author: eips[2]['Review'][i].author,
         })
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
         arr.push({
           id: inc++,
           Number: eips[3]['Last Call'][i].eip,
@@ -730,16 +730,7 @@ const Dashboard = () => {
           Author: eips[3]['Last Call'][i].author,
         })
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[3]['Last Call'][i].eip,
-          Title: eips[3]['Last Call'][i].title,
-          Type: eips[3]['Last Call'][i].type,
-          status: eips[3]['Last Call'][i].status,
-          Author: eips[3]['Last Call'][i].author,
-        })
-      }
+
       for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
         arr.push({
           id: inc++,
