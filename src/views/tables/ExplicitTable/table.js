@@ -47,7 +47,7 @@ function table() {
     switch (status) {
       case 'Final':
         return '#c3fae8'
-      case 'Last Call':
+      case 'Last_Call':
         return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
@@ -65,7 +65,7 @@ function table() {
     switch (status) {
       case 'Final':
         return '#0ca678'
-      case 'Last Call':
+      case 'Last_Call':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -119,15 +119,15 @@ function table() {
           })
         }
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
-        if (eips[3]['Last Call'][i].status === status && eips[3]['Last Call'][i].type === type) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
+        if (eips[3]['Last_Call'][i].status === status && eips[3]['Last_Call'][i].type === type) {
           arr.push({
             id: inc++,
-            Number: eips[3]['Last Call'][i].eip,
-            Title: eips[3]['Last Call'][i].title,
-            Type: eips[3]['Last Call'][i].type,
-            status: eips[3]['Last Call'][i].status,
-            Author: eips[3]['Last Call'][i].author,
+            Number: eips[3]['Last_Call'][i].eip,
+            Title: eips[3]['Last_Call'][i].title,
+            Type: eips[3]['Last_Call'][i].type,
+            status: eips[3]['Last_Call'][i].status,
+            Author: eips[3]['Last_Call'][i].author,
           })
         }
       }
@@ -224,19 +224,19 @@ function table() {
           })
         }
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
         if (
-          eips[3]['Last Call'][i].status === status &&
-          eips[3]['Last Call'][i].type === type &&
-          eips[3]['Last Call'][i].category === category
+          eips[3]['Last_Call'][i].status === status &&
+          eips[3]['Last_Call'][i].type === type &&
+          eips[3]['Last_Call'][i].category === category
         ) {
           arr.push({
             id: inc++,
-            Number: eips[3]['Last Call'][i].eip,
-            Title: eips[3]['Last Call'][i].title,
-            Type: eips[3]['Last Call'][i].type,
-            status: eips[3]['Last Call'][i].status,
-            Author: eips[3]['Last Call'][i].author,
+            Number: eips[3]['Last_Call'][i].eip,
+            Title: eips[3]['Last_Call'][i].title,
+            Type: eips[3]['Last_Call'][i].type,
+            status: eips[3]['Last_Call'][i].status,
+            Author: eips[3]['Last_Call'][i].author,
           })
         }
       }
@@ -333,15 +333,15 @@ function table() {
           })
         }
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
-        if (eips[3]['Last Call'][i].status === status) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
+        if (eips[3]['Last_Call'][i].status === status) {
           arr.push({
             id: inc++,
-            Number: eips[3]['Last Call'][i].eip,
-            Title: eips[3]['Last Call'][i].title,
-            Type: eips[3]['Last Call'][i].type,
-            status: eips[3]['Last Call'][i].status,
-            Author: eips[3]['Last Call'][i].author,
+            Number: eips[3]['Last_Call'][i].eip,
+            Title: eips[3]['Last_Call'][i].title,
+            Type: eips[3]['Last_Call'][i].type,
+            status: eips[3]['Last_Call'][i].status,
+            Author: eips[3]['Last_Call'][i].author,
           })
         }
       }
@@ -426,18 +426,18 @@ function table() {
           })
         }
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
         if (
-          eips[3]['Last Call'][i].type === type &&
-          eips[3]['Last Call'][i].category === category
+          eips[3]['Last_Call'][i].type === type &&
+          eips[3]['Last_Call'][i].category === category
         ) {
           arr.push({
             id: inc++,
-            Number: eips[3]['Last Call'][i].eip,
-            Title: eips[3]['Last Call'][i].title,
-            Type: eips[3]['Last Call'][i].type,
-            status: eips[3]['Last Call'][i].status,
-            Author: eips[3]['Last Call'][i].author,
+            Number: eips[3]['Last_Call'][i].eip,
+            Title: eips[3]['Last_Call'][i].title,
+            Type: eips[3]['Last_Call'][i].type,
+            status: eips[3]['Last_Call'][i].status,
+            Author: eips[3]['Last_Call'][i].author,
           })
         }
       }
@@ -525,15 +525,15 @@ function table() {
           })
         }
       }
-      for (let i = 0; i < eips[3]['Last Call'].length; i++) {
-        if (eips[3]['Last Call'][i].type === type) {
+      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
+        if (eips[3]['Last_Call'][i].type === type) {
           arr.push({
             id: inc++,
-            Number: eips[3]['Last Call'][i].eip,
-            Title: eips[3]['Last Call'][i].title,
-            Type: eips[3]['Last Call'][i].type,
-            status: eips[3]['Last Call'][i].status,
-            Author: eips[3]['Last Call'][i].author,
+            Number: eips[3]['Last_Call'][i].eip,
+            Title: eips[3]['Last_Call'][i].title,
+            Type: eips[3]['Last_Call'][i].type,
+            status: eips[3]['Last_Call'][i].status,
+            Author: eips[3]['Last_Call'][i].author,
           })
         }
       }

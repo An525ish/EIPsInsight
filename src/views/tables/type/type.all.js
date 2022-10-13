@@ -115,49 +115,49 @@ function typeAll() {
       {
         type: 'Draft',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Draft')
             : fetchTableDataExtra(post, name, 'Draft'),
       },
       {
         type: 'Final',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Final')
             : fetchTableDataExtra(post, name, 'Final'),
       },
       {
         type: 'Review',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Review')
             : fetchTableDataExtra(post, name, 'Review'),
       },
       {
-        type: 'Last Call',
+        type: 'Last_Call',
         value:
-          name === 'Standards Track'
-            ? fetchTableData(post, name, 'Last Call')
-            : fetchTableDataExtra(post, name, 'Last Call'),
+          name === 'Standard_Track'
+            ? fetchTableData(post, name, 'Last_Call')
+            : fetchTableDataExtra(post, name, 'Last_Call'),
       },
       {
         type: 'Stagnant',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Stagnant')
             : fetchTableDataExtra(post, name, 'Stagnant'),
       },
       {
         type: 'Withdrawn',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Withdrawn')
             : fetchTableDataExtra(post, name, 'Withdrawn'),
       },
       {
         type: 'Living',
         value:
-          name === 'Standards Track'
+          name === 'Standard_Track'
             ? fetchTableData(post, name, 'Living')
             : fetchTableDataExtra(post, name, 'Living'),
       },
@@ -166,15 +166,18 @@ function typeAll() {
     return arr
   }
   const getStandardAttribute = (post, name) => {
+    console.log(post)
     return post.length === 0
       ? 0
-      : post['Final']['Standards Track'][name] +
-          post['Draft']['Standards Track'][name] +
-          post['Review']['Standards Track'][name] +
-          post['Last Call']['Standards Track'][name] +
-          post['Stagnant']['Standards Track'][name] +
-          post['Withdrawn']['Standards Track'][name] +
-          post['Living']['Standards Track'][name]
+      : post['Final']['Standard_Track'] === undefined
+      ? 0
+      : post['Final']['Standard_Track'][name] +
+        post['Draft']['Standard_Track'][name] +
+        post['Review']['Standard_Track'][name] +
+        post['Last_Call']['Standard_Track'][name] +
+        post['Stagnant']['Standard_Track'][name] +
+        post['Withdrawn']['Standard_Track'][name] +
+        post['Living']['Standard_Track'][name]
   }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
@@ -202,7 +205,7 @@ function typeAll() {
     const config = {
       appendPadding: 10,
       data:
-        name === 'Standards Track'
+        name === 'Standard_Track'
           ? fetchChartDataStandardTrack(post.length === 0 ? [] : post)
           : fetchChartData(post === undefined ? [] : post, name),
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
@@ -300,13 +303,13 @@ function typeAll() {
             >
               {post === undefined
                 ? 0
-                : fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Living') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Final') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Withdrawn') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Draft') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Review') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Last Call') +
-                  fetchTableData(post === undefined ? [] : post, 'Standards Track', 'Stagnant')}
+                : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Withdrawn') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Last_Call') +
+                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
             </div>
           </Link>
         </label>
@@ -322,7 +325,7 @@ function typeAll() {
               }}
             >
               <Pie
-                {...getChartInfo(post === undefined ? [] : post, 'Standards Track')}
+                {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
                 style={{ height: '280px' }}
               />
             </CCardBody>
@@ -492,7 +495,7 @@ function typeAll() {
                   fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
                   fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
                   fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last Call') +
+                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
                   fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
             </div>
           </Link>
@@ -590,7 +593,7 @@ function typeAll() {
                       <Link
                         to="/chartTable"
                         style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Last Call', category: '' }}
+                        state={{ type: 'Meta', status: 'Last_Call', category: '' }}
                       >
                         <div
                           className='className="h-7
@@ -601,7 +604,7 @@ function typeAll() {
                       </Link>
                     </CTableDataCell>
                     <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last Call')}
+                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call')}
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
@@ -743,7 +746,7 @@ function typeAll() {
                   fetchTableDataExtra(
                     post === undefined ? [] : post,
                     'Informational',
-                    'Last Call',
+                    'Last_Call',
                   ) +
                   fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')}
             </div>
@@ -850,7 +853,7 @@ function typeAll() {
                       <Link
                         to="/chartTable"
                         style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Last Call', category: '' }}
+                        state={{ type: 'Informational', status: 'Last_Call', category: '' }}
                       >
                         <div
                           className='className="h-7
@@ -864,7 +867,7 @@ function typeAll() {
                       {fetchTableDataExtra(
                         post === undefined ? [] : post,
                         'Informational',
-                        'Last Call',
+                        'Last_Call',
                       )}
                     </CTableDataCell>
                   </CTableRow>

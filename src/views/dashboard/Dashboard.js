@@ -87,13 +87,14 @@ const Dashboard = () => {
   const [date, setDate] = useState()
   const [eips, setEips] = useState()
   const [post, getPost] = useState()
-
+  const [pieChartData, setPieChartData] = useState()
   const [years, setYears] = useState()
 
   const matches = useMediaQuery('(max-width: 600px)')
 
   const API = 'https://eipsinsight.com/api/overallData'
   const API2 = 'https://eipsinsight.com/api/allinfo'
+  const API3 = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
     fetch(API)
       .then((res) => res.json())
@@ -106,6 +107,13 @@ const Dashboard = () => {
       .then((res) => res.json())
       .then((res) => {
         setEips(res)
+      })
+  }
+  const fetchAllStatus = () => {
+    fetch(API3)
+      .then((res) => res.json())
+      .then((res) => {
+        setPieChartData(res)
       })
   }
 
@@ -765,6 +773,162 @@ const Dashboard = () => {
     }
     return arr
   }
+  // pie config
+  const G = G2.getEngine('canvas')
+  const pieData = [
+    {
+      type: 'Living',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Living'] === undefined
+          ? 0
+          : pieChartData['Living']['Standard_Track']['Core'] +
+            pieChartData['Living']['Standard_Track']['ERC'] +
+            pieChartData['Living']['Standard_Track']['Networking'] +
+            pieChartData['Living']['Standard_Track']['Interface'] +
+            pieChartData['Living']['Meta'] +
+            pieChartData['Living']['Informational'],
+    },
+    {
+      type: 'Final',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Final'] === undefined
+          ? 0
+          : pieChartData['Final']['Standard_Track']['Core'] +
+            pieChartData['Final']['Standard_Track']['ERC'] +
+            pieChartData['Final']['Standard_Track']['Networking'] +
+            pieChartData['Final']['Standard_Track']['Interface'] +
+            pieChartData['Final']['Meta'] +
+            pieChartData['Final']['Informational'],
+    },
+    {
+      type: 'Last Call',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Last_Call'] === undefined
+          ? 0
+          : pieChartData['Last_Call']['Standard_Track']['Core'] +
+            pieChartData['Last_Call']['Standard_Track']['ERC'] +
+            pieChartData['Last_Call']['Standard_Track']['Networking'] +
+            pieChartData['Last_Call']['Standard_Track']['Interface'] +
+            pieChartData['Last_Call']['Meta'] +
+            pieChartData['Last_Call']['Informational'],
+    },
+    {
+      type: 'Review',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Review'] === undefined
+          ? 0
+          : pieChartData['Review']['Standard_Track']['Core'] +
+            pieChartData['Review']['Standard_Track']['ERC'] +
+            pieChartData['Review']['Standard_Track']['Networking'] +
+            pieChartData['Review']['Standard_Track']['Interface'] +
+            pieChartData['Review']['Meta'] +
+            pieChartData['Review']['Informational'],
+    },
+    {
+      type: 'Draft',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Draft'] === undefined
+          ? 0
+          : pieChartData['Draft']['Standard_Track']['Core'] +
+            pieChartData['Draft']['Standard_Track']['ERC'] +
+            pieChartData['Draft']['Standard_Track']['Networking'] +
+            pieChartData['Draft']['Standard_Track']['Interface'] +
+            pieChartData['Draft']['Meta'] +
+            pieChartData['Draft']['Informational'],
+    },
+    {
+      type: 'Stagnant',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Stagnant'] === undefined
+          ? 0
+          : pieChartData['Stagnant']['Standard_Track']['Core'] +
+            pieChartData['Stagnant']['Standard_Track']['ERC'] +
+            pieChartData['Stagnant']['Standard_Track']['Networking'] +
+            pieChartData['Stagnant']['Standard_Track']['Interface'] +
+            pieChartData['Stagnant']['Meta'] +
+            pieChartData['Stagnant']['Informational'],
+    },
+    {
+      type: 'Withdrawn',
+      value:
+        pieChartData === undefined
+          ? 0
+          : pieChartData['Withdrawn'] === undefined
+          ? 0
+          : pieChartData['Withdrawn']['Standard_Track']['Core'] +
+            pieChartData['Withdrawn']['Standard_Track']['ERC'] +
+            pieChartData['Withdrawn']['Standard_Track']['Networking'] +
+            pieChartData['Withdrawn']['Standard_Track']['Interface'] +
+            pieChartData['Withdrawn']['Meta'] +
+            pieChartData['Withdrawn']['Informational'],
+    },
+  ]
+  const pieConfig = {
+    appendPadding: 10,
+    data: pieData,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.75,
+    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+    label: {
+      type: 'spider',
+      labelHeight: 40,
+      formatter: (data, mappingData) => {
+        const group = new G.Group({})
+        group.addShape({
+          type: 'circle',
+          attrs: {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 50,
+            r: 5,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 10,
+            y: 8,
+            text: `${data.type}`,
+            fill: mappingData.color,
+          },
+        })
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 0,
+            y: 25,
+            text: `${data.value}`,
+            fill: 'rgba(0, 0, 0, 0.65)',
+            fontWeight: 700,
+          },
+        })
+        return group
+      },
+    },
+    interactions: [
+      {
+        type: 'element-selected',
+      },
+      {
+        type: 'element-active',
+      },
+    ],
+  }
   useEffect(() => {
     // fetchData()
 
@@ -772,6 +936,7 @@ const Dashboard = () => {
     fetchPost()
     fetchDate()
     fetchAllEIPs()
+    fetchAllStatus()
   }, [])
 
   console.log(eips)
@@ -786,7 +951,7 @@ const Dashboard = () => {
               className="cardHeader"
               style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
             >
-              EIPs{' '}
+              EIPs Type & Categories{' '}
             </CCardHeader>
             <CCardBody
               style={{
@@ -809,12 +974,41 @@ const Dashboard = () => {
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
+          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
+            >
+              EIPs Type & Categories{' '}
+            </CCardHeader>
+            <CCardBody
+              style={{
+                // backgroundColor: '#fff9db',
+                height: '300px',
+                // backgroundImage: `url(${github})`,
+                // backgroundSize: '33% 30%',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: 'right -12px bottom -40px',
+              }}
+            >
+              <Pie {...pieConfig} />
+            </CCardBody>
+            <CCardFooter
+              className="cardFooter"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+
+        <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }}>
             <CCardHeader
               className="cardHeader"
               style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
             >
-              EIPs Types
+              Search an EIP
             </CCardHeader>
             <CCardBody
               style={{
@@ -835,6 +1029,9 @@ const Dashboard = () => {
                 columnSorter
                 itemsPerPage={50}
                 pagination
+                onRowClick={(t) => {
+                  console.log(t)
+                }}
                 scopedColumns={{
                   status: (item) => (
                     <td>

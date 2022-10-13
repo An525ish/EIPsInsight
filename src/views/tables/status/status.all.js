@@ -64,22 +64,22 @@ function statusAll(props) {
     arr.push(
       {
         name: 'Core',
-        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Core'],
+        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Core'],
         type: 'Standard Track',
       },
       {
         name: 'ERC',
-        value: data[name] === undefined ? 0 : data[name]['Standards Track']['ERC'],
+        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['ERC'],
         type: 'Standard Track',
       },
       {
         name: 'Networking',
-        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Networking'],
+        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Networking'],
         type: 'Standard Track',
       },
       {
         name: 'Interface',
-        value: data[name] === undefined ? 0 : data[name]['Standards Track']['Interface'],
+        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Interface'],
         type: 'Standard Track',
       },
       {
@@ -148,10 +148,12 @@ function statusAll(props) {
               >
                 {post === undefined
                   ? 0
-                  : post[name]['Standards Track']['Core'] +
-                    post[name]['Standards Track']['ERC'] +
-                    post[name]['Standards Track']['Networking'] +
-                    post[name]['Standards Track']['Interface'] +
+                  : post[name] === undefined
+                  ? 0
+                  : post[name]['Standard_Track']['Core'] +
+                    post[name]['Standard_Track']['ERC'] +
+                    post[name]['Standard_Track']['Networking'] +
+                    post[name]['Standard_Track']['Interface'] +
                     post[name]['Meta'] +
                     post[name]['Informational']}
               </div>
@@ -232,7 +234,11 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name]['Standards Track']['Core']}
+                        {post === undefined
+                          ? 0
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Standard_Track']['Core']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -251,7 +257,11 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name]['Standards Track']['ERC']}
+                        {post === undefined
+                          ? 0
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Standard_Track']['ERC']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -270,7 +280,11 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name]['Standards Track']['Networking']}
+                        {post === undefined
+                          ? 0
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Standard_Track']['Networking']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -278,7 +292,7 @@ function statusAll(props) {
                       <CTableDataCell>
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standards Track', status: name, category: 'Interface' }}
+                          state={{ type: 'Standard_Track', status: name, category: 'Interface' }}
                         >
                           <label
                             className="h-7
@@ -289,7 +303,11 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name]['Standards Track']['Interface']}
+                        {post === undefined
+                          ? 0
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Standard_Track']['Interface']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -307,7 +325,9 @@ function statusAll(props) {
                         </NavLink>
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
-                      <CTableDataCell>{post === undefined ? 0 : post[name]['Meta']}</CTableDataCell>
+                      <CTableDataCell>
+                        {post === undefined ? 0 : post[name] === undefined ? 0 : post[name]['Meta']}
+                      </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row">
@@ -325,7 +345,11 @@ function statusAll(props) {
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name]['Informational']}
+                        {post === undefined
+                          ? 0
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Informational']}
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -345,10 +369,12 @@ function statusAll(props) {
                       >
                         {post === undefined
                           ? 0
-                          : post[name]['Standards Track']['Core'] +
-                            post[name]['Standards Track']['ERC'] +
-                            post[name]['Standards Track']['Networking'] +
-                            post[name]['Standards Track']['Interface'] +
+                          : post[name] === undefined
+                          ? 0
+                          : post[name]['Standard_Track']['Core'] +
+                            post[name]['Standard_Track']['ERC'] +
+                            post[name]['Standard_Track']['Networking'] +
+                            post[name]['Standard_Track']['Interface'] +
                             post[name]['Meta'] +
                             post[name]['Informational']}
                       </CTableDataCell>
@@ -383,7 +409,7 @@ function statusAll(props) {
     <>
       {customTableChart('Living', 'Living')}
       {customTableChart('Final', 'Final')}
-      {customTableChart('Last Call', 'Last-Call')}
+      {customTableChart('Last_Call', 'Last Call')}
       {customTableChart('Review', 'Review')}
       {customTableChart('Draft', 'Draft')}
       {customTableChart('Stagnant', 'Stagnant')}
