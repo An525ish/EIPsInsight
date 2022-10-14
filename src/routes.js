@@ -37,19 +37,7 @@ const Range = React.lazy(() => import('./views/forms/range/Range'))
 const Select = React.lazy(() => import('./views/forms/select/Select'))
 const Validation = React.lazy(() => import('./views/forms/validation/Validation'))
 
-const JuneCharts = React.lazy(() => import('./views/charts/juneCharts'))
 const autoCharts = React.lazy(() => import('./views/charts/AutoCharts'))
-const MayCharts = React.lazy(() => import('./views/charts/mayCharts'))
-const AprilCharts = React.lazy(() => import('./views/charts/aprilCharts'))
-const MarchCharts = React.lazy(() => import('./views/charts/marchCharts'))
-const FebCharts = React.lazy(() => import('./views/charts/febCharts'))
-const JanCharts = React.lazy(() => import('./views/charts/janCharts'))
-const DecCharts = React.lazy(() => import('./views/charts/decCharts'))
-const NovCharts = React.lazy(() => import('./views/charts/novCharts'))
-const OctCharts = React.lazy(() => import('./views/charts/octCharts'))
-const SepCharts = React.lazy(() => import('./views/charts/sepCharts'))
-const AugCharts = React.lazy(() => import('./views/charts/augCharts'))
-const tempCharts = React.lazy(() => import('./views/charts/tempCharts'))
 
 const draftStatusChart = React.lazy(() => import('./views/charts/draftStatus'))
 const finalStatusChart = React.lazy(() => import('./views/charts/finalStatus'))
@@ -151,18 +139,9 @@ const routes = [
   { path: '/buttons/buttons', name: 'Buttons', element: Buttons },
   { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
   { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
-  { path: '/juneCharts', name: 'Charts', element: JuneCharts },
+
   { path: '/autoCharts', name: 'Charts', element: autoCharts },
-  { path: '/mayCharts', name: 'Charts', element: MayCharts },
-  { path: '/aprilCharts', name: 'Charts', element: AprilCharts },
-  { path: '/marchCharts', name: 'Charts', element: MarchCharts },
-  { path: '/febCharts', name: 'Charts', element: FebCharts },
-  { path: '/janCharts', name: 'Charts', element: JanCharts },
-  { path: '/decCharts', name: 'Charts', element: DecCharts },
-  { path: '/novCharts', name: 'Charts', element: NovCharts },
-  { path: '/octCharts', name: 'Charts', element: OctCharts },
-  { path: '/sepCharts', name: 'Charts', element: SepCharts },
-  { path: '/augCharts', name: 'Charts', element: AugCharts },
+
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },
   { path: '/forms/select', name: 'Select', element: Select },
@@ -239,7 +218,6 @@ const routes = [
   { path: '/withdrawnStatusChart', name: 'Withdrawn status', element: withdrawnStatusChart },
   { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
-  { path: '/tempCharts', name: 'Chartsr', element: tempCharts },
   { path: '/ChartTable', name: 'Chart Table', element: table },
 ]
 

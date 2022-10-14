@@ -33,7 +33,6 @@ import 'chartjs-plugin-datalabels'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
 import { Link, useLocation } from 'react-router-dom'
-import './mayCharts.styles.css'
 
 import { element } from 'prop-types'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'

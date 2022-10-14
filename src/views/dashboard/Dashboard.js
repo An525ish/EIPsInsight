@@ -79,7 +79,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
-import '../charts/mayCharts.styles.css'
+
 import './Dashboard.css'
 const Dashboard = () => {
   const [data, setData] = useState()
@@ -651,7 +651,7 @@ const Dashboard = () => {
     switch (status) {
       case 'Final':
         return '#c3fae8'
-      case 'Last Call':
+      case 'Last_Call':
         return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
@@ -669,7 +669,7 @@ const Dashboard = () => {
     switch (status) {
       case 'Final':
         return '#0ca678'
-      case 'Last Call':
+      case 'Last_Call':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -731,11 +731,11 @@ const Dashboard = () => {
       for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
         arr.push({
           id: inc++,
-          Number: eips[3]['Last Call'][i].eip,
-          Title: eips[3]['Last Call'][i].title,
-          Type: eips[3]['Last Call'][i].type,
-          status: eips[3]['Last Call'][i].status,
-          Author: eips[3]['Last Call'][i].author,
+          Number: eips[3]['Last_Call'][i].eip,
+          Title: eips[3]['Last_Call'][i].title,
+          Type: eips[3]['Last_Call'][i].type,
+          status: eips[3]['Last_Call'][i].status,
+          Author: eips[3]['Last_Call'][i].author,
         })
       }
 
@@ -805,7 +805,7 @@ const Dashboard = () => {
             pieChartData['Final']['Informational'],
     },
     {
-      type: 'Last Call',
+      type: 'Last_Call',
       value:
         pieChartData === undefined
           ? 0
