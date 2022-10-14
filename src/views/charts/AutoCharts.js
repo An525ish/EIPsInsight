@@ -41,9 +41,13 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import { cilBold } from '@coreui/icons'
+import { CBadge, CCardFooter } from '@coreui/react-pro'
 
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
+  const [month, setMonth] = useState()
+  const [year, setYear] = useState()
+  const [date, setDate] = useState()
 
   const G = G2.getEngine('canvas')
   let location = useLocation()
@@ -51,6 +55,20 @@ const autoCharts = (props) => {
 
   let [data, setData] = useState() // i set the data here
 
+  const monthNum = {
+    january: 1,
+    february: 2,
+    march: 3,
+    april: 4,
+    may: 5,
+    june: 6,
+    july: 7,
+    august: 8,
+    september: 9,
+    october: 10,
+    november: 11,
+    december: 12,
+  }
   const allData = async (d, y) => {
     try {
       const res = await fetch(`${ip}/register`, {
@@ -64,6 +82,10 @@ const autoCharts = (props) => {
       let datas = await res.json()
 
       let att = d.substring(1)
+      console.log(att, y)
+
+      setMonth(monthNum[att])
+      setYear(y)
 
       let filterData = datas.filter((e) => {
         return e.name.toLowerCase() === att.toLowerCase() && e.year === y
@@ -409,6 +431,42 @@ const autoCharts = (props) => {
     }
     return config
   }
+  const getBadge = (status) => {
+    switch (status) {
+      case 'Final':
+        return '#c3fae8'
+      case 'Last_Call':
+        return '#d3f9d8'
+      case 'Draft':
+        return '#fff3bf'
+      case 'Stagnant':
+        return '#ffe8cc'
+      case 'Withdrawn':
+        return '#ffe3e3'
+      case 'Review':
+        return '#d0ebff'
+      default:
+        return '#c5f6fa'
+    }
+  }
+  const getBadgeColor = (status) => {
+    switch (status) {
+      case 'Final':
+        return '#0ca678'
+      case 'Last_Call':
+        return '#37b24d'
+      case 'Draft':
+        return '#f08c00'
+      case 'Stagnant':
+        return '#e8590c'
+      case 'Withdrawn':
+        return '#e03131'
+      case 'Review':
+        return '#1971c2'
+      default:
+        return '#0c8599'
+    }
+  }
   const configgeneralStatsCharts = (data) => {
     const config = {
       data: [
@@ -463,10 +521,18 @@ const autoCharts = (props) => {
     }
     return 0
   }
+  // for date fetching
+  const fetchDate = () => {
+    let date = new Date().toDateString()
+    setDate(date)
+  }
   useEffect(() => {
     allData(location.state.from, location.state.year)
+    fetchDate()
     // setInfo(localStorage.getItem('count'))
   }, [location.state.from, location.state.year])
+
+  console.log(month, year)
 
   return (
     <>
@@ -530,7 +596,7 @@ const autoCharts = (props) => {
                 width: '100%',
                 fontFamily: 'Roboto',
                 fontSize: '15px',
-                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
               }}
             >
               <CTable align="middle" responsive>
@@ -549,9 +615,67 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Draft</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Draft')}`,
+                            backgroundColor: `${getBadge('Draft')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Draft
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Draft)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge('Draft')}] text-[${getBadgeColor(
+                              'Draft',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Draft')}`,
+                              backgroundColor: `${getBadge('Draft')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Draft')}`,
+                                backgroundColor: `${getBadge('Draft')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Draft',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Draft)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Draft',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Draft')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Draft',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Draft')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -560,9 +684,67 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Final</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Final')}`,
+                            backgroundColor: `${getBadge('Final')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Final
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Final)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge('Final')}] text-[${getBadgeColor(
+                              'Final',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Final')}`,
+                              backgroundColor: `${getBadge('Final')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Final')}`,
+                                backgroundColor: `${getBadge('Final')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Final',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Final)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Final',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Final')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Final',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Final')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -571,9 +753,69 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Review</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Review')}`,
+                            backgroundColor: `${getBadge('Review')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Review
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Review)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              'Review',
+            )}] text-[${getBadgeColor(
+                              'Review',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Review')}`,
+                              backgroundColor: `${getBadge('Review')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Review')}`,
+                                backgroundColor: `${getBadge('Review')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Review',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Review)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Review',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Review')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Review',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Review')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -581,9 +823,69 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Last Call</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Last_Call')}`,
+                            backgroundColor: `${getBadge('Last_Call')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Last Call
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.LastCall)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              'Last_Call',
+            )}] text-[${getBadgeColor(
+                              'Last_Call',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Last_Call')}`,
+                              backgroundColor: `${getBadge('Last_Call')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Last_Call')}`,
+                                backgroundColor: `${getBadge('Last_Call')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Last_Call',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.LastCall)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Last_Call',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Last_Call')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Last_Call',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Last_Call')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -591,9 +893,69 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Stagnant</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Stagnant')}`,
+                            backgroundColor: `${getBadge('Stagnant')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Stagnant
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Stagnant)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              'Stagnant',
+            )}] text-[${getBadgeColor(
+                              'Stagnant',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Stagnant')}`,
+                              backgroundColor: `${getBadge('Stagnant')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Stagnant')}`,
+                                backgroundColor: `${getBadge('Stagnant')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Stagnant',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Stagnant)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Stagnant',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Stagnant')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Stagnant',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Stagnant')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -601,9 +963,69 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Withdrawn</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Withdrawn')}`,
+                            backgroundColor: `${getBadge('Withdrawn')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Withdrawn
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              'Withdrawn',
+            )}] text-[${getBadgeColor(
+                              'Withdrawn',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Withdrawn')}`,
+                              backgroundColor: `${getBadge('Withdrawn')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Withdrawn')}`,
+                                backgroundColor: `${getBadge('Withdrawn')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Withdrawn',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Withdrawn',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Withdrawn')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Withdrawn',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Withdrawn')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -611,15 +1033,84 @@ const autoCharts = (props) => {
                     ''
                   ) : (
                     <CTableRow>
-                      <CTableHeaderCell scope="row">Living</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        <CBadge
+                          style={{
+                            color: `${getBadgeColor('Living')}`,
+                            backgroundColor: `${getBadge('Living')}`,
+                            fontSize: '13px',
+                          }}
+                        >
+                          Living
+                        </CBadge>
+                      </CTableHeaderCell>
                       <CTableDataCell>
-                        {parseInt(data === undefined ? 0 : data[0].summary.Living)}
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              'Living',
+            )}] text-[${getBadgeColor(
+                              'Living',
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                            style={{
+                              color: `${getBadgeColor('Living')}`,
+                              backgroundColor: `${getBadge('Living')}`,
+                            }}
+                          >
+                            <Link
+                              to="/chartTable"
+                              style={{
+                                textDecoration: 'none',
+
+                                color: `${getBadgeColor('Living')}`,
+                                backgroundColor: `${getBadge('Living')}`,
+                              }}
+                              className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              state={{
+                                type: '',
+                                status: 'Living',
+                                category: '',
+                                month: `${month}`,
+                                year: `${year}`,
+                              }}
+                            >
+                              {parseInt(data === undefined ? 0 : data[0].summary.Living)}*
+                            </Link>
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Living',
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Living')}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              'Living',
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor('Living')}`,
+                            }}
+                          ></div>
+                        </label>
                       </CTableDataCell>
                     </CTableRow>
                   )}
                 </CTableBody>
               </CTable>
             </CCardBody>
+            <CCardFooter
+              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                *Click to see more
+              </label>
+              <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+            </CCardFooter>
           </CCard>
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>

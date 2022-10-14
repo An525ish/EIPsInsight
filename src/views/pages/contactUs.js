@@ -40,29 +40,54 @@ const Contact = () => {
     <div>
       <div className="container1">Contact Us</div>
       <div className="whle">
-        {/* <form ref={form} onSubmit={sendEmail}>
-        <label>Name</label>
-        <input type="text" name="user_name" />
-        <label>Email</label>
-        <input type="email" name="user_email" />
-        <label>Message</label>
-        <textarea name="message" />
-        <input type="submit" value="Send" />
-      </form> */}
         <CForm ref={form} onSubmit={sendEmail} className="form23">
           <div className="mb-3">
             <CFormLabel htmlFor="exampleInputEmail1">Name</CFormLabel>
-            <CFormInput
-              type="text"
-              name="user_name"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              required
-            />
+            {!user ? (
+              <CFormInput
+                type="text"
+                name="user_name"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                required
+              />
+            ) : !user.displayName ? (
+              <CFormInput
+                type="text"
+                name="user_name"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                required
+              />
+            ) : (
+              <CFormInput
+                type="text"
+                name="user_name"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                value={user.displayName}
+                style={{ color: 'grey' }}
+                required
+              />
+            )}
           </div>
           <div className="mb-3">
             <CFormLabel htmlFor="exampleInputPassword1">Email</CFormLabel>
-            <CFormInput type="email" id="exampleInputPassword1" name="user_email" required />
+
+            {!user ? (
+              <CFormInput type="email" id="exampleInputPassword1" name="user_email" required />
+            ) : !user.email ? (
+              <CFormInput type="email" id="exampleInputPassword1" name="user_email" required />
+            ) : (
+              <CFormInput
+                type="email"
+                id="exampleInputPassword1"
+                name="user_email"
+                value={user.email}
+                style={{ color: 'grey' }}
+                required
+              />
+            )}
             <CFormText id="emailHelp">We'll never share your email with anyone else.</CFormText>
           </div>
           <div className="mb-3">
@@ -72,6 +97,7 @@ const Contact = () => {
               id="exampleInputPassword1"
               name="message"
               className="textInput"
+              placeholder="Type your message here..."
               required
             />
           </div>
