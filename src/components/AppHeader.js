@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -19,9 +19,12 @@ import { cibDiscord, cibGithub, cilBell, cilEnvelopeOpen, cilList, cilMenu } fro
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import logo from 'src/assets/logo2.gif'
-import leftIcon from 'src/assets/left.png'
-import rightIcon from 'src/assets/right.png'
+import leftIcon from 'src/assets/left.svg'
+import rightIcon from 'src/assets/right.svg'
 import midIcon from 'src/assets/mid.png'
+import discordIcon from 'src/assets/discord.svg'
+import githubIcon from 'src/assets/github.svg'
+import emailIcon from 'src/assets/email.png'
 import { ReactComponent as left } from 'src/assets/brand/left.svg'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
@@ -32,6 +35,8 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 const AppHeader = () => {
   const [changeIcon, setChangeIcon] = useState(0)
   const { imageOpen, user } = useUserAuth()
+  const param = useParams()
+  console.log({ param })
 
   const matches = useMediaQuery('(max-width: 600px)')
 
@@ -112,16 +117,49 @@ const AppHeader = () => {
       setChangeIcon(1)
     }
   }
+  const [styleIt, setStyleIt] = useState(false)
+  const [styleIt1, setStyleIt1] = useState(false)
+  const [styleIt2, setStyleIt2] = useState(false)
+
+  const clickTab = (e) => {
+    setStyleIt(true)
+    setStyleIt1(false)
+    setStyleIt2(false)
+  }
+  const clickTab1 = (e) => {
+    setStyleIt1(true)
+    setStyleIt2(false)
+    setStyleIt(false)
+  }
+  const clickTab2 = (e) => {
+    setStyleIt2(true)
+    setStyleIt1(false)
+    setStyleIt(false)
+  }
+  const resetClick = () => {
+    setStyleIt2(false)
+    setStyleIt1(false)
+    setStyleIt(false)
+  }
 
   useEffect(() => {
     allData()
+    if (param['*'] === 'typeAll') {
+      clickTab()
+    } else if (param['*'] === 'statusAll') {
+      clickTab1()
+    } else if (param['*'] === 'autoCharts') {
+      clickTab2()
+    } else {
+      resetClick()
+    }
   }, [])
 
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
         <CHeaderToggler
-          className="ps-1"
+          className="ps-1  flex items-center justify-center"
           onClick={() => {
             dispatch({ type: 'set', sidebarShow: !sidebarShow })
             changeIconSet()
@@ -131,42 +169,61 @@ const AppHeader = () => {
             src={changeIcon ? (matches ? midIcon : rightIcon) : matches ? midIcon : leftIcon}
             alt=""
             onClick={() => changeIconSet()}
-            className={`${changeIcon && 'rotate-[360deg]'}`}
+            className={`${changeIcon && 'rotate-[360deg]'} `}
           />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none">
           <img src={logo} height={48} alt="Logo" style={{ width: '87px', height: '100%' }} />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem className="headerSection">
-            <CNavLink to="#" component={NavLink}>
-              <Link
-                to="/typeAll"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                className="hover:text-black"
-              >
+          <CNavItem
+            className={`headerSection ${
+              styleIt ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
+          >
+            <Link
+              to="/typeAll"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              className="hover:text-black"
+              onClick={clickTab}
+            >
+              <CNavLink to="/typeAll" component={NavLink} onClick={clickTab}>
                 Type
-              </Link>
-            </CNavLink>
+              </CNavLink>
+            </Link>
           </CNavItem>
-          <CNavItem className="headerSection">
-            <CNavLink href="#">
-              <Link to="/statusAll" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <CNavItem
+            className={`headerSection ${
+              styleIt1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
+          >
+            <Link
+              to="/statusAll"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              onClick={clickTab1}
+            >
+              <CNavLink href="/statusAll" onClick={clickTab}>
                 Status
-              </Link>
-            </CNavLink>
+              </CNavLink>
+            </Link>
           </CNavItem>
-          <CNavItem className="headerSection">
-            <CNavLink href="#">
-              <Link
-                to="/autoCharts"
-                state={{
-                  from: `/${getMonth(data === undefined ? [] : data)}`,
-                  year: getYear(data === undefined ? [] : data),
-                }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                className="z-1"
-              >
+
+          <CNavItem
+            className={`headerSection ${
+              styleIt2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
+          >
+            <Link
+              to="/autoCharts"
+              state={{
+                from: `/${getMonth(data === undefined ? [] : data)}`,
+                year: getYear(data === undefined ? [] : data),
+              }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              className="z-1"
+              onClick={clickTab2}
+            >
+              <CNavLink href="/autoCharts">
                 Insight{' '}
                 <label className="relative cursor-pointer">
                   <div
@@ -176,9 +233,9 @@ const AppHeader = () => {
                     {data === undefined
                       ? ''
                       : getMonth(data === undefined ? [] : data)
-                          .charAt(0)
+                          ?.charAt(0)
                           .toUpperCase()}
-                    {data === undefined ? '' : getMonth(data === undefined ? [] : data).slice(1)}{' '}
+                    {data === undefined ? '' : getMonth(data === undefined ? [] : data)?.slice(1)}{' '}
                     <label className="text-[10px] cursor-pointer">
                       {getYear(data === undefined ? [] : data)}
                     </label>
@@ -186,8 +243,8 @@ const AppHeader = () => {
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>
                 </label>
-              </Link>
-            </CNavLink>
+              </CNavLink>
+            </Link>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
@@ -216,7 +273,7 @@ const AppHeader = () => {
                   rel="noreferrer"
                   className="githubIcon"
                 >
-                  <CIcon icon={cibGithub} size="lg" />
+                  <img src={githubIcon} alt="github Icon" />
                 </a>
               </CTooltip>
             </CNavLink>
@@ -230,7 +287,7 @@ const AppHeader = () => {
                   rel="noreferrer"
                   className="discordIcon"
                 >
-                  <CIcon icon={cibDiscord} size="lg" />
+                  <img src={discordIcon} alt="Discord Icon" />
                 </a>
               </CTooltip>
             </CNavLink>
@@ -239,16 +296,7 @@ const AppHeader = () => {
             <CNavLink href="#">
               <CTooltip content="Share your feedback with us" placement="bottom">
                 <Link to="/contactUs" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <CIcon
-                    icon={cilEnvelopeOpen}
-                    size="lg"
-                    onClick={() =>
-                      dispatch({
-                        type: 'set',
-                        sidebarShow: sidebarShow ? !sidebarShow : sidebarShow,
-                      })
-                    }
-                  />
+                  <img src={emailIcon} alt="Email Icon" />
                 </Link>
               </CTooltip>
             </CNavLink>

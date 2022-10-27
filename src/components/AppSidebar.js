@@ -32,6 +32,7 @@ import {
   cilChart,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { Link } from 'react-router-dom'
 // sidebar nav config
 // import navigation from '../_nav'
 
@@ -140,7 +141,9 @@ const AppSidebar = () => {
       style={{ backgroundColor: '#000000' }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <div className="logoDesign"></div>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <div className="logoDesign"></div>
+        </Link>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

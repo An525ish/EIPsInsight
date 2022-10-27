@@ -269,6 +269,29 @@ function typeAll() {
     return config
   }
 
+  const totalEIPs = () => {
+    const total =
+      getStandardAttribute(post === undefined ? [] : post, 'Core') +
+      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')
+    return total
+  }
+
   return (
     <>
       <div
@@ -360,6 +383,7 @@ function typeAll() {
                   <CTableRow>
                     <CTableHeaderCell scope="col">Category</CTableHeaderCell>
                     <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">%</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -381,6 +405,16 @@ function typeAll() {
                     <CTableDataCell>
                       {getStandardAttribute(post === undefined ? [] : post, 'Core')}
                     </CTableDataCell>
+                    <CTableDataCell>
+                      <label className="font-[800]">
+                        {(
+                          (getStandardAttribute(post === undefined ? [] : post, 'Core') /
+                            totalEIPs()) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </label>
+                    </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
                     <CTableDataCell>
@@ -399,6 +433,16 @@ function typeAll() {
                     </CTableDataCell>
                     <CTableDataCell>
                       {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <label className="font-[800]">
+                        {(
+                          (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
+                            totalEIPs()) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </label>
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
@@ -419,6 +463,16 @@ function typeAll() {
                     <CTableDataCell>
                       {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
                     </CTableDataCell>
+                    <CTableDataCell>
+                      <label className="font-[800]">
+                        {(
+                          (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
+                            totalEIPs()) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </label>
+                    </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
                     <CTableDataCell>
@@ -437,6 +491,16 @@ function typeAll() {
                     </CTableDataCell>
                     <CTableDataCell>
                       {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <label className="font-[800]">
+                        {(
+                          (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
+                            totalEIPs()) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </label>
                     </CTableDataCell>
                   </CTableRow>
                 </CTableBody>

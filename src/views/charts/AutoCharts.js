@@ -80,6 +80,7 @@ const autoCharts = (props) => {
         // credentials: 'include',
       })
       let datas = await res.json()
+      console.log({ datas })
 
       let att = d.substring(1)
       console.log(att, y)
@@ -329,11 +330,11 @@ const autoCharts = (props) => {
       data: [
         {
           type: 'Draft',
-          value: data.length === 0 ? 0 : parseInt(data[0].summary.Draft),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.Draft),
         },
         {
           type: 'Potential Proposal',
-          value: data.length === 0 ? 0 : parseInt(data[0].summary.potentialProposal),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.potentialProposal),
         },
       ],
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
@@ -364,11 +365,11 @@ const autoCharts = (props) => {
       data: [
         {
           type: 'Draft',
-          value: data.length === 0 ? 0 : parseInt(data[0].summary.Draft),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.Draft),
         },
         {
           type: 'Final',
-          value: data.length === 0 ? 0 : parseInt(data[0].summary.Final),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.Final),
         },
       ],
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
@@ -472,19 +473,19 @@ const autoCharts = (props) => {
       data: [
         {
           type: 'Open PR',
-          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.OpenPR),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.OpenPR),
         },
         {
           type: 'Merged PR',
-          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.MergedPR),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.MergedPR),
         },
         {
           type: 'New Issues',
-          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.NewIssues),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.NewIssues),
         },
         {
           type: 'closed Issues',
-          value: data.length === 0 ? 0 : parseInt(data[0].GeneralStats.ClosedIssues),
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.ClosedIssues),
         },
       ],
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
@@ -562,7 +563,7 @@ const autoCharts = (props) => {
             borderTop: '4px solid #339af0',
           }}
         >
-          {data === undefined ? '' : data[0].name + ' ' + data[0].year} Insights
+          {data === undefined ? '' : data[0]?.name + ' ' + data[0]?.year} Insights
         </CCard>
       </div>
       <CCol xs={12} className="mb-1">
@@ -611,7 +612,7 @@ const autoCharts = (props) => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -656,7 +657,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Draft)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft)}*
                             </Link>
                           </div>
                           <div
@@ -680,7 +681,7 @@ const autoCharts = (props) => {
                     </CTableRow>
                   )}
 
-                  {parseInt(data === undefined ? 0 : data[0].summary.Final) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -725,7 +726,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Final)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Final)}*
                             </Link>
                           </div>
                           <div
@@ -749,7 +750,7 @@ const autoCharts = (props) => {
                     </CTableRow>
                   )}
 
-                  {parseInt(data === undefined ? 0 : data[0].summary.Review) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Review) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -796,7 +797,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Review)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Review)}*
                             </Link>
                           </div>
                           <div
@@ -819,7 +820,7 @@ const autoCharts = (props) => {
                       </CTableDataCell>
                     </CTableRow>
                   )}
-                  {parseInt(data === undefined ? 0 : data[0].summary.LastCall) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.LastCall) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -866,7 +867,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.LastCall)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.LastCall)}*
                             </Link>
                           </div>
                           <div
@@ -889,7 +890,7 @@ const autoCharts = (props) => {
                       </CTableDataCell>
                     </CTableRow>
                   )}
-                  {parseInt(data === undefined ? 0 : data[0].summary.Stagnant) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Stagnant) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -936,7 +937,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Stagnant)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Stagnant)}*
                             </Link>
                           </div>
                           <div
@@ -959,7 +960,7 @@ const autoCharts = (props) => {
                       </CTableDataCell>
                     </CTableRow>
                   )}
-                  {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Withdrawn) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -1006,7 +1007,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Withdrawn)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Withdrawn)}*
                             </Link>
                           </div>
                           <div
@@ -1029,7 +1030,7 @@ const autoCharts = (props) => {
                       </CTableDataCell>
                     </CTableRow>
                   )}
-                  {parseInt(data === undefined ? 0 : data[0].summary.Living) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Living) === 0 ? (
                     ''
                   ) : (
                     <CTableRow>
@@ -1076,7 +1077,7 @@ const autoCharts = (props) => {
                                 year: `${year}`,
                               }}
                             >
-                              {parseInt(data === undefined ? 0 : data[0].summary.Living)}*
+                              {parseInt(data === undefined ? 0 : data[0]?.summary.Living)}*
                             </Link>
                           </div>
                           <div
@@ -1114,17 +1115,17 @@ const autoCharts = (props) => {
           </CCard>
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          {data === undefined ? null : data[0].summary.SummaryInfo === '' ? null : (
+          {data === undefined ? null : data[0]?.summary.SummaryInfo === '' ? null : (
             <div className="p-3 mb-2 bg-white text-black" style={{ borderRadius: '20px' }}>
-              <p className="font-monospace">{data[0].summary.SummaryInfo}</p>{' '}
+              <p className="font-monospace">{data[0]?.summary.SummaryInfo}</p>{' '}
             </div>
           )}
           <ul>
-            {data === undefined ? null : data[0].summary.HighlightText === '' ? null : (
+            {data === undefined ? null : data[0]?.summary.HighlightText === '' ? null : (
               <li>
                 <p>
                   <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
-                    {data[0].summary.HighlightText}
+                    {data[0]?.summary.HighlightText}
                   </h1>
                 </p>
               </li>
@@ -1150,10 +1151,10 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0 ? (
+              {parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.ClosedIssues) === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -1178,10 +1179,10 @@ const autoCharts = (props) => {
               <Column
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.OpenPR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.MergePR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.NewIssues) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].GeneralStats.ClosedIssues) === 0
+                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.ClosedIssues) === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
@@ -1218,28 +1219,28 @@ const autoCharts = (props) => {
                   <CTableRow>
                     <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
                     <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Forks)}
+                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Forks)}
                     </CTableDataCell>
                   </CTableRow>
 
                   <CTableRow>
                     <CTableHeaderCell scope="row">Users</CTableHeaderCell>
                     <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Users)}
+                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Users)}
                     </CTableDataCell>
                   </CTableRow>
 
                   <CTableRow>
                     <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
                     <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Authors)}
+                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Authors)}
                     </CTableDataCell>
                   </CTableRow>
 
                   <CTableRow>
                     <CTableHeaderCell scope="row">Files</CTableHeaderCell>
                     <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0].OtherStats.Files)}
+                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Files)}
                     </CTableDataCell>
                   </CTableRow>
                 </CTableBody>
@@ -1626,8 +1627,8 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].summary.potentialProposal) === 0 ? (
+              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.summary.potentialProposal) === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -1652,8 +1653,8 @@ const autoCharts = (props) => {
               <Column
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].summary.potentialProposal) === 0
+                    parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.summary.potentialProposal) === 0
                       ? 'hidden'
                       : 'visible'
                   }`,
@@ -1677,8 +1678,8 @@ const autoCharts = (props) => {
                 backgroundPosition: 'right -16px top -32px',
               }}
             >
-              {parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
-              parseInt(data === undefined ? 0 : data[0].summary.Final) === 0 ? (
+              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0 ? (
                 <div
                   style={{
                     textAlign: 'center',
@@ -1703,8 +1704,8 @@ const autoCharts = (props) => {
               <Pie
                 style={{
                   visibility: `${
-                    parseInt(data === undefined ? 0 : data[0].summary.Draft) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0].summary.Final) === 0
+                    parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0
                       ? 'hidden'
                       : 'visible'
                   }`,

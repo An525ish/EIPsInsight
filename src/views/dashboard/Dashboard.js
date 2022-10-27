@@ -632,7 +632,7 @@ const Dashboard = () => {
     {
       key: 'Title',
       _style: {
-        width: '50%',
+        width: '40%',
         color: '#1c7ed6',
       },
     },
@@ -645,6 +645,7 @@ const Dashboard = () => {
       },
     },
     { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+    { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   const getBadge = (status) => {
@@ -704,6 +705,10 @@ const Dashboard = () => {
           Number: eips[0]['Final'][i].eip,
           Title: eips[0]['Final'][i].title,
           Type: eips[0]['Final'][i].type,
+          Category:
+            eips[0]['Final'][i].type === 'Standards Track'
+              ? eips[0]['Final'][i].category
+              : `Type - ${eips[0]['Final'][i].type}`,
           status: eips[0]['Final'][i].status,
           Author: eips[0]['Final'][i].author,
         })
@@ -714,6 +719,10 @@ const Dashboard = () => {
           Number: eips[1]['Draft'][i].eip,
           Title: eips[1]['Draft'][i].title,
           Type: eips[1]['Draft'][i].type,
+          Category:
+            eips[1]['Draft'][i].type === 'Standards Track'
+              ? eips[1]['Draft'][i].category
+              : `Type - ${eips[1]['Draft'][i].type}`,
           status: eips[1]['Draft'][i].status,
           Author: eips[1]['Draft'][i].author,
         })
@@ -724,6 +733,10 @@ const Dashboard = () => {
           Number: eips[2]['Review'][i].eip,
           Title: eips[2]['Review'][i].title,
           Type: eips[2]['Review'][i].type,
+          Category:
+            eips[2]['Review'][i]?.type === 'Standards Track'
+              ? eips[2]['Review'][i]?.category
+              : `Type - ${eips[2]['Review'][i].type}`,
           status: eips[2]['Review'][i].status,
           Author: eips[2]['Review'][i].author,
         })
@@ -734,6 +747,10 @@ const Dashboard = () => {
           Number: eips[3]['Last_Call'][i].eip,
           Title: eips[3]['Last_Call'][i].title,
           Type: eips[3]['Last_Call'][i].type,
+          Category:
+            eips[3]['Last_Call'][i].type === 'Standards Track'
+              ? eips[3]['Last_Call'][i].category
+              : `Type - ${eips[3]['Last_Call'][i].type}`,
           status: eips[3]['Last_Call'][i].status,
           Author: eips[3]['Last_Call'][i].author,
         })
@@ -745,6 +762,10 @@ const Dashboard = () => {
           Number: eips[4]['Stagnant'][i].eip,
           Title: eips[4]['Stagnant'][i].title,
           Type: eips[4]['Stagnant'][i].type,
+          Category:
+            eips[4]['Stagnant'][i].type === 'Standards Track'
+              ? eips[4]['Stagnant'][i].category
+              : `Type - ${eips[4]['Stagnant'][i].type}`,
           status: eips[4]['Stagnant'][i].status,
           Author: eips[4]['Stagnant'][i].author,
         })
@@ -755,6 +776,10 @@ const Dashboard = () => {
           Number: eips[5]['Withdrawn'][i].eip,
           Title: eips[5]['Withdrawn'][i].title,
           Type: eips[5]['Withdrawn'][i].type,
+          Category:
+            eips[5]['Withdrawn'][i].type === 'Standards Track'
+              ? eips[5]['Withdrawn'][i].category
+              : `Type - ${eips[5]['Withdrawn'][i].type}`,
           status: eips[5]['Withdrawn'][i].status,
           Author: eips[5]['Withdrawn'][i].author,
         })
@@ -765,6 +790,10 @@ const Dashboard = () => {
           Number: eips[6]['Living'][i].eip,
           Title: eips[6]['Living'][i].title,
           Type: eips[6]['Living'][i].type,
+          Category:
+            eips[6]['Living'][i].type === 'Standards Track'
+              ? eips[6]['Living'][i].category
+              : `Type - ${eips[6]['Living'][i].type}`,
           status: eips[6]['Living'][i].status,
           Author: eips[6]['Living'][i].author,
         })
@@ -979,7 +1008,7 @@ const Dashboard = () => {
               className="cardHeader"
               style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
             >
-              EIPs Type & Categories{' '}
+              EIPs Status{' '}
             </CCardHeader>
             <CCardBody
               style={{

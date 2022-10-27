@@ -140,7 +140,7 @@ function statusAll(props) {
             <Link
               to="/chartTable"
               style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{ type: '', status: name, category: '' }}
+              state={{ type: '', status: title, category: '' }}
             >
               <div
                 className='className="h-7
@@ -246,7 +246,11 @@ function statusAll(props) {
                       <CTableDataCell>
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standards Track', status: name, category: 'ERC' }}
+                          state={{
+                            type: 'Standards Track',
+                            status: name === 'Last_Call' ? 'Last Call' : name,
+                            category: 'ERC',
+                          }}
                         >
                           <label
                             className="h-7
