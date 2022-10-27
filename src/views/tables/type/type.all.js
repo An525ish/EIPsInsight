@@ -268,6 +268,16 @@ function typeAll() {
     }
     return config
   }
+  const coloring = (text) => {
+    switch (text) {
+      case 'text':
+        return '#1c7ed6'
+      case 'back':
+        return '#e7f5ff'
+      default:
+        return '#e7f5ff'
+    }
+  }
 
   const totalEIPs = () => {
     const total =
@@ -359,9 +369,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderLeft: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -375,6 +386,8 @@ function typeAll() {
                 fontFamily: 'Roboto',
                 fontSize: '12px',
                 borderRight: '2px solid #74c0fc',
+                '--main-color': `#1c7ed6`,
+                '--main-color-background': `#e7f5ff`,
               }}
               className="scrollbarDesign"
             >
@@ -513,9 +526,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderRight: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -587,9 +601,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderLeft: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -603,6 +618,8 @@ function typeAll() {
                 fontFamily: 'Roboto',
                 fontSize: '12px',
                 borderRight: '2px solid #74c0fc',
+                '--main-color': `#1c7ed6`,
+                '--main-color-background': `#e7f5ff`,
               }}
               className="scrollbarDesign"
             >
@@ -757,9 +774,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderRight: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -839,9 +857,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderLeft: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -855,6 +874,8 @@ function typeAll() {
                 fontFamily: 'Roboto',
                 fontSize: '12px',
                 borderRight: '2px solid #74c0fc',
+                '--main-color': `#1c7ed6`,
+                '--main-color-background': `#e7f5ff`,
               }}
               className="scrollbarDesign"
             >
@@ -1037,9 +1058,10 @@ function typeAll() {
                 justifyContent: 'flex-end',
                 borderRight: '2px solid #74c0fc',
                 borderBottom: '2px solid #74c0fc',
+                background: `${coloring('back')}`,
               }}
             >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
+              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
             </CCardFooter>
           </CCard>
         </CCol>

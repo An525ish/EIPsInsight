@@ -468,6 +468,35 @@ const autoCharts = (props) => {
         return '#0c8599'
     }
   }
+
+  const coloring = (text) => {
+    switch (text) {
+      case 'text':
+        return '#1c7ed6'
+      case 'back':
+        return '#e7f5ff'
+      default:
+        return '#e7f5ff'
+    }
+  }
+
+  // header
+  const header = (text) => {
+    return (
+      <CCardHeader
+        className="cardHeader"
+        style={{
+          fontFamily: 'Roboto',
+          fontWeight: '800',
+          fontSize: '14px',
+          color: `${coloring('text')}`,
+          background: `${coloring('back')}`,
+        }}
+      >
+        {text}
+      </CCardHeader>
+    )
+  }
   const configgeneralStatsCharts = (data) => {
     const config = {
       data: [
@@ -1116,21 +1145,33 @@ const autoCharts = (props) => {
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
           {data === undefined ? null : data[0]?.summary.SummaryInfo === '' ? null : (
-            <div className="p-3 mb-2 bg-white text-black" style={{ borderRadius: '20px' }}>
-              <p className="font-monospace">{data[0]?.summary.SummaryInfo}</p>{' '}
-            </div>
+            <CCard>
+              <CCardBody style={{ borderBottom: '2px solid #74c0fc' }}>
+                <p className="font-monospace text-center">{data[0]?.summary.SummaryInfo}</p>{' '}
+              </CCardBody>
+            </CCard>
           )}
-          <ul>
-            {data === undefined ? null : data[0]?.summary.HighlightText === '' ? null : (
-              <li>
-                <p>
-                  <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
-                    {data[0]?.summary.HighlightText}
-                  </h1>
-                </p>
-              </li>
-            )}
-          </ul>
+          <CCardFooter
+            className="cardFooter"
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              color: `#1c7ed6`,
+              background: `#e7f5ff`,
+            }}
+          >
+            <ul>
+              {data === undefined ? null : data[0]?.summary.HighlightText === '' ? null : (
+                <li>
+                  <p>
+                    <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
+                      {data[0]?.summary.HighlightText}
+                    </h1>
+                  </p>
+                </li>
+              )}
+            </ul>
+          </CCardFooter>
         </div>
       </div>
 
@@ -1139,7 +1180,7 @@ const autoCharts = (props) => {
         <CCol xs={12}>
           <CCard className="mb-4 cardBorder">
             <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">General Stats </CCardHeader>
+              {header('General Stats')}
             </Link>
             <CCardBody
               className="childChartContainer"
@@ -1201,7 +1242,7 @@ const autoCharts = (props) => {
                 width: '100%',
                 fontFamily: 'Roboto',
                 fontSize: '15px',
-                borderRight: '2px solid #74c0fc',
+                borderBottom: '2px solid #74c0fc',
               }}
             >
               <CTable align="middle" responsive>
@@ -1250,8 +1291,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Draft',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Draft{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1311,8 +1369,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayFinalTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Final',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Final{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1372,8 +1447,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayReviewTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Review',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Review{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1433,8 +1525,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayLastCallTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Last_Call',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Last Call{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1494,8 +1603,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayStagnantTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Stagnant',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Stagnant{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1555,8 +1681,25 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayWithdrawnTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CCardHeader className="cardHeader">
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Withdrawn',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
                 Withdrawn{' '}
                 <label style={{ fontWeight: '700' }}>
                   {'('}
@@ -1616,7 +1759,16 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">Draft EIPs vs Potential Proposal</CCardHeader>
+            <CCardHeader
+              className="cardHeader"
+              style={{
+                color: `${coloring('text')}`,
+                background: `${coloring('back')}`,
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              Draft EIPs vs Potential Proposal
+            </CCardHeader>
             <CCardBody
               className="childChartContainer"
               style={{
@@ -1667,7 +1819,16 @@ const autoCharts = (props) => {
 
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">Final vs Draft</CCardHeader>
+            <CCardHeader
+              className="cardHeader"
+              style={{
+                color: `${coloring('text')}`,
+                background: `${coloring('back')}`,
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              Final vs Draft
+            </CCardHeader>
             <CCardBody
               className="childChartContainer"
               style={{
@@ -1717,18 +1878,37 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <CCardHeader className="cardHeader">
-              Living{' '}
-              <label style={{ fontWeight: '700' }}>
-                {'('}
-                {parseInt(
-                  data === undefined
-                    ? 0
-                    : findTotalValueZero(data === undefined ? [] : data, 'Living'),
-                )}
-                {')'}
-              </label>
-            </CCardHeader>
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{
+                type: '',
+                status: 'Living',
+                category: '',
+                month: `${month}`,
+                year: `${year}`,
+              }}
+            >
+              <CCardHeader
+                className="cardHeader"
+                style={{
+                  color: `${coloring('text')}`,
+                  background: `${coloring('back')}`,
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
+                Living{' '}
+                <label style={{ fontWeight: '700' }}>
+                  {'('}
+                  {parseInt(
+                    data === undefined
+                      ? 0
+                      : findTotalValueZero(data === undefined ? [] : data, 'Living'),
+                  )}
+                  {')'}
+                </label>
+              </CCardHeader>
+            </Link>
             <CCardBody
               className="childChartContainer"
               style={{

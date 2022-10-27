@@ -648,6 +648,16 @@ const Dashboard = () => {
     { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
+  const coloring = (text) => {
+    switch (text) {
+      case 'text':
+        return '#1c7ed6'
+      case 'back':
+        return '#e7f5ff'
+      default:
+        return '#e7f5ff'
+    }
+  }
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
@@ -904,6 +914,41 @@ const Dashboard = () => {
             pieChartData['Withdrawn']['Informational'],
     },
   ]
+
+  // header
+  const header = (text) => {
+    return (
+      <CCardHeader
+        className="cardHeader"
+        style={{
+          fontFamily: 'Roboto',
+          fontWeight: '800',
+          fontSize: '14px',
+          color: `${coloring('text')}`,
+          background: `${coloring('back')}`,
+        }}
+      >
+        {text}
+      </CCardHeader>
+    )
+  }
+
+  // footer
+  const footer = (date) => {
+    return (
+      <CCardFooter
+        className="cardFooter"
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          color: `${coloring('text')}`,
+          background: `${coloring('back')}`,
+        }}
+      >
+        <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+      </CCardFooter>
+    )
+  }
   const pieConfig = {
     appendPadding: 10,
     data: pieData,
@@ -976,12 +1021,7 @@ const Dashboard = () => {
       <CRow>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              EIPs Type & Categories{' '}
-            </CCardHeader>
+            {header('EIPs Type & Categories')}{' '}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -994,22 +1034,12 @@ const Dashboard = () => {
             >
               <Column {...config} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              EIPs Status{' '}
-            </CCardHeader>
+            {header('EIPs Status')}{' '}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1022,23 +1052,13 @@ const Dashboard = () => {
             >
               <Pie {...pieConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
 
         <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }}>
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Search an EIP
-            </CCardHeader>
+            {header('Search an EIP')}
             <CCardBody
               style={{
                 overflowX: 'auto',
@@ -1052,6 +1072,7 @@ const Dashboard = () => {
               <CSmartTable
                 items={eipData(eips === undefined ? [] : eips)}
                 activePage={1}
+                color="success"
                 clickableRows
                 columns={columns}
                 columnFilter
@@ -1168,12 +1189,7 @@ const Dashboard = () => {
         </CCol>
         <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Draft{' '}
-            </CCardHeader>
+            {header('Draft')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1186,23 +1202,13 @@ const Dashboard = () => {
             >
               <Line {...monthlyDraftConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
 
         <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Final{' '}
-            </CCardHeader>
+            {header('Final')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1215,23 +1221,13 @@ const Dashboard = () => {
             >
               <Column {...monthlyFinalConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
 
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Final vs Draft{' '}
-            </CCardHeader>
+            {header('Final vs Draft')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1244,22 +1240,12 @@ const Dashboard = () => {
             >
               <Column {...finalvsDraftconfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              DraftEIPs vs Potential Proposal{' '}
-            </CCardHeader>
+            {header('DraftEIPs vs Potential Proposal')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1272,12 +1258,7 @@ const Dashboard = () => {
             >
               <Area {...montlyDraftvsFinalconfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
       </CRow>
@@ -1303,12 +1284,7 @@ const Dashboard = () => {
         </CCol>
         <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Draft{' '}
-            </CCardHeader>
+            {header('Draft')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1321,22 +1297,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyDraftConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Final{' '}
-            </CCardHeader>
+            {header('Final')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1349,22 +1315,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyFinalConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 4}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Review{' '}
-            </CCardHeader>
+            {header('Review')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1377,22 +1333,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyReviewConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Last-Call{' '}
-            </CCardHeader>
+            {header('Last Call')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1405,22 +1351,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyLastCallConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Stagnant{' '}
-            </CCardHeader>
+            {header('Stagnant')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1433,22 +1369,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyStagnantConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Withdrawn{' '}
-            </CCardHeader>
+            {header('Withdrawn')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1461,22 +1387,12 @@ const Dashboard = () => {
             >
               <Column {...yearlyWithdrawnConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{ fontFamily: 'Roboto', fontWeight: '800', fontSize: '14px' }}
-            >
-              Living{' '}
-            </CCardHeader>
+            {header('Living')}
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1489,12 +1405,7 @@ const Dashboard = () => {
             >
               <Column {...yearlyLivingConfig} />
             </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <label style={{ color: 'grey', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
+            {footer(date)}
           </CCard>
         </CCol>
       </CRow>
