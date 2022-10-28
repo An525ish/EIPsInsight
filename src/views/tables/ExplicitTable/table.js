@@ -21,31 +21,71 @@ function table() {
         setEips(res)
       })
   }
-  const columns = [
-    {
-      key: 'Number',
-      _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
-      _props: { className: 'fw-semibold' },
-      sorter: true,
-    },
-    {
-      key: 'Title',
-      _style: {
-        width: '50%',
-        color: '#1c7ed6',
-      },
-    },
-    {
-      key: 'Author',
-      _style: {
-        width: '20%',
-        color: '#1c7ed6',
-        backgroundColor: '#e7f5ff',
-      },
-    },
-    { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
-  ]
+  const fetchColumn = (status) => {
+    console.log(status)
+    const columns =
+      status === 'Last Call'
+        ? [
+            {
+              key: 'Number',
+              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Title',
+              _style: {
+                width: '40%',
+                color: '#1c7ed6',
+              },
+            },
+            {
+              key: 'Author',
+              _style: {
+                width: '20%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
+              },
+            },
+            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Last-Call Deadline', _style: { width: '10%', color: '#1c7ed6' } },
+            {
+              key: 'status',
+              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+          ]
+        : [
+            {
+              key: 'Number',
+              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Title',
+              _style: {
+                width: '50%',
+                color: '#1c7ed6',
+              },
+            },
+            {
+              key: 'Author',
+              _style: {
+                width: '20%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
+              },
+            },
+            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            {
+              key: 'status',
+              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+          ]
+
+    return columns
+  }
+
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
@@ -130,6 +170,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -239,6 +280,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -344,6 +386,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -453,6 +496,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -561,6 +605,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -657,6 +702,7 @@ function table() {
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
             status: eips[3]['Last_Call'][i].status,
+            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
           })
         }
@@ -770,7 +816,7 @@ function table() {
             }
             activePage={1}
             clickableRows
-            columns={columns}
+            columns={fetchColumn(status)}
             columnFilter
             columnSorter
             itemsPerPage={15}
