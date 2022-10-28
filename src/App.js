@@ -11,6 +11,7 @@ import MForm2 from './views/pages/ManualForm/mForm2'
 import ResetPassword from './views/pages/ResetPassword/resetPassword'
 import { useUserAuth } from 'src/Context/AuthContext'
 import ProtectedRouteAdmin from './components/ProtectedRouteAdmin.js'
+import EIPs from './views/charts/EIPs'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -72,6 +73,8 @@ function App() {
                 </ProtectedRouteAdmin>
               }
             />
+            {/* route for each EIP */}
+            {/* <Route path="/EIPS/:EIPid" element={<EIPs />} /> */}
           </Routes>
         </UserAuthContextProvider>
       </Suspense>

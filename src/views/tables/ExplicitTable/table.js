@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { CBadge, CCard, CCardBody, CCardFooter, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 function table() {
   const location = useLocation()
@@ -803,10 +803,8 @@ function table() {
                         backgroundColor: `${getBadge(item.status)}`,
                       }}
                     >
-                      <a
-                        href={`https://eips.ethereum.org/EIPS/eip-${item.Number}`}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Link
+                        to={`/EIPs/${item.Number}`}
                         className={`githubIcon h-7
             shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                         style={{
@@ -815,7 +813,7 @@ function table() {
                         }}
                       >
                         {item.Number}*
-                      </a>
+                      </Link>
                     </div>
                     <div
                       className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(

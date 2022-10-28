@@ -1117,10 +1117,8 @@ const Dashboard = () => {
                             backgroundColor: `${getBadge(item.status)}`,
                           }}
                         >
-                          <a
-                            href={`https://eips.ethereum.org/EIPS/eip-${item.Number}`}
-                            target="_blank"
-                            rel="noreferrer"
+                          <Link
+                            to={`/EIPs/${item.Number}`}
                             className={`githubIcon h-7
             shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                             style={{
@@ -1129,7 +1127,7 @@ const Dashboard = () => {
                             }}
                           >
                             {item.Number}*
-                          </a>
+                          </Link>
                         </div>
                         <div
                           className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(

@@ -1,4 +1,5 @@
 import React from 'react'
+import EIPs from './views/charts/EIPs'
 import mForm from './views/pages/ManualForm/mForm'
 import mForm2 from './views/pages/ManualForm/mForm2'
 
@@ -219,6 +220,7 @@ const routes = [
   { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
+  { path: '/EIPS/:id', name: 'EIPs', element: EIPs },
 ]
 
 export default routes
