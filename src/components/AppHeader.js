@@ -19,6 +19,7 @@ import { cibDiscord, cibGithub, cilBell, cilEnvelopeOpen, cilList, cilMenu } fro
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import logo from 'src/assets/logo2.gif'
+import logoAndroid from 'src/assets/logo3.gif'
 import leftIcon from 'src/assets/left.svg'
 import rightIcon from 'src/assets/right.svg'
 import midIcon from 'src/assets/mid.png'
@@ -46,7 +47,7 @@ const AppHeader = () => {
   } = useUserAuth()
   const param = useParams()
 
-  const matches = useMediaQuery('(max-width: 600px)')
+  const matches = useMediaQuery('(max-width: 767px)')
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -178,7 +179,12 @@ const AppHeader = () => {
           />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none">
-          <img src={logo} height={48} alt="Logo" style={{ width: '87px', height: '100%' }} />
+          <img
+            src={matches ? logoAndroid : logo}
+            height={48}
+            alt="Logo"
+            style={{ width: '87px', height: '100%' }}
+          />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem

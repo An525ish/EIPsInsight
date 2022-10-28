@@ -53,7 +53,7 @@ const autoCharts = (props) => {
 
   const G = G2.getEngine('canvas')
   let location = useLocation()
-  const matches = useMediaQuery('(max-width: 600px)')
+  const matches = useMediaQuery('(max-width: 767px)')
   const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
   let [data, setData] = useState() // i set the data here
@@ -1179,7 +1179,6 @@ const autoCharts = (props) => {
         </div>
       </div>
 
-      <hr />
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4 cardBorder">

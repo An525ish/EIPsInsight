@@ -29,7 +29,7 @@ import { GoogleButton } from 'react-google-button'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
 const Login = () => {
-  const matches = useMediaQuery('(max-width: 600px)')
+  const matches = useMediaQuery('(max-width: 767px)')
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')

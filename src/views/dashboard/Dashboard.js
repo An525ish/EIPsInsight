@@ -95,7 +95,7 @@ const Dashboard = () => {
 
   const [years, setYears] = useState()
 
-  const matches = useMediaQuery('(max-width: 600px)')
+  const matches = useMediaQuery('(max-width: 767px)')
 
   const API = 'https://eipsinsight.com/api/overallData'
   const API2 = 'https://eipsinsight.com/api/allinfo'

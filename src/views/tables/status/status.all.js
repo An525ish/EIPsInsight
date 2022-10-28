@@ -25,7 +25,7 @@ function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
 
-  const matches = useMediaQuery('(max-width: 600px)')
+  const matches = useMediaQuery('(max-width: 767px)')
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {

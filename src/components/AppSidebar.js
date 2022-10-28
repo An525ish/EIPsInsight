@@ -30,16 +30,18 @@ import {
   cidSpeedometer,
   cilStar,
   cilChart,
+  cilExpandLeft,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { Link, useParams } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
+import useMediaQuery from 'src/scss/useMediaQuery'
 // sidebar nav config
 // import navigation from '../_nav'
 
 const AppSidebar = () => {
   const param = useParams()
-
+  const matches = useMediaQuery('(max-width: 767px)')
   const dispatch = useDispatch()
   const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
@@ -95,6 +97,25 @@ const AppSidebar = () => {
           text: 'NEW',
         },
       })
+      // for app version
+      if (matches) {
+        completeList.push(
+          {
+            component: CNavItem,
+            name: 'Type',
+            to: '/typeAll',
+            icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+            // icon: <FontAwesomeIcon icon={faEnvelope} />,
+          },
+          {
+            component: CNavItem,
+            name: 'Status',
+            to: '/statusAll',
+            icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+            // icon: <FontAwesomeIcon icon={faEnvelope} />,
+          },
+        )
+      }
       for (let j = 0; j < yearArr.length; j++) {
         list = []
         for (let i = 0; i < datas.length; i++) {
