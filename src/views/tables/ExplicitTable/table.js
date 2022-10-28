@@ -390,7 +390,6 @@ function table() {
     return arr
   }
   const eipDataStatusExtra = (eips, status, month, year) => {
-    console.log('comming')
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 0
@@ -838,9 +837,7 @@ function table() {
                 </td>
               ),
             }}
-            onRowClick={(item) => {
-              console.log(item)
-            }}
+            onRowClick={(item) => {}}
             sorterValue={{ column: 'name', state: 'asc' }}
             tableHeadProps={{}}
             tableProps={{

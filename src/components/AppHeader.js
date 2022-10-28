@@ -34,9 +34,17 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 
 const AppHeader = () => {
   const [changeIcon, setChangeIcon] = useState(0)
-  const { imageOpen, user } = useUserAuth()
+  const {
+    imageOpen,
+    user,
+    click1,
+    click2,
+    click3,
+    setClick1Function,
+    setClick2Function,
+    setClick3Function,
+  } = useUserAuth()
   const param = useParams()
-  console.log({ param })
 
   const matches = useMediaQuery('(max-width: 600px)')
 
@@ -117,29 +125,26 @@ const AppHeader = () => {
       setChangeIcon(1)
     }
   }
-  const [styleIt, setStyleIt] = useState(false)
-  const [styleIt1, setStyleIt1] = useState(false)
-  const [styleIt2, setStyleIt2] = useState(false)
 
   const clickTab = (e) => {
-    setStyleIt(true)
-    setStyleIt1(false)
-    setStyleIt2(false)
+    setClick1Function(true)
+    setClick2Function(false)
+    setClick3Function(false)
   }
   const clickTab1 = (e) => {
-    setStyleIt1(true)
-    setStyleIt2(false)
-    setStyleIt(false)
+    setClick1Function(false)
+    setClick2Function(true)
+    setClick3Function(false)
   }
   const clickTab2 = (e) => {
-    setStyleIt2(true)
-    setStyleIt1(false)
-    setStyleIt(false)
+    setClick1Function(false)
+    setClick2Function(false)
+    setClick3Function(true)
   }
   const resetClick = () => {
-    setStyleIt2(false)
-    setStyleIt1(false)
-    setStyleIt(false)
+    setClick1Function(false)
+    setClick2Function(false)
+    setClick3Function(false)
   }
 
   useEffect(() => {
@@ -150,7 +155,7 @@ const AppHeader = () => {
       clickTab1()
     } else if (param['*'] === 'autoCharts') {
       clickTab2()
-    } else {
+    } else if (param['*'] === '' || param['*'] === 'autoCharts') {
       resetClick()
     }
   }, [])
@@ -178,7 +183,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem
             className={`headerSection ${
-              styleIt ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
             <Link
@@ -194,7 +199,7 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem
             className={`headerSection ${
-              styleIt1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
             <Link
@@ -210,7 +215,7 @@ const AppHeader = () => {
 
           <CNavItem
             className={`headerSection ${
-              styleIt2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
             <Link

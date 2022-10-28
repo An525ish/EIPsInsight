@@ -26,6 +26,9 @@ export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState('')
   const [imageOpen, setImageOpen] = useState('enable')
   const [adminLogin, setAdminLogin] = useState(false)
+  const [click1, setClick1] = useState(false)
+  const [click2, setClick2] = useState(false)
+  const [click3, setClick3] = useState(false)
 
   // admin Check
   // function adminCheck() {
@@ -80,6 +83,27 @@ export function UserAuthContextProvider({ children }) {
     return set()
   }
 
+  // set click
+  function setClick1Function(bool) {
+    const set = () => {
+      setClick1(bool)
+    }
+    return set()
+  }
+
+  function setClick2Function(bool) {
+    const set = () => {
+      setClick2(bool)
+    }
+    return set()
+  }
+  function setClick3Function(bool) {
+    const set = () => {
+      setClick3(bool)
+    }
+    return set()
+  }
+
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
       url: 'https://eipsinsight.com/#/login',
@@ -113,6 +137,13 @@ export function UserAuthContextProvider({ children }) {
         forgotPassword,
         ResetPassword,
         adminLogin,
+        click1,
+        click2,
+        click3,
+        setClick1Function,
+        setClick2Function,
+        setClick3Function,
+
         // adminCheck,
         // adminCheckAgain,
       }}

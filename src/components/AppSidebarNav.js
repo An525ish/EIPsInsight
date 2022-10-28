@@ -43,6 +43,7 @@ export const AppSidebarNav = ({ items, d }) => {
   const navItem = (item, index) => {
     const { component, name, badge, icon, ...rest } = item
     const Component = component
+
     return (
       <Component
         className="hover:border-[white]  hover:rounded-[2rem]  hover:text-[white] hover:transition-all hover:duration-100 hover:ease-in-out focus:border-[white] focus:border-l-[2rem] focus:text-[white]  focus:font-black transition-transform duration-500 transform

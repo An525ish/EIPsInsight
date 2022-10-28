@@ -166,7 +166,6 @@ function typeAll() {
     return arr
   }
   const getStandardAttribute = (post, name) => {
-    console.log(post)
     return post.length === 0
       ? 0
       : post['Final']['Standard_Track'] === undefined

@@ -72,7 +72,7 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { Chart } from 'react-google-charts'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ip } from 'src/constants'
 
 import useMediaQuery from 'src/scss/useMediaQuery'
@@ -81,13 +81,18 @@ import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 
 import './Dashboard.css'
+import { useUserAuth } from 'src/Context/AuthContext'
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
+  const param = useParams()
   const [date, setDate] = useState()
   const [eips, setEips] = useState()
   const [post, getPost] = useState()
   const [pieChartData, setPieChartData] = useState()
+  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
+    useUserAuth()
+
   const [years, setYears] = useState()
 
   const matches = useMediaQuery('(max-width: 600px)')
@@ -1011,9 +1016,13 @@ const Dashboard = () => {
     fetchDate()
     fetchAllEIPs()
     fetchAllStatus()
+    if (param['*'] === '') {
+      setClick1Function(false)
+      setClick2Function(false)
+      setClick3Function(false)
+    }
   }, [])
 
-  console.log(eips)
   // temparary
 
   return (
@@ -1079,9 +1088,7 @@ const Dashboard = () => {
                 columnSorter
                 itemsPerPage={50}
                 pagination
-                onRowClick={(t) => {
-                  console.log(t)
-                }}
+                onRowClick={(t) => {}}
                 scopedColumns={{
                   status: (item) => (
                     <td>

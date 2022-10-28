@@ -32,7 +32,7 @@ import {
 import 'chartjs-plugin-datalabels'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 import { element } from 'prop-types'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
@@ -42,17 +42,20 @@ import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/
 import { each, groupBy } from '@antv/util'
 import { cilBold } from '@coreui/icons'
 import { CBadge, CCardFooter } from '@coreui/react-pro'
+import { useUserAuth } from 'src/Context/AuthContext'
 
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
+  const param = useParams()
 
   const G = G2.getEngine('canvas')
   let location = useLocation()
   const matches = useMediaQuery('(max-width: 600px)')
-
+  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
+    useUserAuth()
   let [data, setData] = useState() // i set the data here
 
   const monthNum = {
@@ -80,10 +83,8 @@ const autoCharts = (props) => {
         // credentials: 'include',
       })
       let datas = await res.json()
-      console.log({ datas })
 
       let att = d.substring(1)
-      console.log(att, y)
 
       setMonth(monthNum[att])
       setYear(y)
@@ -559,10 +560,13 @@ const autoCharts = (props) => {
   useEffect(() => {
     allData(location.state.from, location.state.year)
     fetchDate()
+    if (param['*'] === 'autoCharts') {
+      setClick1Function(false)
+      setClick2Function(false)
+      setClick3Function(false)
+    }
     // setInfo(localStorage.getItem('count'))
   }, [location.state.from, location.state.year])
-
-  console.log(month, year)
 
   return (
     <>

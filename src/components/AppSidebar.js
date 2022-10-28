@@ -32,12 +32,17 @@ import {
   cilChart,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { useUserAuth } from 'src/Context/AuthContext'
 // sidebar nav config
 // import navigation from '../_nav'
 
 const AppSidebar = () => {
+  const param = useParams()
+
   const dispatch = useDispatch()
+  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
+    useUserAuth()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [data, setData] = useState()
@@ -128,6 +133,11 @@ const AppSidebar = () => {
 
   useEffect(() => {
     allData()
+    if (param['*'] === 'autoCharts' || param['*'] === '') {
+      setClick1Function(false)
+      setClick2Function(false)
+      setClick3Function(false)
+    }
   }, [])
 
   return (
