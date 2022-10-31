@@ -225,31 +225,23 @@ const AppHeader = () => {
             }`}
           >
             <Link
-              to="/autoCharts"
+              to="/Insight/currentMonth"
               state={{
-                from: `/${getMonth(data === undefined ? [] : data)}`,
-                year: getYear(data === undefined ? [] : data),
+                from: `/october`,
+                year: 2022,
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}
               className="z-1"
               onClick={clickTab2}
             >
-              <CNavLink href="/autoCharts">
+              <CNavLink href="/Insight">
                 Insight{' '}
                 <label className="relative cursor-pointer">
                   <div
                     className=" h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
                   >
-                    {data === undefined
-                      ? ''
-                      : getMonth(data === undefined ? [] : data)
-                          ?.charAt(0)
-                          .toUpperCase()}
-                    {data === undefined ? '' : getMonth(data === undefined ? [] : data)?.slice(1)}{' '}
-                    <label className="text-[10px] cursor-pointer">
-                      {getYear(data === undefined ? [] : data)}
-                    </label>
+                    October <label className="text-[10px] cursor-pointer">2022</label>
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>

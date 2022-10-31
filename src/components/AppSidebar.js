@@ -116,14 +116,26 @@ const AppSidebar = () => {
           },
         )
       }
+
       for (let j = 0; j < yearArr.length; j++) {
         list = []
+        if (yearArr[j] === '2022') {
+          list.push({
+            component: CNavItem,
+            name: `October`,
+            to: `/Insight/currentMonth`,
+            state: {
+              from: `/october`,
+              year: 2022,
+            },
+          })
+        }
         for (let i = 0; i < datas.length; i++) {
           if (datas[i].year === yearArr[j]) {
             list.push({
               component: CNavItem,
               name: `${datas[i].name}`,
-              to: `/autoCharts`,
+              to: `/Insight`,
               state: {
                 from: `/${datas[i].name.toLowerCase()}`,
                 year: datas[i].year,

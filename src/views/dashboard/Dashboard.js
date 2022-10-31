@@ -1030,7 +1030,7 @@ const Dashboard = () => {
       <CRow>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('EIPs Type & Categories')}{' '}
+            <Link to="/typeAll">{header('EIPs Type & Categories')} </Link>
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',
@@ -1048,7 +1048,7 @@ const Dashboard = () => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('EIPs Status')}{' '}
+            <Link to="/statusAll">{header('EIPs Status')} </Link>
             <CCardBody
               style={{
                 // backgroundColor: '#fff9db',

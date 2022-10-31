@@ -1,4 +1,5 @@
 import React from 'react'
+import CurrentMonth from './views/charts/currentMonth'
 import EIPs from './views/charts/EIPs'
 import mForm from './views/pages/ManualForm/mForm'
 import mForm2 from './views/pages/ManualForm/mForm2'
@@ -141,7 +142,8 @@ const routes = [
   { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
   { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
 
-  { path: '/autoCharts', name: 'Charts', element: autoCharts },
+  { path: '/Insight', name: 'Charts', element: autoCharts },
+  { path: '/Insight/currentMonth', name: 'Current Month', element: CurrentMonth },
 
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },

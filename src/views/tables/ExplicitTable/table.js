@@ -764,6 +764,9 @@ function table() {
     fetchDate()
   }, [])
 
+  console.log({ year })
+  console.log({ month })
+
   return (
     <>
       <CCard>
