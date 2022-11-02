@@ -90,8 +90,15 @@ const Dashboard = () => {
   const [eips, setEips] = useState()
   const [post, getPost] = useState()
   const [pieChartData, setPieChartData] = useState()
-  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
-    useUserAuth()
+  const {
+    click1,
+    click2,
+    click3,
+    setClick1Function,
+    setClick2Function,
+    setClick3Function,
+    setClick4Function,
+  } = useUserAuth()
 
   const [years, setYears] = useState()
 
@@ -669,6 +676,8 @@ const Dashboard = () => {
         return '#c3fae8'
       case 'Last_Call':
         return '#d3f9d8'
+      case 'Last Call':
+        return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
       case 'Stagnant':
@@ -677,8 +686,10 @@ const Dashboard = () => {
         return '#ffe3e3'
       case 'Review':
         return '#d0ebff'
-      default:
+      case 'Living':
         return '#c5f6fa'
+      default:
+        return '#e7f5ff'
     }
   }
   const getBadgeColor = (status) => {
@@ -686,6 +697,8 @@ const Dashboard = () => {
       case 'Final':
         return '#0ca678'
       case 'Last_Call':
+        return '#37b24d'
+      case 'Last Call':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -695,8 +708,10 @@ const Dashboard = () => {
         return '#e03131'
       case 'Review':
         return '#1971c2'
-      default:
+      case 'Living':
         return '#0c8599'
+      default:
+        return '#1c7ed6'
     }
   }
   const toggleDetails = (index) => {
@@ -929,8 +944,9 @@ const Dashboard = () => {
           fontFamily: 'Roboto',
           fontWeight: '800',
           fontSize: '14px',
-          color: `${coloring('text')}`,
-          background: `${coloring('back')}`,
+          color: `${getBadgeColor(text)}`,
+          background: `${getBadge(text)}`,
+          borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
         {text}
@@ -939,18 +955,19 @@ const Dashboard = () => {
   }
 
   // footer
-  const footer = (date) => {
+  const footer = (date, text) => {
     return (
       <CCardFooter
         className="cardFooter"
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
-          color: `${coloring('text')}`,
-          background: `${coloring('back')}`,
+          color: `${getBadgeColor(text)}`,
+          background: `${getBadge(text)}`,
+          borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+        <label style={{ fontSize: '10px', color: `${getBadgeColor(text)}` }}>{date}</label>
       </CCardFooter>
     )
   }
@@ -1008,6 +1025,30 @@ const Dashboard = () => {
       },
     ],
   }
+  // yearly Draft Component
+  const yearlyInsights = (col, title, configName) => {
+    return (
+      <CCol xs={matches ? 12 : col}>
+        <CCard className="mb-2 cardBorder">
+          {header(title)}
+          <CCardBody
+            style={{
+              // backgroundColor: '#fff9db',
+              height: '300px',
+              // backgroundImage: `url(${github})`,
+              // backgroundSize: '33% 30%',
+              // backgroundRepeat: 'no-repeat',
+              // backgroundPosition: 'right -12px bottom -40px',
+            }}
+          >
+            <Column {...configName} />
+          </CCardBody>
+          {footer(date, title)}
+        </CCard>
+      </CCol>
+    )
+  }
+
   useEffect(() => {
     // fetchData()
 
@@ -1020,6 +1061,7 @@ const Dashboard = () => {
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
+      setClick4Function(false)
     }
   }, [])
 
@@ -1159,7 +1201,7 @@ const Dashboard = () => {
               />
             </CCardBody>
             <CCardFooter
-              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
               style={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
@@ -1181,7 +1223,8 @@ const Dashboard = () => {
               marginBottom: '00px',
               backgroundColor: 'white',
               border: 'none',
-              width: '17rem',
+              display: 'inline-block',
+
               padding: '14px',
               borderRadius: '5px',
               borderLeft: '4px solid #339af0',
@@ -1189,11 +1232,11 @@ const Dashboard = () => {
               marginTop: '2rem',
             }}
           >
-            Monthly Insights
+            Insights
           </div>
         </CCol>
         <CCol xs={12}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+          <CCard className="mb-2 cardBorder">
             {header('Draft')}
             <CCardBody
               style={{
@@ -1207,12 +1250,12 @@ const Dashboard = () => {
             >
               <Line {...monthlyDraftConfig} />
             </CCardBody>
-            {footer(date)}
+            {footer(date, 'Draft')}
           </CCard>
         </CCol>
 
         <CCol xs={12}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+          <CCard className="mb-2 cardBorder">
             {header('Final')}
             <CCardBody
               style={{
@@ -1226,7 +1269,7 @@ const Dashboard = () => {
             >
               <Column {...monthlyFinalConfig} />
             </CCardBody>
-            {footer(date)}
+            {footer(date, 'Final')}
           </CCard>
         </CCol>
 
@@ -1276,7 +1319,7 @@ const Dashboard = () => {
               marginBottom: '00px',
               backgroundColor: 'white',
               border: 'none',
-              width: '17rem',
+              display: 'inline-block',
               padding: '14px',
               borderRadius: '5px',
               borderLeft: '4px solid #339af0',
@@ -1287,132 +1330,15 @@ const Dashboard = () => {
             Yearly Insights
           </div>
         </CCol>
-        <CCol xs={matches ? 12 : 4}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Draft')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyDraftConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 4}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Final')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyFinalConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 4}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Review')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyReviewConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Last Call')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyLastCallConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Stagnant')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyStagnantConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Withdrawn')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyWithdrawnConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Living')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...yearlyLivingConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
+
+        {/* Yearly Insights */}
+        {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
+        {yearlyInsights(4, 'Final', yearlyFinalConfig)}
+        {yearlyInsights(4, 'Review', yearlyReviewConfig)}
+        {yearlyInsights(6, 'Last Call', yearlyLastCallConfig)}
+        {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
+        {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
+        {yearlyInsights(6, 'Living', yearlyLivingConfig)}
       </CRow>
     </>
   )

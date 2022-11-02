@@ -41,9 +41,11 @@ const AppHeader = () => {
     click1,
     click2,
     click3,
+    click4,
     setClick1Function,
     setClick2Function,
     setClick3Function,
+    setClick4Function,
   } = useUserAuth()
   const param = useParams()
 
@@ -131,21 +133,32 @@ const AppHeader = () => {
     setClick1Function(true)
     setClick2Function(false)
     setClick3Function(false)
+    setClick4Function(false)
   }
   const clickTab1 = (e) => {
     setClick1Function(false)
     setClick2Function(true)
     setClick3Function(false)
+    setClick4Function(false)
   }
   const clickTab2 = (e) => {
     setClick1Function(false)
     setClick2Function(false)
     setClick3Function(true)
+    setClick4Function(false)
   }
+  const clickTab4 = (e) => {
+    setClick1Function(false)
+    setClick2Function(false)
+    setClick3Function(false)
+    setClick4Function(true)
+  }
+
   const resetClick = () => {
     setClick1Function(false)
     setClick2Function(false)
     setClick3Function(false)
+    setClick4Function(false)
   }
 
   useEffect(() => {
@@ -187,6 +200,22 @@ const AppHeader = () => {
           />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
+          <CNavItem
+            className={`headerSection ${
+              click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
+          >
+            <Link
+              to="/EIPS"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              className="hover:text-black"
+              onClick={clickTab4}
+            >
+              <CNavLink to="/EIPS" component={NavLink} onClick={clickTab4}>
+                All EIPs
+              </CNavLink>
+            </Link>
+          </CNavItem>
           <CNavItem
             className={`headerSection ${
               click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''

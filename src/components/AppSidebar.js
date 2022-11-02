@@ -43,8 +43,16 @@ const AppSidebar = () => {
   const param = useParams()
   const matches = useMediaQuery('(max-width: 767px)')
   const dispatch = useDispatch()
-  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
-    useUserAuth()
+  const {
+    click1,
+    click2,
+    click3,
+    click4,
+    setClick1Function,
+    setClick2Function,
+    setClick3Function,
+    setClick4Function,
+  } = useUserAuth()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [data, setData] = useState()
@@ -167,9 +175,12 @@ const AppSidebar = () => {
   useEffect(() => {
     allData()
     if (param['*'] === 'autoCharts' || param['*'] === '') {
+      console.log('hello')
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
+      setClick4Function(false)
+      console.log(click4)
     }
   }, [])
 

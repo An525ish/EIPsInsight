@@ -439,6 +439,10 @@ const CurrentMonth = () => {
         return '#c3fae8'
       case 'Last_Call':
         return '#d3f9d8'
+      case 'Last Call':
+        return '#d3f9d8'
+      case 'LastCall':
+        return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
       case 'Stagnant':
@@ -447,8 +451,10 @@ const CurrentMonth = () => {
         return '#ffe3e3'
       case 'Review':
         return '#d0ebff'
-      default:
+      case 'Living':
         return '#c5f6fa'
+      default:
+        return '#e7f5ff'
     }
   }
   const getBadgeColor = (status) => {
@@ -456,6 +462,10 @@ const CurrentMonth = () => {
       case 'Final':
         return '#0ca678'
       case 'Last_Call':
+        return '#37b24d'
+      case 'Last Call':
+        return '#37b24d'
+      case 'LastCall':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -465,8 +475,10 @@ const CurrentMonth = () => {
         return '#e03131'
       case 'Review':
         return '#1971c2'
-      default:
+      case 'Living':
         return '#0c8599'
+      default:
+        return '#1c7ed6'
     }
   }
 
@@ -487,14 +499,19 @@ const CurrentMonth = () => {
       <CCardHeader
         className="cardHeader"
         style={{
-          fontFamily: 'Roboto',
-          fontWeight: '800',
-          fontSize: '14px',
-          color: `${coloring('text')}`,
-          background: `${coloring('back')}`,
+          color: `${getBadgeColor(text)}`,
+          background: `${getBadge(text)}`,
+          borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        {text}
+        {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
+        <label style={{ fontWeight: '700' }}>
+          {'('}
+          {parseInt(
+            data === undefined ? 0 : findTotalValueZero(data === undefined ? [] : data, text),
+          )}
+          {')'}
+        </label>
       </CCardHeader>
     )
   }
@@ -1420,26 +1437,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Draft{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Draft',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Draft')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -1503,26 +1501,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Final{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Final',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Final')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -1586,26 +1565,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Review{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Review',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Review')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -1669,26 +1629,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Last Call{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Last_Call',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('LastCall')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -1752,26 +1693,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Stagnant{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Stagnant',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Stagnant')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -1835,26 +1757,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Withdrawn{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Withdrawn',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Withdrawn')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
@@ -2051,26 +1954,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              <CCardHeader
-                className="cardHeader"
-                style={{
-                  color: `${coloring('text')}`,
-                  background: `${coloring('back')}`,
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                Living{' '}
-                <label style={{ fontWeight: '700' }}>
-                  {'('}
-                  {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Living',
-                    ),
-                  )}
-                  {')'}
-                </label>
-              </CCardHeader>
+              {header('Living')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(

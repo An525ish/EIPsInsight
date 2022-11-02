@@ -1,4 +1,5 @@
 import React from 'react'
+import AllEIPs from './views/charts/allEIPs'
 import CurrentMonth from './views/charts/currentMonth'
 import EIPs from './views/charts/EIPs'
 import mForm from './views/pages/ManualForm/mForm'
@@ -223,6 +224,7 @@ const routes = [
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
   { path: '/EIPS/:id', name: 'EIPs', element: EIPs },
+  { path: '/EIPS', name: 'EIPs', element: AllEIPs },
 ]
 
 export default routes

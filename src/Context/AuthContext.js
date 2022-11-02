@@ -29,6 +29,7 @@ export function UserAuthContextProvider({ children }) {
   const [click1, setClick1] = useState(false)
   const [click2, setClick2] = useState(false)
   const [click3, setClick3] = useState(false)
+  const [click4, setClick4] = useState(false)
 
   // admin Check
   // function adminCheck() {
@@ -103,6 +104,12 @@ export function UserAuthContextProvider({ children }) {
     }
     return set()
   }
+  function setClick4Function(bool) {
+    const set = () => {
+      setClick4(bool)
+    }
+    return set()
+  }
 
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
@@ -140,9 +147,11 @@ export function UserAuthContextProvider({ children }) {
         click1,
         click2,
         click3,
+        click4,
         setClick1Function,
         setClick2Function,
         setClick3Function,
+        setClick4Function,
 
         // adminCheck,
         // adminCheckAgain,
