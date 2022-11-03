@@ -508,7 +508,10 @@ const CurrentMonth = () => {
         <label style={{ fontWeight: '700' }}>
           {'('}
           {parseInt(
-            data === undefined ? 0 : findTotalValueZero(data === undefined ? [] : data, text),
+            fetchStatusSum(
+              currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+              text === 'Last Call' ? 'Last_Call' : text,
+            ),
           )}
           {')'}
         </label>
@@ -625,7 +628,7 @@ const CurrentMonth = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          textTransform: 'uppercase',
+          // textTransform: 'uppercase',
         }}
       >
         <CCard
@@ -633,17 +636,30 @@ const CurrentMonth = () => {
             display: 'inline-block',
             padding: '2rem',
 
-            borderBottom: '4px solid #339af0',
-            borderLeft: '2px solid #339af0',
-            borderRight: '2px solid #339af0',
+            // borderBottom: '4px solid #339af0',
+            // borderLeft: '2px solid #339af0',
+            // borderRight: '2px solid #339af0',
             // borderBottomLeftRadius: '2rem',
             // borderBottomRightRadius: '2rem',
-            fontFamily: 'colombo',
+            // fontFamily: 'Quicksand',
+
             borderRadius: '2rem',
-            borderTop: '4px solid #339af0',
+            border: '2px solid #1c7ed6',
+            // background: '#e7f5ff',
+            // borderTop: '4px solid #339af0',
+            // borderTop: '4px solid #339af0',
           }}
         >
-          {'October 2022 '} Insights
+          <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+            2022
+            {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
+            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
+          </label>
+          {/* <label className="text-[5rem]">O</label> */}
+          <label className="text-[#1c7ed6]">{'October '} </label>{' '}
+          <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+            Insights
+          </label>
         </CCard>
       </div>
       <CCol xs={12} className="mb-1">
@@ -1629,7 +1645,7 @@ const CurrentMonth = () => {
                 year: `${year}`,
               }}
             >
-              {header('LastCall')}
+              {header('Last Call')}
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(

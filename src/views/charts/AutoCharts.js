@@ -596,7 +596,7 @@ const autoCharts = (props) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          textTransform: 'uppercase',
+          // textTransform: 'uppercase',
         }}
       >
         <CCard
@@ -604,19 +604,33 @@ const autoCharts = (props) => {
             display: 'inline-block',
             padding: '2rem',
 
-            borderBottom: '4px solid #339af0',
-            borderLeft: '2px solid #339af0',
-            borderRight: '2px solid #339af0',
+            // borderBottom: '4px solid #339af0',
+            // borderLeft: '2px solid #339af0',
+            // borderRight: '2px solid #339af0',
             // borderBottomLeftRadius: '2rem',
             // borderBottomRightRadius: '2rem',
-            fontFamily: 'colombo',
+            // fontFamily: 'Quicksand',
+
             borderRadius: '2rem',
-            borderTop: '4px solid #339af0',
+            border: '2px solid #1c7ed6',
+            // background: '#e7f5ff',
+            // borderTop: '4px solid #339af0',
+            // borderTop: '4px solid #339af0',
           }}
         >
-          {data === undefined ? '' : data[0]?.name + ' ' + data[0]?.year} Insights
+          <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+            {data === undefined ? '' : data[0]?.year}
+            {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
+            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
+          </label>
+          {/* <label className="text-[5rem]">O</label> */}
+          <label className="text-[#1c7ed6]">{data === undefined ? '' : data[0]?.name} </label>{' '}
+          <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+            Insights
+          </label>
         </CCard>
       </div>
+
       <CCol xs={12} className="mb-1">
         <div
           style={{
