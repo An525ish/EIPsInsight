@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { Link, NavLink, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -78,29 +79,14 @@ const AppHeader = () => {
       return months.indexOf(a.name) - months.indexOf(b.name)
     }
   }
-  const allData = async () => {
-    try {
-      const res = await fetch(`${ip}/register`, {
-        // method: 'GET',
-        // headers: {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application',
-        // },
-        // credentials: 'include',
+
+  const APII = 'https://eipsinsight.com/api/typePage'
+  const fetchPost = () => {
+    fetch(APII)
+      .then((res) => res.json())
+      .then((res) => {
+        setData(res)
       })
-      let datas = []
-      datas = await res.json()
-
-      setData(datas)
-
-      const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
-      setYears(yearArr)
-
-      if (!res.status === 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    } catch (err) {}
   }
 
   const getMonth = (d) => {
@@ -162,7 +148,7 @@ const AppHeader = () => {
   }
 
   useEffect(() => {
-    allData()
+    fetchPost()
     if (param['*'] === 'typeAll') {
       clickTab()
     } else if (param['*'] === 'statusAll') {
@@ -212,7 +198,26 @@ const AppHeader = () => {
               onClick={clickTab4}
             >
               <CNavLink to="/EIPS" component={NavLink} onClick={clickTab4}>
-                All EIPs
+                All{' '}
+                <label className="relative cursor-pointer">
+                  <div
+                    className=" h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
+                  >
+                    EIPs
+                  </div>
+                  <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2 h-2"></div>
+                  <div className="absolute top-0 right-0 -mr-0 -mt-1   w-2 h-2 text-[10px] text-[#1c7ed6] font-[900]">
+                    {data === undefined
+                      ? 0
+                      : data['Standard_Track']['Networking'] +
+                        data['Standard_Track']['ERC'] +
+                        data['Standard_Track']['Core'] +
+                        data['Standard_Track']['Interface'] +
+                        data['Meta'] +
+                        data['Informational']}
+                  </div>
+                </label>
               </CNavLink>
             </Link>
           </CNavItem>
@@ -347,6 +352,29 @@ const AppHeader = () => {
       <CHeaderDivider />
       <CContainer fluid>
         <AppBreadcrumb />
+        {/* <motion.div
+          className="bg-[#e7f5ff] text-[#1c7ed6] font-[900] pl-10 pr-10"
+          initial={{ opacity: 0, scale: 0.5 }}
+          cx={500}
+          animate={{
+            opacity: 1,
+
+            x: [0, 0],
+            y: [0, 500],
+          }}
+          transition={{
+            type: 'spring',
+            duration: 5,
+            // times: [0, 0.4, 0.5, 0.9, 1],
+            // delay: 2,
+            ease: 'easeOut',
+            repeat: 'Infinity',
+          }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1 }}
+        >
+          EIPs: 538
+        </motion.div> */}
       </CContainer>
     </CHeader>
   )

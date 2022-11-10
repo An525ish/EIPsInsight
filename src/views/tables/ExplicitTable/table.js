@@ -27,15 +27,22 @@ function table() {
       status === 'Last Call'
         ? [
             {
+              key: 'id',
+              _style: { width: '5%', color: '#1c7ed6' },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
               key: 'Number',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
+
             {
               key: 'Title',
               _style: {
-                width: '40%',
+                width: '35%',
                 color: '#1c7ed6',
               },
             },
@@ -55,6 +62,12 @@ function table() {
             },
           ]
         : [
+            {
+              key: 'id',
+              _style: { width: '5%', color: '#1c7ed6' },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
             {
               key: 'Number',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
@@ -124,6 +137,7 @@ function table() {
   }
   const eipData = (eips, status, type) => {
     let arr = []
+    console.log('eipData')
     if (eips[0] !== undefined) {
       let inc = 0
       for (let i = 0; i < eips[0]['Final'].length; i++) {
@@ -217,6 +231,7 @@ function table() {
     return arr
   }
   const eipDataCategory = (eips, type, status, category) => {
+    console.log('eipDataCategory')
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 0
@@ -339,7 +354,10 @@ function table() {
     return arr
   }
   const eipDataStatus = (eips, status) => {
+    console.log('eipDataStatus')
     let arr = []
+    status = status === 'Last_Call' ? 'Last Call' : status
+    console.log({ status })
     if (eips[0] !== undefined) {
       let inc = 0
       for (let i = 0; i < eips[0]['Final'].length; i++) {
@@ -433,6 +451,8 @@ function table() {
     return arr
   }
   const eipDataStatusExtra = (eips, status, month, year) => {
+    console.log('eipDataStatusExtra')
+    status = status === 'Last_Call' ? 'Last Call' : status
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 0
@@ -555,6 +575,7 @@ function table() {
     return arr
   }
   const eipDataCategoryType = (eips, type, category) => {
+    console.log('eipDataCategoryType')
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 0
@@ -655,6 +676,7 @@ function table() {
     return arr
   }
   const eipDataMain = (eips, type) => {
+    console.log('main')
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 0
@@ -766,6 +788,7 @@ function table() {
 
   console.log({ year })
   console.log({ month })
+  console.log({ status })
 
   return (
     <>

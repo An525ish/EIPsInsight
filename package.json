@@ -51,6 +51,7 @@
     "classnames": "^2.3.1",
     "core-js": "^3.22.6",
     "firebase": "^9.8.3",
+    "framer-motion": "^7.6.5",
     "http-proxy-middleware": "^2.0.6",
     "nivo": "^0.31.0",
     "prop-types": "^15.8.1",

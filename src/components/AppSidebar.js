@@ -143,7 +143,7 @@ const AppSidebar = () => {
             list.push({
               component: CNavItem,
               name: `${datas[i].name}`,
-              to: `/Insight`,
+              to: `/Insight/${datas[i].name.toLowerCase()}-${datas[i].year}`,
               state: {
                 from: `/${datas[i].name.toLowerCase()}`,
                 year: datas[i].year,

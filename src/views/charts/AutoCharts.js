@@ -46,6 +46,7 @@ import { useUserAuth } from 'src/Context/AuthContext'
 
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
+
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
@@ -72,7 +73,7 @@ const autoCharts = (props) => {
     november: 11,
     december: 12,
   }
-  const allData = async (d, y) => {
+  const allData = async () => {
     try {
       const res = await fetch(`${ip}/register`, {
         // method: 'GET',
@@ -83,16 +84,19 @@ const autoCharts = (props) => {
         // credentials: 'include',
       })
       let datas = await res.json()
+      const list = param.id.split('-')
+      const att = list[0]
+      const y = list[1]
 
-      let att = d.substring(1)
-
-      setMonth(monthNum[att])
+      console.log({ att, y })
+      setMonth(monthNum[list[0]])
       setYear(y)
 
       let filterData = datas.filter((e) => {
         return e.name.toLowerCase() === att.toLowerCase() && e.year === y
       }) // we filter from here
 
+      console.log({ filterData })
       setData(filterData)
 
       if (!res.status === 200) {
@@ -576,7 +580,7 @@ const autoCharts = (props) => {
     setDate(date)
   }
   useEffect(() => {
-    allData(location.state.from, location.state.year)
+    allData()
     fetchDate()
     if (param['*'] === 'autoCharts') {
       setClick1Function(false)
@@ -584,7 +588,7 @@ const autoCharts = (props) => {
       setClick3Function(false)
     }
     // setInfo(localStorage.getItem('count'))
-  }, [location.state.from, location.state.year])
+  }, [location.state.from, location.state.to])
 
   return (
     <>
@@ -1214,9 +1218,8 @@ const autoCharts = (props) => {
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4 cardBorder">
-            <Link to="/mayDraftTable" style={{ textDecoration: 'none', color: 'inherit' }}>
-              {header('GeneralStats')}
-            </Link>
+            {header('GeneralStats')}
+
             <CCardBody
               className="childChartContainer"
               style={{

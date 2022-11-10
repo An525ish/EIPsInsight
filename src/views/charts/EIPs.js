@@ -16,6 +16,7 @@ const EIPs = () => {
   const params = useParams()
   const [data, setData] = useState()
   const [allData, setAllData] = useState()
+
   const fetchAllData = async () => {
     try {
       const res = await fetch(`${ip}/rawData`, {

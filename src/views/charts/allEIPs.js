@@ -5,9 +5,16 @@ import { Link } from 'react-router-dom'
 const AllEIPs = () => {
   const [eips, setEips] = useState()
   const [date, setDate] = useState()
-
+  const [data, setData] = useState()
   const API2 = 'https://eipsinsight.com/api/allinfo'
-
+  const APII = 'https://eipsinsight.com/api/typePage'
+  const fetchPost = () => {
+    fetch(APII)
+      .then((res) => res.json())
+      .then((res) => {
+        setData(res)
+      })
+  }
   const fetchAllEIPs = () => {
     fetch(API2)
       .then((res) => res.json())
@@ -198,7 +205,7 @@ const AllEIPs = () => {
   }
 
   // header
-  const header = (text) => {
+  const header = (text, data) => {
     return (
       <CCardHeader
         className="cardHeader"
@@ -211,7 +218,16 @@ const AllEIPs = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        {text}
+        {text} (
+        {data === undefined
+          ? 0
+          : data['Standard_Track']['Networking'] +
+            data['Standard_Track']['ERC'] +
+            data['Standard_Track']['Core'] +
+            data['Standard_Track']['Interface'] +
+            data['Meta'] +
+            data['Informational']}
+        )
       </CCardHeader>
     )
   }
@@ -225,10 +241,11 @@ const AllEIPs = () => {
   useEffect(() => {
     fetchAllEIPs()
     fetchDate()
+    fetchPost()
   }, [])
   return (
     <CCard style={{ border: '2px solid #a5d8ff' }}>
-      {header('All EIPs')}
+      {header('All EIPs', data)}
       <CCardBody
         style={{
           overflowX: 'auto',

@@ -77,7 +77,8 @@ const CurrentMonth = () => {
     const response = await fetch(`${ip}/currentMonth`)
     const data = await response.json()
     console.log(data)
-    setCurrentMonthData(data)
+    console.log(Object.values(data)[0])
+    setCurrentMonthData(Object.values(data)[0])
   }
   const allData = async (d, y) => {
     try {
@@ -509,7 +510,7 @@ const CurrentMonth = () => {
           {'('}
           {parseInt(
             fetchStatusSum(
-              currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+              currentMonthData === undefined ? [] : currentMonthData,
               text === 'Last Call' ? 'Last_Call' : text,
             ),
           )}
@@ -581,7 +582,8 @@ const CurrentMonth = () => {
   // current Month fetching
   const fetchStatusSum = (monthData, status) => {
     let sum = 0
-    for (let i = 0; i < monthData.length; i++) {
+
+    for (let i = 0; i < monthData?.length; i++) {
       if (monthData[i].Status === status) {
         sum += parseInt(monthData[i].Core) === -1 ? 0 : parseInt(monthData[i].Core)
         sum += parseInt(monthData[i].ERC) === -1 ? 0 : parseInt(monthData[i].ERC)
@@ -598,7 +600,7 @@ const CurrentMonth = () => {
 
   const fetchStatusCategorySum = (monthData, status, category) => {
     let sum = 0
-    for (let i = 0; i < monthData.length; i++) {
+    for (let i = 0; i < monthData?.length; i++) {
       if (monthData[i].Status === status) {
         sum = parseInt(monthData[i][category]) === -1 ? 0 : parseInt(monthData[i][category])
       }
@@ -607,7 +609,6 @@ const CurrentMonth = () => {
     return sum
   }
   useEffect(() => {
-    allData(location.state.from, location.state.year)
     fetchCurrentMonthData()
     fetchDate()
     if (param['*'] === 'autoCharts') {
@@ -709,10 +710,7 @@ const CurrentMonth = () => {
                 </CTableHead>
                 <CTableBody>
                   {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Draft',
-                    ),
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
                   ) === 0 ? (
                     ''
                   ) : (
@@ -762,9 +760,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Draft',
                                 ),
                               )}
@@ -793,10 +789,7 @@ const CurrentMonth = () => {
                   )}
 
                   {parseInt(
-                    fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                      'Final',
-                    ),
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
                   ) === 0 ? (
                     ''
                   ) : (
@@ -846,9 +839,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Final',
                                 ),
                               )}
@@ -878,7 +869,7 @@ const CurrentMonth = () => {
 
                   {parseInt(
                     fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                      currentMonthData === undefined ? [] : currentMonthData,
                       'Review',
                     ),
                   ) === 0 ? (
@@ -930,9 +921,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Review',
                                 ),
                               )}
@@ -961,7 +950,7 @@ const CurrentMonth = () => {
                   )}
                   {parseInt(
                     fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                      currentMonthData === undefined ? [] : currentMonthData,
                       'Last_Call',
                     ),
                   ) === 0 ? (
@@ -1013,9 +1002,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Last_Call',
                                 ),
                               )}
@@ -1044,7 +1031,7 @@ const CurrentMonth = () => {
                   )}
                   {parseInt(
                     fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                      currentMonthData === undefined ? [] : currentMonthData,
                       'Stagnant',
                     ),
                   ) === 0 ? (
@@ -1096,9 +1083,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Stagnant',
                                 ),
                               )}
@@ -1127,7 +1112,7 @@ const CurrentMonth = () => {
                   )}
                   {parseInt(
                     fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                      currentMonthData === undefined ? [] : currentMonthData,
                       'Withdrawn',
                     ),
                   ) === 0 ? (
@@ -1179,9 +1164,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Withdrawn',
                                 ),
                               )}
@@ -1210,7 +1193,7 @@ const CurrentMonth = () => {
                   )}
                   {parseInt(
                     fetchStatusSum(
-                      currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                      currentMonthData === undefined ? [] : currentMonthData,
                       'Living',
                     ),
                   ) === 0 ? (
@@ -1262,9 +1245,7 @@ const CurrentMonth = () => {
                             >
                               {parseInt(
                                 fetchStatusSum(
-                                  currentMonthData === undefined
-                                    ? []
-                                    : currentMonthData?.StatusWise,
+                                  currentMonthData === undefined ? [] : currentMonthData,
                                   'Living',
                                 ),
                               )}
@@ -1306,17 +1287,15 @@ const CurrentMonth = () => {
           </CCard>
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          {data === undefined ? null : data[0]?.summary.SummaryInfo === '' ? null : (
-            <CCard>
-              <CCardBody style={{ borderBottom: '2px solid #74c0fc' }}>
-                <p className="font-monospace text-center">
-                  In October, we have added 9 new EIPs as Draft 2 EIPs moved from Draft and 2 EIP
-                  moved from Last Call are available in Review status. 0 EIPs are promoted to Last
-                  Call. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.
-                </p>{' '}
-              </CCardBody>
-            </CCard>
-          )}
+          <CCard>
+            <CCardBody style={{ borderBottom: '2px solid #74c0fc' }}>
+              <p className="font-monospace text-center">
+                In October, we have added 9 new EIPs as Draft 2 EIPs moved from Draft and 2 EIP
+                moved from Last Call are available in Review status. 0 EIPs are promoted to Last
+                Call. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.
+              </p>{' '}
+            </CCardBody>
+          </CCard>
           <CCardFooter
             className="cardFooter"
             style={{
@@ -1327,16 +1306,14 @@ const CurrentMonth = () => {
             }}
           >
             <ul>
-              {data === undefined ? null : data[0]?.summary.HighlightText === '' ? null : (
-                <li>
-                  <p>
-                    <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
-                      This repo has 3940 Forks and 925 users have put it on the watchlist. Open Pull
-                      Request-94 & Issues-26.
-                    </h1>
-                  </p>
-                </li>
-              )}
+              <li>
+                <p>
+                  <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
+                    This repo has 3940 Forks and 925 users have put it on the watchlist. Open Pull
+                    Request-94 & Issues-26.
+                  </h1>
+                </p>
+              </li>
             </ul>
           </CCardFooter>
         </div>
@@ -1349,44 +1326,7 @@ const CurrentMonth = () => {
               {header('General Stats')}
             </Link>
             <CCardBody className="childChartContainer">
-              {parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
-              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
-              parseInt(data === undefined ? 0 : data[0]?.GeneralStats.ClosedIssues) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0]?.GeneralStats.ClosedIssues) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configgeneralStatsCharts(data === undefined ? [] : data)}
-              />
+              <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
             </CCardBody>
           </CCard>
         </CCol>
@@ -1457,10 +1397,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Draft',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1488,7 +1425,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Draft',
                       ),
                     ) === 0
@@ -1498,7 +1435,7 @@ const CurrentMonth = () => {
                 }}
                 {...configColumnCharts(
                   'Draft',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1521,10 +1458,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Final',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1552,7 +1486,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Final',
                       ),
                     ) === 0
@@ -1562,7 +1496,7 @@ const CurrentMonth = () => {
                 }}
                 {...configPieCharts(
                   'Final',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1585,10 +1519,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Review',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Review'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1616,7 +1547,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Review',
                       ),
                     ) === 0
@@ -1626,7 +1557,7 @@ const CurrentMonth = () => {
                 }}
                 {...configDougnutChart(
                   'Review',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1649,10 +1580,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Last_Call',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Last_Call'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1680,7 +1608,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Last_Call',
                       ),
                     ) === 0
@@ -1690,7 +1618,7 @@ const CurrentMonth = () => {
                 }}
                 {...configAreaCharts(
                   'Last_Call',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1713,10 +1641,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Stagnant',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Stagnant'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1744,7 +1669,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Stagnant',
                       ),
                     ) === 0
@@ -1754,7 +1679,7 @@ const CurrentMonth = () => {
                 }}
                 {...configPieCharts(
                   'Stagnant',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1777,10 +1702,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Withdrawn',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Withdrawn'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1808,7 +1730,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Withdrawn',
                       ),
                     ) === 0
@@ -1818,7 +1740,7 @@ const CurrentMonth = () => {
                 }}
                 {...configColumnCharts(
                   'Withdrawn',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1838,10 +1760,7 @@ const CurrentMonth = () => {
             </CCardHeader>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Draft',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
               ) && 12 === 0 ? (
                 <div
                   style={{
@@ -1869,7 +1788,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Draft',
                       ),
                     ) && 12 === 0
@@ -1878,7 +1797,7 @@ const CurrentMonth = () => {
                   }`,
                 }}
                 {...configDraftvsPotentialCharts(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1899,16 +1818,10 @@ const CurrentMonth = () => {
             </CCardHeader>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Draft',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
               ) === 0 &&
               parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Final',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
               ) === 0 ? (
                 <div
                   style={{
@@ -1936,13 +1849,13 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Draft',
                       ),
                     ) === 0 &&
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Final',
                       ),
                     ) === 0
@@ -1951,7 +1864,7 @@ const CurrentMonth = () => {
                   }`,
                 }}
                 {...configDraftvsFinalCharts(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>
@@ -1974,10 +1887,7 @@ const CurrentMonth = () => {
             </Link>
             <CCardBody className="childChartContainer">
               {parseInt(
-                fetchStatusSum(
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
-                  'Living',
-                ),
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Living'),
               ) === 0 ? (
                 <div
                   style={{
@@ -2005,7 +1915,7 @@ const CurrentMonth = () => {
                   visibility: `${
                     parseInt(
                       fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                        currentMonthData === undefined ? [] : currentMonthData,
                         'Living',
                       ),
                     ) === 0
@@ -2015,7 +1925,7 @@ const CurrentMonth = () => {
                 }}
                 {...configColumnCharts(
                   'Living',
-                  currentMonthData === undefined ? [] : currentMonthData?.StatusWise,
+                  currentMonthData === undefined ? [] : currentMonthData,
                 )}
               />
             </CCardBody>

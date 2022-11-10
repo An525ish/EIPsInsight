@@ -143,8 +143,9 @@ const routes = [
   { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
   { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
 
-  { path: '/Insight', name: 'Charts', element: autoCharts },
+  // { path: '/Insight', name: 'Charts', element: autoCharts },
   { path: '/Insight/currentMonth', name: 'Current Month', element: CurrentMonth },
+  { path: '/Insight/:id', name: 'Month', element: autoCharts },
 
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },

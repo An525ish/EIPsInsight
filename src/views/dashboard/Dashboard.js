@@ -1109,7 +1109,7 @@ const Dashboard = () => {
 
         <CCol xs={12}>
           <CCard style={{ border: '2px solid #a5d8ff' }}>
-            {header('Search an EIP')}
+            <Link to="/EIPS">{header('Search an EIP')}</Link>
             <CCardBody
               style={{
                 overflowX: 'auto',
