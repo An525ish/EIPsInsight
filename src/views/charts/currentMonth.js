@@ -43,6 +43,7 @@ import { each, groupBy } from '@antv/util'
 import { cilBold } from '@coreui/icons'
 import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
+import Loading from '../theme/loading/loading'
 
 const CurrentMonth = () => {
   const [month, setMonth] = useState()
@@ -50,6 +51,7 @@ const CurrentMonth = () => {
   const [date, setDate] = useState()
   const param = useParams()
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   const G = G2.getEngine('canvas')
   let location = useLocation()
@@ -80,29 +82,7 @@ const CurrentMonth = () => {
     console.log(data)
     console.log(Object.values(data)[0])
     setCurrentMonthData(Object.values(data)[0])
-  }
-  const allData = async (d, y) => {
-    try {
-      const res = await fetch(`${ip}/register`)
-      let datas = await res.json()
-
-      let att = d.substring(1)
-      console.log(att)
-
-      setMonth(monthNum[att])
-      setYear(y)
-
-      let filterData = datas.filter((e) => {
-        return e.name.toLowerCase() === att.toLowerCase() && e.year === y
-      }) // we filter from here
-
-      setData(filterData)
-
-      if (!res.status === 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    } catch (err) {}
+    setLoading(true)
   }
 
   const dataCapture = (name, data) => {
@@ -616,1229 +596,1256 @@ const CurrentMonth = () => {
     return sum
   }
   useEffect(() => {
-    fetchCurrentMonthData()
     fetchDate()
     if (param['*'] === 'autoCharts') {
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
     }
+    fetchCurrentMonthData()
     // setInfo(localStorage.getItem('count'))
   }, [location.state.from, location.state.year])
 
   return (
     <>
-      <div
-        style={{
-          fontSize: '40px',
-          fontWeight: '800',
-          marginBottom: '60px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          // textTransform: 'uppercase',
-        }}
-      >
-        <CCard
-          style={{
-            display: 'inline-block',
-            padding: '2rem',
-
-            // borderBottom: '4px solid #339af0',
-            // borderLeft: '2px solid #339af0',
-            // borderRight: '2px solid #339af0',
-            // borderBottomLeftRadius: '2rem',
-            // borderBottomRightRadius: '2rem',
-            // fontFamily: 'Quicksand',
-
-            borderRadius: '2rem',
-            border: '2px solid #1c7ed6',
-            // background: '#e7f5ff',
-            // borderTop: '4px solid #339af0',
-            // borderTop: '4px solid #339af0',
-          }}
-        >
-          <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-            2022
-            {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
-            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
-          </label>
-          {/* <label className="text-[5rem]">O</label> */}
-          <label className="text-[#1c7ed6]">{'November '} </label>{' '}
-          <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-            Insights
-          </label>
-        </CCard>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
-        <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          <CCard>
-            <CCardBody
+      {loading ? (
+        <div>
+          <div
+            style={{
+              fontSize: '40px',
+              fontWeight: '800',
+              marginBottom: '60px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              // textTransform: 'uppercase',
+            }}
+          >
+            <CCard
               style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                width: '100%',
-                fontFamily: 'Roboto',
-                fontSize: '15px',
-                borderBottom: '2px solid #74c0fc',
+                display: 'inline-block',
+                padding: '2rem',
+
+                // borderBottom: '4px solid #339af0',
+                // borderLeft: '2px solid #339af0',
+                // borderRight: '2px solid #339af0',
+                // borderBottomLeftRadius: '2rem',
+                // borderBottomRightRadius: '2rem',
+                // fontFamily: 'Quicksand',
+
+                borderRadius: '2rem',
+                border: '2px solid #1c7ed6',
+                // background: '#e7f5ff',
+                // borderTop: '4px solid #339af0',
+                // borderTop: '4px solid #339af0',
               }}
             >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
-                      Status
-                    </CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
-                      Number
-                    </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
-                  ) === 0 ? (
-                    ''
-                  ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Draft')}`,
-                            backgroundColor: `${getBadge('Draft')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Draft
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
+              <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+                2022
+                {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
+            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
+              </label>
+              {/* <label className="text-[5rem]">O</label> */}
+              <label className="text-[#1c7ed6]">{'November '} </label>{' '}
+              <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+                Insights
+              </label>
+            </CCard>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
+            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+              <CCard>
+                <CCardBody
+                  style={{
+                    overflowX: 'auto',
+                    overflowY: 'auto',
+                    width: '100%',
+                    fontFamily: 'Roboto',
+                    fontSize: '15px',
+                    borderBottom: '2px solid #74c0fc',
+                  }}
+                >
+                  <CTable align="middle" responsive>
+                    <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                      <CTableRow>
+                        <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                          Status
+                        </CTableHeaderCell>
+                        <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                          Number
+                        </CTableHeaderCell>
+                      </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Draft',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Draft')}`,
+                                backgroundColor: `${getBadge('Draft')}`,
+                                fontSize: '13px',
+                              }}
+                            >
+                              Draft
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
               shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
                 'Draft',
               )}] text-[${getBadgeColor(
-                              'Draft',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Draft')}`,
-                              backgroundColor: `${getBadge('Draft')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
+                                  'Draft',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Draft')}`,
+                                  backgroundColor: `${getBadge('Draft')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
 
-                                color: `${getBadgeColor('Draft')}`,
-                                backgroundColor: `${getBadge('Draft')}`,
-                              }}
-                              className={`githubIcon h-7
+                                    color: `${getBadgeColor('Draft')}`,
+                                    backgroundColor: `${getBadge('Draft')}`,
+                                  }}
+                                  className={`githubIcon h-7
               shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Draft',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
+                                  state={{
+                                    type: '',
+                                    status: 'Draft',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Draft',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Draft',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Draft')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Draft',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Draft')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Final',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Final')}`,
+                                backgroundColor: `${getBadge('Final')}`,
+                                fontSize: '13px',
                               }}
                             >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Draft',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Draft',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Draft')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Draft',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Draft')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
-                  )}
-
-                  {parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
-                  ) === 0 ? (
-                    ''
-                  ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Final')}`,
-                            backgroundColor: `${getBadge('Final')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Final
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
+                              Final
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
               shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
                 'Final',
               )}] text-[${getBadgeColor(
-                              'Final',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Final')}`,
-                              backgroundColor: `${getBadge('Final')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
+                                  'Final',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Final')}`,
+                                  backgroundColor: `${getBadge('Final')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
 
-                                color: `${getBadgeColor('Final')}`,
-                                backgroundColor: `${getBadge('Final')}`,
-                              }}
-                              className={`githubIcon h-7
+                                    color: `${getBadgeColor('Final')}`,
+                                    backgroundColor: `${getBadge('Final')}`,
+                                  }}
+                                  className={`githubIcon h-7
               shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Final',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
+                                  state={{
+                                    type: '',
+                                    status: 'Final',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Final',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Final',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Final')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Final',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Final')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Review',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Review')}`,
+                                backgroundColor: `${getBadge('Review')}`,
+                                fontSize: '13px',
                               }}
                             >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Final',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Final',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Final')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Final',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Final')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
-                  )}
+                              Review
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
+              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+                'Review',
+              )}] text-[${getBadgeColor(
+                                  'Review',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Review')}`,
+                                  backgroundColor: `${getBadge('Review')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
 
+                                    color: `${getBadgeColor('Review')}`,
+                                    backgroundColor: `${getBadge('Review')}`,
+                                  }}
+                                  className={`githubIcon h-7
+              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                  state={{
+                                    type: '',
+                                    status: 'Review',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Review',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Review',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Review')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Review',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Review')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Last_Call',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Last_Call')}`,
+                                backgroundColor: `${getBadge('Last_Call')}`,
+                                fontSize: '13px',
+                              }}
+                            >
+                              Last Call
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
+              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+                'Last_Call',
+              )}] text-[${getBadgeColor(
+                                  'Last_Call',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Last_Call')}`,
+                                  backgroundColor: `${getBadge('Last_Call')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
+
+                                    color: `${getBadgeColor('Last_Call')}`,
+                                    backgroundColor: `${getBadge('Last_Call')}`,
+                                  }}
+                                  className={`githubIcon h-7
+              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                  state={{
+                                    type: '',
+                                    status: 'Last_Call',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Last_Call',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Last_Call',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Last_Call')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Last_Call',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Last_Call')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Stagnant',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Stagnant')}`,
+                                backgroundColor: `${getBadge('Stagnant')}`,
+                                fontSize: '13px',
+                              }}
+                            >
+                              Stagnant
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
+              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+                'Stagnant',
+              )}] text-[${getBadgeColor(
+                                  'Stagnant',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Stagnant')}`,
+                                  backgroundColor: `${getBadge('Stagnant')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
+
+                                    color: `${getBadgeColor('Stagnant')}`,
+                                    backgroundColor: `${getBadge('Stagnant')}`,
+                                  }}
+                                  className={`githubIcon h-7
+              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                  state={{
+                                    type: '',
+                                    status: 'Stagnant',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Stagnant',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Stagnant',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Stagnant')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Stagnant',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Stagnant')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Withdrawn',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Withdrawn')}`,
+                                backgroundColor: `${getBadge('Withdrawn')}`,
+                                fontSize: '13px',
+                              }}
+                            >
+                              Withdrawn
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
+              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+                'Withdrawn',
+              )}] text-[${getBadgeColor(
+                                  'Withdrawn',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Withdrawn')}`,
+                                  backgroundColor: `${getBadge('Withdrawn')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
+
+                                    color: `${getBadgeColor('Withdrawn')}`,
+                                    backgroundColor: `${getBadge('Withdrawn')}`,
+                                  }}
+                                  className={`githubIcon h-7
+              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                  state={{
+                                    type: '',
+                                    status: 'Withdrawn',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Withdrawn',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Withdrawn',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Withdrawn')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Withdrawn',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Withdrawn')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                      {parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Living',
+                        ),
+                      ) === 0 ? (
+                        ''
+                      ) : (
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">
+                            <CBadge
+                              style={{
+                                color: `${getBadgeColor('Living')}`,
+                                backgroundColor: `${getBadge('Living')}`,
+                                fontSize: '13px',
+                              }}
+                            >
+                              Living
+                            </CBadge>
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            <label className="relative cursor-pointer">
+                              <div
+                                className={`h-7
+              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+                'Living',
+              )}] text-[${getBadgeColor(
+                                  'Living',
+                                )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor('Living')}`,
+                                  backgroundColor: `${getBadge('Living')}`,
+                                }}
+                              >
+                                <Link
+                                  to="/chartTable"
+                                  style={{
+                                    textDecoration: 'none',
+
+                                    color: `${getBadgeColor('Living')}`,
+                                    backgroundColor: `${getBadge('Living')}`,
+                                  }}
+                                  className={`githubIcon h-7
+              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                  state={{
+                                    type: '',
+                                    status: 'Living',
+                                    category: '',
+                                    month: `${month}`,
+                                    year: `${year}`,
+                                  }}
+                                >
+                                  {parseInt(
+                                    fetchStatusSum(
+                                      currentMonthData === undefined ? [] : currentMonthData,
+                                      'Living',
+                                    ),
+                                  )}
+                                  *
+                                </Link>
+                              </div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Living',
+                                )}] animate-ping`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Living')}`,
+                                }}
+                              ></div>
+                              <div
+                                className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                  'Living',
+                                )}]`}
+                                style={{
+                                  backgroundColor: `${getBadgeColor('Living')}`,
+                                }}
+                              ></div>
+                            </label>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                    </CTableBody>
+                  </CTable>
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                    *Click to see more
+                  </label>
+                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </div>
+            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+              <CCol xs={12} className="mb-4">
+                <CCard>
+                  <CCardBody
+                    style={{
+                      overflowX: 'auto',
+                      overflowY: 'auto',
+                      width: '100%',
+                      fontFamily: 'Roboto',
+                      fontSize: '15px',
+                      borderBottom: '2px solid #74c0fc',
+                    }}
+                  >
+                    <CTable align="middle" responsive>
+                      <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                        <CTableRow>
+                          <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                            Other Stats
+                          </CTableHeaderCell>
+                          <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                            Number
+                          </CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
+                          <CTableDataCell>3940</CTableDataCell>
+                        </CTableRow>
+
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">Users</CTableHeaderCell>
+                          <CTableDataCell>925</CTableDataCell>
+                        </CTableRow>
+
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
+                          <CTableDataCell>38</CTableDataCell>
+                        </CTableRow>
+
+                        <CTableRow>
+                          <CTableHeaderCell scope="row">Files</CTableHeaderCell>
+                          <CTableDataCell>95</CTableDataCell>
+                        </CTableRow>
+                      </CTableBody>
+                    </CTable>
+                  </CCardBody>
+                </CCard>
+                <CCardFooter
+                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <label></label>
+                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                </CCardFooter>
+              </CCol>
+            </div>
+          </div>
+
+          <CRow>
+            <CCol xs={12}>
+              <CCard className="mb-4 cardBorder">
+                {header('GeneralStats')}
+
+                <CCardBody className="childChartContainer">
+                  <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
+                </CCardBody>
+              </CCard>
+            </CCol>
+
+            {/* status Information */}
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Draft',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Draft')}
+                </Link>
+                <CCardBody className="childChartContainer">
+                  {parseInt(
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
+                  ) === 0 ? (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Draft',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configColumnCharts(
+                      'Draft',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Final',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Final')}
+                </Link>
+                <CCardBody className="childChartContainer">
+                  {parseInt(
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
+                  ) === 0 ? (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <Pie
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Final',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configPieCharts(
+                      'Final',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Review',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Review')}
+                </Link>
+                <CCardBody className="childChartContainer">
                   {parseInt(
                     fetchStatusSum(
                       currentMonthData === undefined ? [] : currentMonthData,
                       'Review',
                     ),
                   ) === 0 ? (
-                    ''
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
                   ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Review')}`,
-                            backgroundColor: `${getBadge('Review')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Review
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
-              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-                'Review',
-              )}] text-[${getBadgeColor(
-                              'Review',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Review')}`,
-                              backgroundColor: `${getBadge('Review')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
-
-                                color: `${getBadgeColor('Review')}`,
-                                backgroundColor: `${getBadge('Review')}`,
-                              }}
-                              className={`githubIcon h-7
-              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Review',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
-                              }}
-                            >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Review',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Review',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Review')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Review',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Review')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
+                    ''
                   )}
+                  <Pie
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Review',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configDougnutChart(
+                      'Review',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Last_Call',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Last Call')}
+                </Link>
+                <CCardBody className="childChartContainer">
                   {parseInt(
                     fetchStatusSum(
                       currentMonthData === undefined ? [] : currentMonthData,
                       'Last_Call',
                     ),
                   ) === 0 ? (
-                    ''
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
                   ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Last_Call')}`,
-                            backgroundColor: `${getBadge('Last_Call')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Last Call
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
-              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-                'Last_Call',
-              )}] text-[${getBadgeColor(
-                              'Last_Call',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Last_Call')}`,
-                              backgroundColor: `${getBadge('Last_Call')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
-
-                                color: `${getBadgeColor('Last_Call')}`,
-                                backgroundColor: `${getBadge('Last_Call')}`,
-                              }}
-                              className={`githubIcon h-7
-              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Last_Call',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
-                              }}
-                            >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Last_Call',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Last_Call',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Last_Call')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Last_Call',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Last_Call')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
+                    ''
                   )}
+                  <Area
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Last_Call',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configAreaCharts(
+                      'Last_Call',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Stagnant',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Stagnant')}
+                </Link>
+                <CCardBody className="childChartContainer">
                   {parseInt(
                     fetchStatusSum(
                       currentMonthData === undefined ? [] : currentMonthData,
                       'Stagnant',
                     ),
                   ) === 0 ? (
-                    ''
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
                   ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Stagnant')}`,
-                            backgroundColor: `${getBadge('Stagnant')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Stagnant
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
-              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-                'Stagnant',
-              )}] text-[${getBadgeColor(
-                              'Stagnant',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Stagnant')}`,
-                              backgroundColor: `${getBadge('Stagnant')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
-
-                                color: `${getBadgeColor('Stagnant')}`,
-                                backgroundColor: `${getBadge('Stagnant')}`,
-                              }}
-                              className={`githubIcon h-7
-              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Stagnant',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
-                              }}
-                            >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Stagnant',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Stagnant',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Stagnant')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Stagnant',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Stagnant')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
+                    ''
                   )}
+                  <Pie
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Stagnant',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configPieCharts(
+                      'Stagnant',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Withdrawn',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Withdrawn')}
+                </Link>
+                <CCardBody className="childChartContainer">
                   {parseInt(
                     fetchStatusSum(
                       currentMonthData === undefined ? [] : currentMonthData,
                       'Withdrawn',
                     ),
                   ) === 0 ? (
-                    ''
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
                   ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Withdrawn')}`,
-                            backgroundColor: `${getBadge('Withdrawn')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Withdrawn
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
-              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-                'Withdrawn',
-              )}] text-[${getBadgeColor(
-                              'Withdrawn',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Withdrawn')}`,
-                              backgroundColor: `${getBadge('Withdrawn')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
-
-                                color: `${getBadgeColor('Withdrawn')}`,
-                                backgroundColor: `${getBadge('Withdrawn')}`,
-                              }}
-                              className={`githubIcon h-7
-              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Withdrawn',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
-                              }}
-                            >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Withdrawn',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Withdrawn',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Withdrawn')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Withdrawn',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Withdrawn')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
+                    ''
                   )}
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Withdrawn',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configColumnCharts(
+                      'Withdrawn',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: '',
+                    status: 'Living',
+                    category: '',
+                    month: `${month}`,
+                    year: `${year}`,
+                  }}
+                >
+                  {header('Living')}
+                </Link>
+                <CCardBody className="childChartContainer">
                   {parseInt(
                     fetchStatusSum(
                       currentMonthData === undefined ? [] : currentMonthData,
                       'Living',
                     ),
                   ) === 0 ? (
-                    ''
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
                   ) : (
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">
-                        <CBadge
-                          style={{
-                            color: `${getBadgeColor('Living')}`,
-                            backgroundColor: `${getBadge('Living')}`,
-                            fontSize: '13px',
-                          }}
-                        >
-                          Living
-                        </CBadge>
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        <label className="relative cursor-pointer">
-                          <div
-                            className={`h-7
-              shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-                'Living',
-              )}] text-[${getBadgeColor(
-                              'Living',
-                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor('Living')}`,
-                              backgroundColor: `${getBadge('Living')}`,
-                            }}
-                          >
-                            <Link
-                              to="/chartTable"
-                              style={{
-                                textDecoration: 'none',
-
-                                color: `${getBadgeColor('Living')}`,
-                                backgroundColor: `${getBadge('Living')}`,
-                              }}
-                              className={`githubIcon h-7
-              shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                              state={{
-                                type: '',
-                                status: 'Living',
-                                category: '',
-                                month: `${month}`,
-                                year: `${year}`,
-                              }}
-                            >
-                              {parseInt(
-                                fetchStatusSum(
-                                  currentMonthData === undefined ? [] : currentMonthData,
-                                  'Living',
-                                ),
-                              )}
-                              *
-                            </Link>
-                          </div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Living',
-                            )}] animate-ping`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Living')}`,
-                            }}
-                          ></div>
-                          <div
-                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                              'Living',
-                            )}]`}
-                            style={{
-                              backgroundColor: `${getBadgeColor('Living')}`,
-                            }}
-                          ></div>
-                        </label>
-                      </CTableDataCell>
-                    </CTableRow>
+                    ''
                   )}
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-              style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                *Click to see more
-              </label>
-              <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
-          </CCard>
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Living',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configColumnCharts(
+                      'Living',
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              <CCard className="mb-4 cardBorder">
+                <CCardHeader
+                  className="cardHeader"
+                  style={{
+                    color: `${coloring('text')}`,
+                    background: `${coloring('back')}`,
+                    borderBottom: '2px solid #74c0fc',
+                  }}
+                >
+                  Final vs Draft
+                </CCardHeader>
+                <CCardBody className="childChartContainer">
+                  {parseInt(
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
+                  ) === 0 &&
+                  parseInt(
+                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
+                  ) === 0 ? (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>No data for you today!</b>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Draft',
+                          ),
+                        ) === 0 &&
+                        parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Final',
+                          ),
+                        ) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configDraftvsFinalCharts(
+                      currentMonthData === undefined ? [] : currentMonthData,
+                    )}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
         </div>
-        <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          <CCol xs={12} className="mb-4">
-            <CCard>
-              <CCardBody
-                style={{
-                  overflowX: 'auto',
-                  overflowY: 'auto',
-                  width: '100%',
-                  fontFamily: 'Roboto',
-                  fontSize: '15px',
-                  borderBottom: '2px solid #74c0fc',
-                }}
-              >
-                <CTable align="middle" responsive>
-                  <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                    <CTableRow>
-                      <CTableHeaderCell scope="col" style={{ width: '70%' }}>
-                        Other Stats
-                      </CTableHeaderCell>
-                      <CTableHeaderCell scope="col" style={{ width: '30%' }}>
-                        Number
-                      </CTableHeaderCell>
-                    </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                      <CTableDataCell>3940</CTableDataCell>
-                    </CTableRow>
-
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                      <CTableDataCell>925</CTableDataCell>
-                    </CTableRow>
-
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                      <CTableDataCell>38</CTableDataCell>
-                    </CTableRow>
-
-                    <CTableRow>
-                      <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                      <CTableDataCell>95</CTableDataCell>
-                    </CTableRow>
-                  </CTableBody>
-                </CTable>
-              </CCardBody>
-            </CCard>
-            <CCardFooter
-              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-              style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              <label></label>
-              <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
-          </CCol>
-        </div>
-      </div>
-
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4 cardBorder">
-            {header('GeneralStats')}
-
-            <CCardBody className="childChartContainer">
-              <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
-            </CCardBody>
-          </CCard>
-        </CCol>
-
-        {/* status Information */}
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Draft',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Draft')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Draft',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configColumnCharts(
-                  'Draft',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Final',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Final')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Pie
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Final',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configPieCharts(
-                  'Final',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Review',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Review')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Review'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Pie
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Review',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configDougnutChart(
-                  'Review',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Last_Call',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Last Call')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Last_Call'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Area
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Last_Call',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configAreaCharts(
-                  'Last_Call',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Stagnant',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Stagnant')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Stagnant'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Pie
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Stagnant',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configPieCharts(
-                  'Stagnant',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Withdrawn',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Withdrawn')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Withdrawn'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Withdrawn',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configColumnCharts(
-                  'Withdrawn',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: 'Living',
-                category: '',
-                month: `${month}`,
-                year: `${year}`,
-              }}
-            >
-              {header('Living')}
-            </Link>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Living'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Living',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configColumnCharts(
-                  'Living',
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{
-                color: `${coloring('text')}`,
-                background: `${coloring('back')}`,
-                borderBottom: '2px solid #74c0fc',
-              }}
-            >
-              Final vs Draft
-            </CCardHeader>
-            <CCardBody className="childChartContainer">
-              {parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
-              ) === 0 &&
-              parseInt(
-                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
-              ) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Draft',
-                      ),
-                    ) === 0 &&
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Final',
-                      ),
-                    ) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configDraftvsFinalCharts(
-                  currentMonthData === undefined ? [] : currentMonthData,
-                )}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

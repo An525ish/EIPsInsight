@@ -82,6 +82,7 @@ import { each, groupBy } from '@antv/util'
 
 import './Dashboard.css'
 import { useUserAuth } from 'src/Context/AuthContext'
+import Loading from '../theme/loading/loading'
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
@@ -90,6 +91,8 @@ const Dashboard = () => {
   const [eips, setEips] = useState()
   const [post, getPost] = useState()
   const [pieChartData, setPieChartData] = useState()
+  const [loading, setLoading] = useState(false)
+
   const {
     click1,
     click2,
@@ -171,6 +174,7 @@ const Dashboard = () => {
 
       const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
       setYears(yearArr)
+      setLoading(true)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
@@ -429,26 +433,15 @@ const Dashboard = () => {
     yField: 'gdp',
     seriesField: 'name',
     color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
-    // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
-
-    /** 设置颜色 */
-    //color: ['#1ca9e6', '#f88c24'],
-
-    /** 设置间距 */
-    // marginRatio: 0.1,
     label: {
-      // 可手动配置 label 数据标签位置
       position: 'middle',
-      // 'top', 'middle', 'bottom'
-      // 可配置附加的布局方法
       layout: [
-        // 柱形图数据标签位置自动调整
         {
           type: 'interval-adjust-position',
-        }, // 数据标签防遮挡
+        },
         {
           type: 'interval-hide-overlap',
-        }, // 数据标签文颜色自动调整
+        },
         {
           type: 'adjust-color',
         },
@@ -466,12 +459,6 @@ const Dashboard = () => {
     yField: 'value',
     seriesField: 'name',
     color: ['#ffa8a8', '#ffe066', '#e599f7'],
-    // color: ['#1864ab', '#74c0fc'],
-
-    // xAxis: {
-    //   type: 'time',
-    //   mask: 'YYYY',
-    // },
     yAxis: {
       label: {
         // 数值格式化为千分位
@@ -484,12 +471,6 @@ const Dashboard = () => {
     axis: {
       minLimit: 0,
     },
-    // meta: {
-    //   value: {
-    //     min: 0,
-    //     max: 10,
-    //   },
-    // },
   }
 
   const finalvsDraftData = (data) => {
@@ -1052,289 +1033,294 @@ const Dashboard = () => {
   useEffect(() => {
     // fetchData()
 
-    allData()
     fetchPost()
     fetchDate()
     fetchAllEIPs()
     fetchAllStatus()
+    allData()
   }, [])
 
   // temparary
 
   return (
-    <>
-      <CRow>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <Link to="/typeAll">{header('EIPs Type & Categories')} </Link>
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...config} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            <Link to="/statusAll">{header('EIPs Status')} </Link>
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Pie {...pieConfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
+    <div>
+      {loading ? (
+        <div>
+          <CRow>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+                <Link to="/typeAll">{header('EIPs Type & Categories')} </Link>
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Column {...config} />
+                </CCardBody>
+                {footer(date)}
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+                <Link to="/statusAll">{header('EIPs Status')} </Link>
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Pie {...pieConfig} />
+                </CCardBody>
+                {footer(date)}
+              </CCard>
+            </CCol>
 
-        <CCol xs={12}>
-          <CCard style={{ border: '2px solid #a5d8ff' }}>
-            <Link to="/EIPS">{header('Search an EIP')}</Link>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                height: '300px',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-              }}
-              className="scrollbarDesign"
-            >
-              <CSmartTable
-                items={eipData(eips === undefined ? [] : eips)}
-                activePage={1}
-                color="success"
-                clickableRows
-                columns={columns}
-                columnFilter
-                columnSorter
-                itemsPerPage={50}
-                pagination
-                onRowClick={(t) => {}}
-                scopedColumns={{
-                  status: (item) => (
-                    <td>
-                      <CBadge
-                        style={{
-                          color: `${getBadgeColor(item.status)}`,
-                          backgroundColor: `${getBadge(item.status)}`,
-                        }}
-                      >
-                        {item.status}
-                      </CBadge>
-                    </td>
-                  ),
-                  Number: (item) => (
-                    <td>
-                      <label className="relative cursor-pointer">
-                        <div
-                          className={`h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-              item.status,
-            )}] text-[${getBadgeColor(
-                            item.status,
-                          )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                          style={{
-                            color: `${getBadgeColor(item.status)}`,
-                            backgroundColor: `${getBadge(item.status)}`,
-                          }}
-                        >
-                          <Link
-                            to={`/EIP-${item.Number}`}
-                            className={`githubIcon h-7
-            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+            <CCol xs={12}>
+              <CCard style={{ border: '2px solid #a5d8ff' }}>
+                <Link to="/EIPS">{header('Search an EIP')}</Link>
+                <CCardBody
+                  style={{
+                    overflowX: 'auto',
+                    overflowY: 'auto',
+                    height: '300px',
+                    fontFamily: 'Roboto',
+                    fontSize: '12px',
+                  }}
+                  className="scrollbarDesign"
+                >
+                  <CSmartTable
+                    items={eipData(eips === undefined ? [] : eips)}
+                    activePage={1}
+                    color="success"
+                    clickableRows
+                    columns={columns}
+                    columnFilter
+                    columnSorter
+                    itemsPerPage={50}
+                    pagination
+                    onRowClick={(t) => {}}
+                    scopedColumns={{
+                      status: (item) => (
+                        <td>
+                          <CBadge
                             style={{
                               color: `${getBadgeColor(item.status)}`,
                               backgroundColor: `${getBadge(item.status)}`,
                             }}
                           >
-                            {item.Number}*
-                          </Link>
-                        </div>
-                        <div
-                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                            item.status,
-                          )}] animate-ping`}
-                          style={{
-                            backgroundColor: `${getBadgeColor(item.status)}`,
-                          }}
-                        ></div>
-                        <div
-                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                            item.status,
-                          )}]`}
-                          style={{
-                            backgroundColor: `${getBadgeColor(item.status)}`,
-                          }}
-                        ></div>
-                      </label>
-                    </td>
-                  ),
+                            {item.status}
+                          </CBadge>
+                        </td>
+                      ),
+                      Number: (item) => (
+                        <td>
+                          <label className="relative cursor-pointer">
+                            <div
+                              className={`h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
+              item.status,
+            )}] text-[${getBadgeColor(
+                                item.status,
+                              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                              style={{
+                                color: `${getBadgeColor(item.status)}`,
+                                backgroundColor: `${getBadge(item.status)}`,
+                              }}
+                            >
+                              <Link
+                                to={`/EIP-${item.Number}`}
+                                className={`githubIcon h-7
+            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                                style={{
+                                  color: `${getBadgeColor(item.status)}`,
+                                  backgroundColor: `${getBadge(item.status)}`,
+                                }}
+                              >
+                                {item.Number}*
+                              </Link>
+                            </div>
+                            <div
+                              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                item.status,
+                              )}] animate-ping`}
+                              style={{
+                                backgroundColor: `${getBadgeColor(item.status)}`,
+                              }}
+                            ></div>
+                            <div
+                              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                item.status,
+                              )}]`}
+                              style={{
+                                backgroundColor: `${getBadgeColor(item.status)}`,
+                              }}
+                            ></div>
+                          </label>
+                        </td>
+                      ),
+                    }}
+                    sorterValue={{ column: 'name', state: 'asc' }}
+                    tableHeadProps={{}}
+                    tableProps={{
+                      striped: true,
+                      hover: true,
+                      responsive: true,
+                    }}
+                  />
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                    *Click to see more
+                  </label>
+                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+          </CRow>
+
+          <CRow>
+            <CCol xs={12} className="mb-4">
+              <div
+                style={{
+                  fontSize: '30px',
+                  fontWeight: '400',
+                  marginBottom: '00px',
+                  backgroundColor: 'white',
+                  border: 'none',
+                  display: 'inline-block',
+
+                  padding: '14px',
+                  borderRadius: '5px',
+                  borderLeft: '4px solid #339af0',
+                  borderBottom: '2px solid #339af0',
+                  marginTop: '2rem',
                 }}
-                sorterValue={{ column: 'name', state: 'asc' }}
-                tableHeadProps={{}}
-                tableProps={{
-                  striped: true,
-                  hover: true,
-                  responsive: true,
+              >
+                Insights
+              </div>
+            </CCol>
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Draft')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Line {...monthlyDraftConfig} />
+                </CCardBody>
+                {footer(date, 'Draft')}
+              </CCard>
+            </CCol>
+
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Final')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Column {...monthlyFinalConfig} />
+                </CCardBody>
+                {footer(date, 'Final')}
+              </CCard>
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+                {header('Final vs Draft')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Column {...finalvsDraftconfig} />
+                </CCardBody>
+                {footer(date)}
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+                {header('DraftEIPs vs Potential Proposal')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Area {...montlyDraftvsFinalconfig} />
+                </CCardBody>
+                {footer(date)}
+              </CCard>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12} className="mb-4">
+              <div
+                style={{
+                  fontSize: '30px',
+                  fontWeight: '400',
+                  marginBottom: '00px',
+                  backgroundColor: 'white',
+                  border: 'none',
+                  display: 'inline-block',
+                  padding: '14px',
+                  borderRadius: '5px',
+                  borderLeft: '4px solid #339af0',
+                  borderBottom: '2px solid #339af0',
+                  marginTop: '2rem',
                 }}
-              />
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
-              style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                *Click to see more
-              </label>
-              <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-      </CRow>
+              >
+                Yearly Insights
+              </div>
+            </CCol>
 
-      {/* Monthly Insights */}
-      <CRow>
-        <CCol xs={12} className="mb-4">
-          <div
-            style={{
-              fontSize: '30px',
-              fontWeight: '400',
-              marginBottom: '00px',
-              backgroundColor: 'white',
-              border: 'none',
-              display: 'inline-block',
-
-              padding: '14px',
-              borderRadius: '5px',
-              borderLeft: '4px solid #339af0',
-              borderBottom: '2px solid #339af0',
-              marginTop: '2rem',
-            }}
-          >
-            Insights
-          </div>
-        </CCol>
-        <CCol xs={12}>
-          <CCard className="mb-2 cardBorder">
-            {header('Draft')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Line {...monthlyDraftConfig} />
-            </CCardBody>
-            {footer(date, 'Draft')}
-          </CCard>
-        </CCol>
-
-        <CCol xs={12}>
-          <CCard className="mb-2 cardBorder">
-            {header('Final')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...monthlyFinalConfig} />
-            </CCardBody>
-            {footer(date, 'Final')}
-          </CCard>
-        </CCol>
-
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('Final vs Draft')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Column {...finalvsDraftconfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-            {header('DraftEIPs vs Potential Proposal')}
-            <CCardBody
-              style={{
-                // backgroundColor: '#fff9db',
-                height: '300px',
-                // backgroundImage: `url(${github})`,
-                // backgroundSize: '33% 30%',
-                // backgroundRepeat: 'no-repeat',
-                // backgroundPosition: 'right -12px bottom -40px',
-              }}
-            >
-              <Area {...montlyDraftvsFinalconfig} />
-            </CCardBody>
-            {footer(date)}
-          </CCard>
-        </CCol>
-      </CRow>
-      <CRow>
-        <CCol xs={12} className="mb-4">
-          <div
-            style={{
-              fontSize: '30px',
-              fontWeight: '400',
-              marginBottom: '00px',
-              backgroundColor: 'white',
-              border: 'none',
-              display: 'inline-block',
-              padding: '14px',
-              borderRadius: '5px',
-              borderLeft: '4px solid #339af0',
-              borderBottom: '2px solid #339af0',
-              marginTop: '2rem',
-            }}
-          >
-            Yearly Insights
-          </div>
-        </CCol>
-
-        {/* Yearly Insights */}
-        {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
-        {yearlyInsights(4, 'Final', yearlyFinalConfig)}
-        {yearlyInsights(4, 'Review', yearlyReviewConfig)}
-        {yearlyInsights(6, 'Last Call', yearlyLastCallConfig)}
-        {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
-        {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
-        {yearlyInsights(6, 'Living', yearlyLivingConfig)}
-      </CRow>
-    </>
+            {/* Yearly Insights */}
+            {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
+            {yearlyInsights(4, 'Final', yearlyFinalConfig)}
+            {yearlyInsights(4, 'Review', yearlyReviewConfig)}
+            {yearlyInsights(6, 'Last Call', yearlyLastCallConfig)}
+            {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
+            {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
+            {yearlyInsights(6, 'Living', yearlyLivingConfig)}
+          </CRow>
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </div>
   )
 }
 

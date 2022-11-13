@@ -20,11 +20,13 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
 import { faLessThan } from '@fortawesome/free-solid-svg-icons'
+import Loading from 'src/views/theme/loading/loading'
 
 function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   const matches = useMediaQuery('(max-width: 767px)')
 
@@ -34,6 +36,7 @@ function statusAll(props) {
       .then((res) => res.json())
       .then((res) => {
         getPost(res)
+        setLoading(true)
       })
   }
   const fetchAnnotations = (d) => {
@@ -470,13 +473,19 @@ function statusAll(props) {
 
   return (
     <>
-      {customTableChart('Living', 'Living')}
-      {customTableChart('Final', 'Final')}
-      {customTableChart('Last_Call', 'Last Call')}
-      {customTableChart('Review', 'Review')}
-      {customTableChart('Draft', 'Draft')}
-      {customTableChart('Stagnant', 'Stagnant')}
-      {customTableChart('Withdrawn', 'Withdrawn')}
+      {loading ? (
+        <div>
+          {customTableChart('Living', 'Living')}
+          {customTableChart('Final', 'Final')}
+          {customTableChart('Last_Call', 'Last Call')}
+          {customTableChart('Review', 'Review')}
+          {customTableChart('Draft', 'Draft')}
+          {customTableChart('Stagnant', 'Stagnant')}
+          {customTableChart('Withdrawn', 'Withdrawn')}
+        </div>
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

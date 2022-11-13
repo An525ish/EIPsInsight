@@ -2,11 +2,14 @@ import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from 
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
+import Loading from '../theme/loading/loading'
 
 const AllEIPs = () => {
   const [eips, setEips] = useState()
   const [date, setDate] = useState()
   const [data, setData] = useState()
+  const [loading, setLoading] = useState(false)
+
   const navigate = useNavigate()
   const { allEIPs } = useUserAuth()
   const API2 = 'https://eipsinsight.com/api/allinfo'
@@ -23,6 +26,7 @@ const AllEIPs = () => {
       .then((res) => res.json())
       .then((res) => {
         setEips(res)
+        setLoading(true)
       })
   }
 
@@ -251,83 +255,87 @@ const AllEIPs = () => {
           }}
           className="scrollbarDesign"
         >
-          <CSmartTable
-            items={eipData(eips === undefined ? [] : eips)}
-            activePage={1}
-            color="success"
-            clickableRows
-            columns={columns}
-            columnFilter
-            columnSorter
-            itemsPerPage={15}
-            pagination
-            onRowClick={(t) => {}}
-            scopedColumns={{
-              status: (item) => (
-                <td>
-                  <CBadge
-                    style={{
-                      color: `${getBadgeColor(item.status)}`,
-                      backgroundColor: `${getBadge(item.status)}`,
-                    }}
-                  >
-                    {item.status}
-                  </CBadge>
-                </td>
-              ),
-              Number: (item) => (
-                <td>
-                  <label className="relative cursor-pointer">
-                    <div
-                      className={`h-7
-    shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
-                        item.status,
-                      )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+          {loading ? (
+            <CSmartTable
+              items={eipData(eips === undefined ? [] : eips)}
+              activePage={1}
+              color="success"
+              clickableRows
+              columns={columns}
+              columnFilter
+              columnSorter
+              itemsPerPage={15}
+              pagination
+              onRowClick={(t) => {}}
+              scopedColumns={{
+                status: (item) => (
+                  <td>
+                    <CBadge
                       style={{
                         color: `${getBadgeColor(item.status)}`,
                         backgroundColor: `${getBadge(item.status)}`,
                       }}
                     >
-                      <Link
-                        to={`/EIP-${item.Number}`}
-                        className={`githubIcon h-7
-    shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                      {item.status}
+                    </CBadge>
+                  </td>
+                ),
+                Number: (item) => (
+                  <td>
+                    <label className="relative cursor-pointer">
+                      <div
+                        className={`h-7
+    shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
+                          item.status,
+                        )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                         style={{
                           color: `${getBadgeColor(item.status)}`,
                           backgroundColor: `${getBadge(item.status)}`,
                         }}
                       >
-                        {item.Number}*
-                      </Link>
-                    </div>
-                    <div
-                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                        item.status,
-                      )}] animate-ping`}
-                      style={{
-                        backgroundColor: `${getBadgeColor(item.status)}`,
-                      }}
-                    ></div>
-                    <div
-                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                        item.status,
-                      )}]`}
-                      style={{
-                        backgroundColor: `${getBadgeColor(item.status)}`,
-                      }}
-                    ></div>
-                  </label>
-                </td>
-              ),
-            }}
-            sorterValue={{ column: 'name', state: 'asc' }}
-            tableHeadProps={{}}
-            tableProps={{
-              striped: true,
-              hover: true,
-              responsive: true,
-            }}
-          />
+                        <Link
+                          to={`/EIP-${item.Number}`}
+                          className={`githubIcon h-7
+    shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                          style={{
+                            color: `${getBadgeColor(item.status)}`,
+                            backgroundColor: `${getBadge(item.status)}`,
+                          }}
+                        >
+                          {item.Number}*
+                        </Link>
+                      </div>
+                      <div
+                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                          item.status,
+                        )}] animate-ping`}
+                        style={{
+                          backgroundColor: `${getBadgeColor(item.status)}`,
+                        }}
+                      ></div>
+                      <div
+                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                          item.status,
+                        )}]`}
+                        style={{
+                          backgroundColor: `${getBadgeColor(item.status)}`,
+                        }}
+                      ></div>
+                    </label>
+                  </td>
+                ),
+              }}
+              sorterValue={{ column: 'name', state: 'asc' }}
+              tableHeadProps={{}}
+              tableProps={{
+                striped: true,
+                hover: true,
+                responsive: true,
+              }}
+            />
+          ) : (
+            <Loading />
+          )}
         </CCardBody>
         <CCardFooter
           className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"

@@ -19,10 +19,12 @@ import './type.css'
 import useMediaQuery from 'src/scss/useMediaQuery'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
+import Loading from 'src/views/theme/loading/loading'
 
 function typeAll() {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const matches = useMediaQuery('(max-width: 767px)')
@@ -33,6 +35,7 @@ function typeAll() {
       .then((res) => res.json())
       .then((res) => {
         getPost(res)
+        setLoading(true)
       })
   }
   const fetchAnnotations = (d) => {
@@ -306,398 +309,428 @@ function typeAll() {
 
   return (
     <>
-      <div
-        style={{
-          fontSize: '30px',
-          fontWeight: '400',
-          marginBottom: '00px',
-          backgroundColor: 'white',
-          border: 'none',
-          width: '18rem',
-          padding: '10px',
-          borderRadius: '5px',
-          borderLeft: '4px solid #339af0',
-          borderBottom: '2px solid #339af0',
-        }}
-      >
-        Standard Track{' '}
-        <label
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: '800',
-          }}
-        >
-          <Link
-            to="/chartTable"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-            state={{ type: 'Standards Track', status: '', category: '' }}
+      {loading ? (
+        <div>
+          <div
+            style={{
+              fontSize: '30px',
+              fontWeight: '400',
+              marginBottom: '00px',
+              backgroundColor: 'white',
+              border: 'none',
+              width: '18rem',
+              padding: '10px',
+              borderRadius: '5px',
+              borderLeft: '4px solid #339af0',
+              borderBottom: '2px solid #339af0',
+            }}
           >
+            Standard Track{' '}
+            <label
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: '800',
+              }}
+            >
+              <Link
+                to="/chartTable"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                state={{ type: 'Standards Track', status: '', category: '' }}
+              >
+                <div
+                  className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                >
+                  {post === undefined
+                    ? 0
+                    : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
+                      fetchTableData(
+                        post === undefined ? [] : post,
+                        'Standard_Track',
+                        'Withdrawn',
+                      ) +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
+                      fetchTableData(
+                        post === undefined ? [] : post,
+                        'Standard_Track',
+                        'Last_Call',
+                      ) +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
+                </div>
+              </Link>
+            </label>
+          </div>
+          <CRow>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard>
+                <CCardBody
+                  style={{
+                    height: '300px',
+
+                    borderLeft: '2px solid #74c0fc',
+                  }}
+                >
+                  <Pie
+                    {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
+                    style={{ height: '280px' }}
+                  />
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    borderLeft: '2px solid #74c0fc',
+                    borderBottom: '2px solid #74c0fc',
+                    background: `${coloring('back')}`,
+                  }}
+                >
+                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard>
+                <CCardBody
+                  style={{
+                    overflowX: 'auto',
+                    overflowY: 'auto',
+                    height: '300px',
+                    fontFamily: 'Roboto',
+                    fontSize: '12px',
+                    borderRight: '2px solid #74c0fc',
+                    '--main-color': `#1c7ed6`,
+                    '--main-color-background': `#e7f5ff`,
+                  }}
+                  className="scrollbarDesign"
+                >
+                  <CTable align="middle" responsive>
+                    <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                      <CTableRow>
+                        <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">%</CTableHeaderCell>
+                      </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{ type: 'Standards Track', status: '', category: 'Core' }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Core
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {getStandardAttribute(post === undefined ? [] : post, 'Core')}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {(
+                              (getStandardAttribute(post === undefined ? [] : post, 'Core') /
+                                totalEIPs()) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{ type: 'Standards Track', status: '', category: 'ERC' }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              ERC
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {(
+                              (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
+                                totalEIPs()) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{ type: 'Standards Track', status: '', category: 'Networking' }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Networking
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {(
+                              (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
+                                totalEIPs()) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{ type: 'Standards Track', status: '', category: 'Interface' }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Interface
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {(
+                              (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
+                                totalEIPs()) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                    </CTableBody>
+                  </CTable>
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    borderRight: '2px solid #74c0fc',
+                    borderBottom: '2px solid #74c0fc',
+                    background: `${coloring('back')}`,
+                  }}
+                >
+                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+          </CRow>
+          <div className="flex justify-between">
             <div
-              className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+              style={{
+                fontSize: '30px',
+                fontWeight: '400',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+                display: 'inline-block',
+                padding: '12px',
+                borderRadius: '5px',
+                borderLeft: '4px solid #339af0',
+                borderBottom: '2px solid #339af0',
+                marginTop: '2rem',
+              }}
             >
-              {post === undefined
-                ? 0
-                : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Withdrawn') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Last_Call') +
-                  fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
+              Meta{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                }}
+              >
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{ type: 'Meta', status: '', category: '' }}
+                >
+                  <div
+                    className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                  >
+                    {post === undefined
+                      ? 0
+                      : fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
+                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
+                  </div>
+                </Link>
+              </label>
             </div>
-          </Link>
-        </label>
-      </div>
-      <CRow>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
+            <div
               style={{
-                height: '300px',
+                fontSize: '30px',
+                fontWeight: '400',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
 
-                borderLeft: '2px solid #74c0fc',
+                padding: '12px',
+                display: 'inline-block',
+                borderRadius: '5px',
+                borderRight: '4px solid #339af0',
+                borderBottom: '2px solid #339af0',
+                marginTop: '2rem',
               }}
             >
-              <Pie
-                {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
-                style={{ height: '280px' }}
-              />
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderLeft: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                height: '300px',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-                borderRight: '2px solid #74c0fc',
-                '--main-color': `#1c7ed6`,
-                '--main-color-background': `#e7f5ff`,
-              }}
-              className="scrollbarDesign"
-            >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">Category</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">%</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Standards Track', status: '', category: 'Core' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Core
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {getStandardAttribute(post === undefined ? [] : post, 'Core')}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <label className="font-[800]">
-                        {(
-                          (getStandardAttribute(post === undefined ? [] : post, 'Core') /
-                            totalEIPs()) *
-                          100
-                        ).toFixed(2)}
-                        %
-                      </label>
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Standards Track', status: '', category: 'ERC' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          ERC
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <label className="font-[800]">
-                        {(
-                          (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
-                            totalEIPs()) *
-                          100
-                        ).toFixed(2)}
-                        %
-                      </label>
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Standards Track', status: '', category: 'Networking' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Networking
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <label className="font-[800]">
-                        {(
-                          (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
-                            totalEIPs()) *
-                          100
-                        ).toFixed(2)}
-                        %
-                      </label>
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Standards Track', status: '', category: 'Interface' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Interface
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <label className="font-[800]">
-                        {(
-                          (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
-                            totalEIPs()) *
-                          100
-                        ).toFixed(2)}
-                        %
-                      </label>
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderRight: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-      </CRow>
-      <div className="flex justify-between">
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: '400',
-            marginBottom: '00px',
-            backgroundColor: 'white',
-            border: 'none',
-            display: 'inline-block',
-            padding: '12px',
-            borderRadius: '5px',
-            borderLeft: '4px solid #339af0',
-            borderBottom: '2px solid #339af0',
-            marginTop: '2rem',
-          }}
-        >
-          Meta{' '}
-          <label
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: '800',
-            }}
-          >
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{ type: 'Meta', status: '', category: '' }}
-            >
-              <div
-                className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+              Informational{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                }}
               >
-                {post === undefined
-                  ? 0
-                  : fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
-              </div>
-            </Link>
-          </label>
-        </div>
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: '400',
-            marginBottom: '00px',
-            backgroundColor: 'white',
-            border: 'none',
-
-            padding: '12px',
-            display: 'inline-block',
-            borderRadius: '5px',
-            borderRight: '4px solid #339af0',
-            borderBottom: '2px solid #339af0',
-            marginTop: '2rem',
-          }}
-        >
-          Informational{' '}
-          <label
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: '800',
-            }}
-          >
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{ type: 'Informational', status: '', category: '' }}
-            >
-              <div
-                className='className="h-7
+                <Link
+                  to="/chartTable"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{ type: 'Informational', status: '', category: '' }}
+                >
+                  <div
+                    className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-              >
-                {post === undefined
-                  ? 0
-                  : fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
-                    fetchTableDataExtra(
-                      post === undefined ? [] : post,
-                      'Informational',
-                      'Withdrawn',
-                    ) +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
-                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
-                    fetchTableDataExtra(
-                      post === undefined ? [] : post,
-                      'Informational',
-                      'Last_Call',
-                    ) +
-                    fetchTableDataExtra(
-                      post === undefined ? [] : post,
-                      'Informational',
-                      'Stagnant',
-                    )}
-              </div>
-            </Link>
-          </label>
-        </div>
-      </div>
-      <CRow>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
-              style={{
-                height: '300px',
-                borderLeft: '2px solid #74c0fc',
-              }}
-            >
-              <Pie
-                {...getChartInfo(post === undefined ? [] : post, 'Meta')}
-                style={{ height: '280px' }}
-              />
-              ;
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderLeft: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
+                  >
+                    {post === undefined
+                      ? 0
+                      : fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Living',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Final',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Withdrawn',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Draft',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Review',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Last_Call',
+                        ) +
+                        fetchTableDataExtra(
+                          post === undefined ? [] : post,
+                          'Informational',
+                          'Stagnant',
+                        )}
+                  </div>
+                </Link>
+              </label>
+            </div>
+          </div>
+          <CRow>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard>
+                <CCardBody
+                  style={{
+                    height: '300px',
+                    borderLeft: '2px solid #74c0fc',
+                  }}
+                >
+                  <Pie
+                    {...getChartInfo(post === undefined ? [] : post, 'Meta')}
+                    style={{ height: '280px' }}
+                  />
+                  ;
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    borderLeft: '2px solid #74c0fc',
+                    borderBottom: '2px solid #74c0fc',
+                    background: `${coloring('back')}`,
+                  }}
+                >
+                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </CCol>
 
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
-              style={{
-                height: '300px',
-                borderRight: '2px solid #74c0fc',
-              }}
-            >
-              <Pie
-                {...getChartInfo(post === undefined ? [] : post, 'Informational')}
-                style={{ height: '280px' }}
-              />
-              ;
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderRight: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-      </CRow>
+            <CCol xs={matches ? 12 : 6}>
+              <CCard>
+                <CCardBody
+                  style={{
+                    height: '300px',
+                    borderRight: '2px solid #74c0fc',
+                  }}
+                >
+                  <Pie
+                    {...getChartInfo(post === undefined ? [] : post, 'Informational')}
+                    style={{ height: '280px' }}
+                  />
+                  ;
+                </CCardBody>
+                <CCardFooter
+                  className="cardFooter"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    borderRight: '2px solid #74c0fc',
+                    borderBottom: '2px solid #74c0fc',
+                    background: `${coloring('back')}`,
+                  }}
+                >
+                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+          </CRow>
+        </div>
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }
