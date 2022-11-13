@@ -1,11 +1,14 @@
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUserAuth } from 'src/Context/AuthContext'
 
 const AllEIPs = () => {
   const [eips, setEips] = useState()
   const [date, setDate] = useState()
   const [data, setData] = useState()
+  const navigate = useNavigate()
+  const { allEIPs } = useUserAuth()
   const API2 = 'https://eipsinsight.com/api/allinfo'
   const APII = 'https://eipsinsight.com/api/typePage'
   const fetchPost = () => {
@@ -205,7 +208,7 @@ const AllEIPs = () => {
   }
 
   // header
-  const header = (text, data) => {
+  const header = (text) => {
     return (
       <CCardHeader
         className="cardHeader"
@@ -218,16 +221,7 @@ const AllEIPs = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        {text} (
-        {data === undefined
-          ? 0
-          : data['Standard_Track']['Networking'] +
-            data['Standard_Track']['ERC'] +
-            data['Standard_Track']['Core'] +
-            data['Standard_Track']['Interface'] +
-            data['Meta'] +
-            data['Informational']}
-        )
+        {text} ({allEIPs})
       </CCardHeader>
     )
   }
@@ -244,106 +238,108 @@ const AllEIPs = () => {
     fetchPost()
   }, [])
   return (
-    <CCard style={{ border: '2px solid #a5d8ff' }}>
-      {header('All EIPs', data)}
-      <CCardBody
-        style={{
-          overflowX: 'auto',
-          overflowY: 'auto',
+    <>
+      <CCard style={{ border: '2px solid #a5d8ff' }}>
+        {header('All EIPs')}
+        <CCardBody
+          style={{
+            overflowX: 'auto',
+            overflowY: 'auto',
 
-          fontFamily: 'Roboto',
-          fontSize: '12px',
-        }}
-        className="scrollbarDesign"
-      >
-        <CSmartTable
-          items={eipData(eips === undefined ? [] : eips)}
-          activePage={1}
-          color="success"
-          clickableRows
-          columns={columns}
-          columnFilter
-          columnSorter
-          itemsPerPage={15}
-          pagination
-          onRowClick={(t) => {}}
-          scopedColumns={{
-            status: (item) => (
-              <td>
-                <CBadge
-                  style={{
-                    color: `${getBadgeColor(item.status)}`,
-                    backgroundColor: `${getBadge(item.status)}`,
-                  }}
-                >
-                  {item.status}
-                </CBadge>
-              </td>
-            ),
-            Number: (item) => (
-              <td>
-                <label className="relative cursor-pointer">
-                  <div
-                    className={`h-7
-    shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
-                      item.status,
-                    )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+            fontFamily: 'Roboto',
+            fontSize: '12px',
+          }}
+          className="scrollbarDesign"
+        >
+          <CSmartTable
+            items={eipData(eips === undefined ? [] : eips)}
+            activePage={1}
+            color="success"
+            clickableRows
+            columns={columns}
+            columnFilter
+            columnSorter
+            itemsPerPage={15}
+            pagination
+            onRowClick={(t) => {}}
+            scopedColumns={{
+              status: (item) => (
+                <td>
+                  <CBadge
                     style={{
                       color: `${getBadgeColor(item.status)}`,
                       backgroundColor: `${getBadge(item.status)}`,
                     }}
                   >
-                    <Link
-                      to={`/EIPs/${item.Number}`}
-                      className={`githubIcon h-7
-    shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                    {item.status}
+                  </CBadge>
+                </td>
+              ),
+              Number: (item) => (
+                <td>
+                  <label className="relative cursor-pointer">
+                    <div
+                      className={`h-7
+    shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
+                        item.status,
+                      )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                       style={{
                         color: `${getBadgeColor(item.status)}`,
                         backgroundColor: `${getBadge(item.status)}`,
                       }}
                     >
-                      {item.Number}*
-                    </Link>
-                  </div>
-                  <div
-                    className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                      item.status,
-                    )}] animate-ping`}
-                    style={{
-                      backgroundColor: `${getBadgeColor(item.status)}`,
-                    }}
-                  ></div>
-                  <div
-                    className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                      item.status,
-                    )}]`}
-                    style={{
-                      backgroundColor: `${getBadgeColor(item.status)}`,
-                    }}
-                  ></div>
-                </label>
-              </td>
-            ),
-          }}
-          sorterValue={{ column: 'name', state: 'asc' }}
-          tableHeadProps={{}}
-          tableProps={{
-            striped: true,
-            hover: true,
-            responsive: true,
-          }}
-        />
-      </CCardBody>
-      <CCardFooter
-        className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
-        style={{ display: 'flex', justifyContent: 'space-between' }}
-      >
-        <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-          *Click to see more
-        </label>
-        <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-      </CCardFooter>
-    </CCard>
+                      <Link
+                        to={`/EIP-${item.Number}`}
+                        className={`githubIcon h-7
+    shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                        style={{
+                          color: `${getBadgeColor(item.status)}`,
+                          backgroundColor: `${getBadge(item.status)}`,
+                        }}
+                      >
+                        {item.Number}*
+                      </Link>
+                    </div>
+                    <div
+                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                        item.status,
+                      )}] animate-ping`}
+                      style={{
+                        backgroundColor: `${getBadgeColor(item.status)}`,
+                      }}
+                    ></div>
+                    <div
+                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                        item.status,
+                      )}]`}
+                      style={{
+                        backgroundColor: `${getBadgeColor(item.status)}`,
+                      }}
+                    ></div>
+                  </label>
+                </td>
+              ),
+            }}
+            sorterValue={{ column: 'name', state: 'asc' }}
+            tableHeadProps={{}}
+            tableProps={{
+              striped: true,
+              hover: true,
+              responsive: true,
+            }}
+          />
+        </CCardBody>
+        <CCardFooter
+          className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
+          style={{ display: 'flex', justifyContent: 'space-between' }}
+        >
+          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+            *Click to see more
+          </label>
+          <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+        </CCardFooter>
+      </CCard>
+    </>
   )
 }
 

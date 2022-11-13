@@ -17,11 +17,13 @@ import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/
 import { each, groupBy } from '@antv/util'
 import './type.css'
 import useMediaQuery from 'src/scss/useMediaQuery'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUserAuth } from 'src/Context/AuthContext'
 
 function typeAll() {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
+  const navigate = useNavigate()
 
   const matches = useMediaQuery('(max-width: 767px)')
 
@@ -298,6 +300,7 @@ function typeAll() {
       fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
       fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Last_Call') +
       fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')
+
     return total
   }
 
@@ -533,50 +536,108 @@ function typeAll() {
           </CCard>
         </CCol>
       </CRow>
-
-      <div
-        style={{
-          fontSize: '30px',
-          fontWeight: '400',
-          marginBottom: '00px',
-          backgroundColor: 'white',
-          border: 'none',
-          width: '9rem',
-          padding: '10px',
-          borderRadius: '5px',
-          borderLeft: '4px solid #339af0',
-          borderBottom: '2px solid #339af0',
-          marginTop: '2rem',
-        }}
-      >
-        Meta{' '}
-        <label
+      <div className="flex justify-between">
+        <div
           style={{
-            fontSize: '1.5rem',
-            fontWeight: '800',
+            fontSize: '30px',
+            fontWeight: '400',
+            marginBottom: '00px',
+            backgroundColor: 'white',
+            border: 'none',
+            display: 'inline-block',
+            padding: '12px',
+            borderRadius: '5px',
+            borderLeft: '4px solid #339af0',
+            borderBottom: '2px solid #339af0',
+            marginTop: '2rem',
           }}
         >
-          <Link
-            to="/chartTable"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-            state={{ type: 'Meta', status: '', category: '' }}
+          Meta{' '}
+          <label
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: '800',
+            }}
           >
-            <div
-              className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{ type: 'Meta', status: '', category: '' }}
             >
-              {post === undefined
-                ? 0
-                : fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
-            </div>
-          </Link>
-        </label>
+              <div
+                className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+              >
+                {post === undefined
+                  ? 0
+                  : fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
+              </div>
+            </Link>
+          </label>
+        </div>
+        <div
+          style={{
+            fontSize: '30px',
+            fontWeight: '400',
+            marginBottom: '00px',
+            backgroundColor: 'white',
+            border: 'none',
+
+            padding: '12px',
+            display: 'inline-block',
+            borderRadius: '5px',
+            borderRight: '4px solid #339af0',
+            borderBottom: '2px solid #339af0',
+            marginTop: '2rem',
+          }}
+        >
+          Informational{' '}
+          <label
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: '800',
+            }}
+          >
+            <Link
+              to="/chartTable"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              state={{ type: 'Informational', status: '', category: '' }}
+            >
+              <div
+                className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+              >
+                {post === undefined
+                  ? 0
+                  : fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
+                    fetchTableDataExtra(
+                      post === undefined ? [] : post,
+                      'Informational',
+                      'Withdrawn',
+                    ) +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
+                    fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
+                    fetchTableDataExtra(
+                      post === undefined ? [] : post,
+                      'Informational',
+                      'Last_Call',
+                    ) +
+                    fetchTableDataExtra(
+                      post === undefined ? [] : post,
+                      'Informational',
+                      'Stagnant',
+                    )}
+              </div>
+            </Link>
+          </label>
+        </div>
       </div>
       <CRow>
         <CCol xs={matches ? 12 : 6}>
@@ -607,240 +668,13 @@ function typeAll() {
             </CCardFooter>
           </CCard>
         </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                height: '300px',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-                borderRight: '2px solid #74c0fc',
-                '--main-color': `#1c7ed6`,
-                '--main-color-background': `#e7f5ff`,
-              }}
-              className="scrollbarDesign"
-            >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Living', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Living
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Final', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Final
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Last_Call', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Last-Call
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Review', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Review
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Draft', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Draft
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Stagnant', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Stagnant
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Meta', status: 'Withdrawn', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Withdrawn
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn')}
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderRight: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-      </CRow>
 
-      <div
-        style={{
-          fontSize: '30px',
-          fontWeight: '400',
-          marginBottom: '00px',
-          backgroundColor: 'white',
-          border: 'none',
-          width: '15rem',
-          padding: '10px',
-          borderRadius: '5px',
-          borderLeft: '4px solid #339af0',
-          borderBottom: '2px solid #339af0',
-          marginTop: '2rem',
-        }}
-      >
-        Informational{' '}
-        <label
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: '800',
-          }}
-        >
-          <Link
-            to="/chartTable"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-            state={{ type: 'Informational', status: '', category: '' }}
-          >
-            <div
-              className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-            >
-              {post === undefined
-                ? 0
-                : fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
-                  fetchTableDataExtra(
-                    post === undefined ? [] : post,
-                    'Informational',
-                    'Withdrawn',
-                  ) +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
-                  fetchTableDataExtra(
-                    post === undefined ? [] : post,
-                    'Informational',
-                    'Last_Call',
-                  ) +
-                  fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')}
-            </div>
-          </Link>
-        </label>
-      </div>
-      <CRow>
         <CCol xs={matches ? 12 : 6}>
           <CCard>
             <CCardBody
               style={{
                 height: '300px',
-                borderLeft: '2px solid #74c0fc',
+                borderRight: '2px solid #74c0fc',
               }}
             >
               <Pie
@@ -848,207 +682,6 @@ function typeAll() {
                 style={{ height: '280px' }}
               />
               ;
-            </CCardBody>
-            <CCardFooter
-              className="cardFooter"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                borderLeft: '2px solid #74c0fc',
-                borderBottom: '2px solid #74c0fc',
-                background: `${coloring('back')}`,
-              }}
-            >
-              <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                height: '300px',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-                borderRight: '2px solid #74c0fc',
-                '--main-color': `#1c7ed6`,
-                '--main-color-background': `#e7f5ff`,
-              }}
-              className="scrollbarDesign"
-            >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Living', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Living
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Living',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Final', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Final
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Final',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Last_Call', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Last-Call
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Last_Call',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Review', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Review
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Review',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Draft', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Draft
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Draft',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Stagnant', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Stagnant
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Stagnant',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableDataCell>
-                      <Link
-                        to="/chartTable"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        state={{ type: 'Informational', status: 'Withdrawn', category: '' }}
-                      >
-                        <div
-                          className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
-                        >
-                          Withdrawn
-                        </div>
-                      </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {fetchTableDataExtra(
-                        post === undefined ? [] : post,
-                        'Informational',
-                        'Withdrawn',
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
             </CCardBody>
             <CCardFooter
               className="cardFooter"

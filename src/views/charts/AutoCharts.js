@@ -32,7 +32,7 @@ import {
 import 'chartjs-plugin-datalabels'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { element } from 'prop-types'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
@@ -50,6 +50,7 @@ const autoCharts = (props) => {
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
+  const navigate = useNavigate()
   const param = useParams()
 
   const G = G2.getEngine('canvas')
@@ -364,76 +365,78 @@ const autoCharts = (props) => {
 
     return config
   }
+
+  const annotations = []
+
+  const d1 = [
+    {
+      year: 'Draft',
+      value: data === undefined ? 0 : parseInt(data[0]?.Draft.Core),
+      type: 'Core',
+    },
+    {
+      year: 'Draft',
+      value: data === undefined ? 0 : parseInt(data[0]?.Draft.ERC),
+      type: 'ERC',
+    },
+    {
+      year: 'Draft',
+      value: data === undefined ? 0 : parseInt(data[0]?.Draft.Networking),
+      type: 'Networking',
+    },
+    {
+      year: 'Draft',
+      value: data === undefined ? 0 : parseInt(data[0]?.Draft.Interface),
+      type: 'Interface',
+    },
+    {
+      year: 'Final',
+      value: data === undefined ? 0 : parseInt(data[0]?.Final.Core),
+      type: 'Core',
+    },
+    {
+      year: 'Final',
+      value: data === undefined ? 0 : parseInt(data[0]?.Final.ERC),
+      type: 'ERC',
+    },
+    {
+      year: 'Final',
+      value: data === undefined ? 0 : parseInt(data[0]?.Final.Networking),
+      type: 'Networking',
+    },
+    {
+      year: 'Final',
+      value: data === undefined ? 0 : parseInt(data[0]?.Final.Interface),
+      type: 'Interface',
+    },
+  ]
+  each(groupBy(d1, 'year'), (values, k) => {
+    const value = values.reduce((a, b) => a + b.value, 0)
+
+    annotations.push({
+      type: 'text',
+      position: [k, value],
+      content: `${value}`,
+      style: {
+        textAlign: 'center',
+        fontSize: 12,
+        fill: 'rgba(0,0,0,0.6)',
+      },
+      offsetY: -10,
+    })
+  })
+
   const configDraftvsFinalCharts = (data) => {
     const config = {
-      appendPadding: 10,
-      data: [
-        {
-          type: 'Draft',
-          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.Draft),
-        },
-        {
-          type: 'Final',
-          value: data.length === 0 ? 0 : parseInt(data[0]?.summary.Final),
-        },
-      ],
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
-      angleField: 'value',
-      colorField: 'type',
-      radius: 1,
-      innerRadius: 0.64,
-      meta: {
-        value: {
-          formatter: (v) => `${v} ¥`,
-        },
-      },
-      label: {
-        type: 'inner',
-        offset: '-50%',
-        style: {
-          textAlign: 'center',
-        },
-        autoRotate: false,
-        content: '{value}',
-      },
-      statistic: {
-        title: {
-          offsetY: -4,
+      data: d1,
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      isStack: true,
+      xField: 'year',
+      yField: 'value',
+      seriesField: 'type',
+      label: false,
 
-          customHtml: (container, view, datum) => {
-            const { width, height } = container.getBoundingClientRect()
-            const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2))
-            const text = datum ? datum.type : 'Total'
-            return renderStatistic(d, text, {
-              fontSize: 8,
-            })
-          },
-        },
-        content: {
-          offsetY: 4,
-          style: {
-            fontSize: '32px',
-          },
-          customHtml: (container, view, datum, data) => {
-            const { width } = container.getBoundingClientRect()
-            const text = datum ? `${datum.value}` : `${data.reduce((r, d) => r + d.value, 0)}`
-            return renderStatistic(width, text, {
-              fontSize: 32,
-            })
-          },
-        },
-      },
-      interactions: [
-        {
-          type: 'element-selected',
-        },
-        {
-          type: 'element-active',
-        },
-        {
-          type: 'pie-statistic-active',
-        },
-      ],
+      annotations,
     }
     return config
   }
@@ -509,13 +512,17 @@ const autoCharts = (props) => {
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
-        <label style={{ fontWeight: '700' }}>
-          {'('}
-          {parseInt(
-            data === undefined ? 0 : findTotalValueZero(data === undefined ? [] : data, text),
-          )}
-          {')'}
-        </label>
+        {text === 'GeneralStats' ? (
+          ''
+        ) : (
+          <label style={{ fontWeight: '700' }}>
+            {'('}
+            {parseInt(
+              data === undefined ? 0 : findTotalValueZero(data === undefined ? [] : data, text),
+            )}
+            {')'}
+          </label>
+        )}
       </CCardHeader>
     )
   }
@@ -596,10 +603,11 @@ const autoCharts = (props) => {
         style={{
           fontSize: '40px',
           fontWeight: '800',
-          marginBottom: '20px',
+          marginBottom: '60px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+
           // textTransform: 'uppercase',
         }}
       >
@@ -634,27 +642,6 @@ const autoCharts = (props) => {
           </label>
         </CCard>
       </div>
-
-      <CCol xs={12} className="mb-1">
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: '400',
-            marginBottom: '00px',
-            backgroundColor: 'white',
-            border: 'none',
-            width: '17rem',
-            padding: '14px',
-            borderRadius: '5px',
-            borderLeft: '4px solid #339af0',
-            borderBottom: '2px solid #339af0',
-            marginTop: '2rem',
-            marginLeft: '8px',
-          }}
-        >
-          Monthly Insights
-        </div>
-      </CCol>
 
       <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
@@ -1184,34 +1171,69 @@ const autoCharts = (props) => {
           </CCard>
         </div>
         <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-          {data === undefined ? null : data[0]?.summary.SummaryInfo === '' ? null : (
+          <CCol xs={12} className="mb-4">
             <CCard>
-              <CCardBody style={{ borderBottom: '2px solid #74c0fc' }}>
-                <p className="font-monospace text-center">{data[0]?.summary.SummaryInfo}</p>{' '}
+              <CCardBody
+                style={{
+                  overflowX: 'auto',
+                  overflowY: 'auto',
+                  width: '100%',
+                  fontFamily: 'Roboto',
+                  fontSize: '15px',
+                  borderBottom: '2px solid #74c0fc',
+                }}
+              >
+                <CTable align="middle" responsive>
+                  <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                    <CTableRow>
+                      <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                        Other Stats
+                      </CTableHeaderCell>
+                      <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                        Number
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Forks)}
+                      </CTableDataCell>
+                    </CTableRow>
+
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Users</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Users)}
+                      </CTableDataCell>
+                    </CTableRow>
+
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Authors)}
+                      </CTableDataCell>
+                    </CTableRow>
+
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">Files</CTableHeaderCell>
+                      <CTableDataCell>
+                        {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Files)}
+                      </CTableDataCell>
+                    </CTableRow>
+                  </CTableBody>
+                </CTable>
               </CCardBody>
+              <CCardFooter
+                className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <label></label>
+                <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+              </CCardFooter>
             </CCard>
-          )}
-          <CCardFooter
-            className="cardFooter"
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              color: `#1c7ed6`,
-              background: `#e7f5ff`,
-            }}
-          >
-            <ul>
-              {data === undefined ? null : data[0]?.summary.HighlightText === '' ? null : (
-                <li>
-                  <p>
-                    <h1 className="display-6" style={{ fontSize: '1.3rem', fontStyle: 'italic' }}>
-                      {data[0]?.summary.HighlightText}
-                    </h1>
-                  </p>
-                </li>
-              )}
-            </ul>
-          </CCardFooter>
+          </CCol>
         </div>
       </div>
 
@@ -1220,16 +1242,7 @@ const autoCharts = (props) => {
           <CCard className="mb-4 cardBorder">
             {header('GeneralStats')}
 
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 90%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
               parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
               parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
@@ -1271,62 +1284,7 @@ const autoCharts = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={12} className="mb-4">
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                width: '100%',
-                fontFamily: 'Roboto',
-                fontSize: '15px',
-                borderBottom: '2px solid #74c0fc',
-              }}
-            >
-              <CTable align="middle" responsive>
-                <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col" style={{ width: '70%' }}>
-                      Other Stats
-                    </CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ width: '30%' }}>
-                      Number
-                    </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Forks)}
-                    </CTableDataCell>
-                  </CTableRow>
 
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Users)}
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Authors)}
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                    <CTableDataCell>
-                      {parseInt(data === undefined ? 0 : data[0]?.OtherStats.Files)}
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
             <Link
@@ -1342,16 +1300,7 @@ const autoCharts = (props) => {
             >
               {header('Draft')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Draft') === 0 ? (
                 <div
                   style={{
@@ -1402,16 +1351,7 @@ const autoCharts = (props) => {
             >
               {header('Final')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Final') === 0 ? (
                 <div
                   style={{
@@ -1462,16 +1402,7 @@ const autoCharts = (props) => {
             >
               {header('Review')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Review') === 0 ? (
                 <div
                   style={{
@@ -1522,16 +1453,7 @@ const autoCharts = (props) => {
             >
               {header('LastCall')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'LastCall') === 0 ? (
                 <div
                   style={{
@@ -1582,16 +1504,7 @@ const autoCharts = (props) => {
             >
               {header('Stagnant')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Stagnant') === 0 ? (
                 <div
                   style={{
@@ -1642,16 +1555,7 @@ const autoCharts = (props) => {
             >
               {header('Withdrawn')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Withdrawn') === 0 ? (
                 <div
                   style={{
@@ -1689,125 +1593,6 @@ const autoCharts = (props) => {
         </CCol>
         <CCol xs={matches ? 12 : 6}>
           <CCard className="mb-4 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{
-                color: `${coloring('text')}`,
-                background: `${coloring('back')}`,
-                borderBottom: '2px solid #74c0fc',
-              }}
-            >
-              Draft EIPs vs Potential Proposal
-            </CCardHeader>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
-              parseInt(data === undefined ? 0 : data[0]?.summary.potentialProposal) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Column
-                style={{
-                  visibility: `${
-                    parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0]?.summary.potentialProposal) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configDraftvsPotentialCharts(data === undefined ? [] : data)}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
-            <CCardHeader
-              className="cardHeader"
-              style={{
-                color: `${coloring('text')}`,
-                background: `${coloring('back')}`,
-                borderBottom: '2px solid #74c0fc',
-              }}
-            >
-              Final vs Draft
-            </CCardHeader>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
-              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
-              parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0 ? (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    left: '0',
-                    top: '83px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: 'rgba(220, 52, 85, 0.5)',
-                    zIndex: '1',
-                    fontSize: '26px',
-                  }}
-                >
-                  <b>No data for you today!</b>
-                </div>
-              ) : (
-                ''
-              )}
-              <Pie
-                style={{
-                  visibility: `${
-                    parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
-                    parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0
-                      ? 'hidden'
-                      : 'visible'
-                  }`,
-                }}
-                {...configDraftvsFinalCharts(data === undefined ? [] : data)}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={matches ? 12 : 6}>
-          <CCard className="mb-4 cardBorder">
             <Link
               to="/chartTable"
               style={{ textDecoration: 'none', color: 'inherit' }}
@@ -1821,16 +1606,7 @@ const autoCharts = (props) => {
             >
               {header('Living')}
             </Link>
-            <CCardBody
-              className="childChartContainer"
-              style={{
-                // backgroundColor: '#fff9db',
-                backgroundImage: `url(${github})`,
-                backgroundSize: '33% 50%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right -16px top -32px',
-              }}
-            >
+            <CCardBody className="childChartContainer">
               {findTotalValueZero(data === undefined ? [] : data, 'Living') === 0 ? (
                 <div
                   style={{
@@ -1862,6 +1638,58 @@ const autoCharts = (props) => {
                   }`,
                 }}
                 {...configColumnCharts('Living', data === undefined ? [] : data)}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+
+        <CCol xs={matches ? 12 : 6}>
+          <CCard className="mb-4 cardBorder">
+            <CCardHeader
+              className="cardHeader"
+              style={{
+                color: `${coloring('text')}`,
+                background: `${coloring('back')}`,
+                borderBottom: '2px solid #74c0fc',
+              }}
+            >
+              Final vs Draft
+            </CCardHeader>
+            <CCardBody className="childChartContainer">
+              {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+              parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0 ? (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    left: '0',
+                    top: '83px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'rgba(220, 52, 85, 0.5)',
+                    zIndex: '1',
+                    fontSize: '26px',
+                  }}
+                >
+                  <b>No data for you today!</b>
+                </div>
+              ) : (
+                ''
+              )}
+
+              <Column
+                style={{
+                  visibility: `${
+                    parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+                    parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0
+                      ? 'hidden'
+                      : 'visible'
+                  }`,
+                }}
+                {...configDraftvsFinalCharts(data === undefined ? [] : data)}
               />
             </CCardBody>
           </CCard>

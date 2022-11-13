@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { CBadge, CCard, CCardBody, CCardFooter, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 function table() {
   const location = useLocation()
@@ -12,6 +12,7 @@ function table() {
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
+  const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/allinfo'
 
   const fetchAllEIPs = () => {
@@ -876,7 +877,7 @@ function table() {
                       }}
                     >
                       <Link
-                        to={`/EIPs/${item.Number}`}
+                        to={`/EIP-${item.Number}`}
                         className={`githubIcon h-7
             shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                         style={{

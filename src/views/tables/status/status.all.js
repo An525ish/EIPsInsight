@@ -12,7 +12,7 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
@@ -24,6 +24,7 @@ import { faLessThan } from '@fortawesome/free-solid-svg-icons'
 function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
+  const navigate = useNavigate()
 
   const matches = useMediaQuery('(max-width: 767px)')
 

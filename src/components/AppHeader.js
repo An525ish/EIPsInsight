@@ -47,6 +47,8 @@ const AppHeader = () => {
     setClick2Function,
     setClick3Function,
     setClick4Function,
+    allEIPs,
+    setAllEIPsFunction,
   } = useUserAuth()
   const param = useParams()
 
@@ -89,6 +91,65 @@ const AppHeader = () => {
       })
   }
 
+  const [post, getPost] = useState()
+  const APIII = 'https://eipsinsight.com/api/statusPage'
+  const fetchPostI = () => {
+    fetch(APIII)
+      .then((res) => res.json())
+      .then((res) => {
+        getPost(res)
+      })
+  }
+
+  const getStandardAttribute = (post, name) => {
+    return post.length === 0
+      ? 0
+      : post['Final']['Standard_Track'] === undefined
+      ? 0
+      : post['Final']['Standard_Track'][name] +
+        post['Draft']['Standard_Track'][name] +
+        post['Review']['Standard_Track'][name] +
+        post['Last_Call']['Standard_Track'][name] +
+        post['Stagnant']['Standard_Track'][name] +
+        post['Withdrawn']['Standard_Track'][name] +
+        post['Living']['Standard_Track'][name]
+  }
+
+  const fetchTableDataExtra = (data, name, status) => {
+    const keys = Object.keys(data)
+    let res = 0
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] === status) {
+        res = data[keys[i]][name]
+      }
+    }
+
+    return res
+  }
+  const totalEIPs = () => {
+    const total =
+      getStandardAttribute(post === undefined ? [] : post, 'Core') +
+      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')
+    setAllEIPsFunction(total)
+    return total
+  }
+
   const getMonth = (d) => {
     if (d.length !== 0) {
       d.sort(sorter)
@@ -115,49 +176,9 @@ const AppHeader = () => {
     }
   }
 
-  const clickTab = (e) => {
-    setClick1Function(true)
-    setClick2Function(false)
-    setClick3Function(false)
-    setClick4Function(false)
-  }
-  const clickTab1 = (e) => {
-    setClick1Function(false)
-    setClick2Function(true)
-    setClick3Function(false)
-    setClick4Function(false)
-  }
-  const clickTab2 = (e) => {
-    setClick1Function(false)
-    setClick2Function(false)
-    setClick3Function(true)
-    setClick4Function(false)
-  }
-  const clickTab4 = (e) => {
-    setClick1Function(false)
-    setClick2Function(false)
-    setClick3Function(false)
-    setClick4Function(true)
-  }
-
-  const resetClick = () => {
-    setClick1Function(false)
-    setClick2Function(false)
-    setClick3Function(false)
-    setClick4Function(false)
-  }
-
   useEffect(() => {
     fetchPost()
-    if (param['*'] === 'typeAll') {
-      clickTab()
-    } else if (param['*'] === 'statusAll') {
-      clickTab1()
-    } else if (param['*'] === 'autoCharts') {
-      clickTab2()
-    } else if (param['*'] === '' || param['*'] === 'autoCharts') {
-      resetClick()
-    }
+    fetchPostI()
   }, [])
 
   return (
@@ -195,9 +216,8 @@ const AppHeader = () => {
               to="/EIPS"
               style={{ textDecoration: 'none', color: 'inherit' }}
               className="hover:text-black"
-              onClick={clickTab4}
             >
-              <CNavLink to="/EIPS" component={NavLink} onClick={clickTab4}>
+              <CNavLink to="/EIPS" component={NavLink}>
                 All{' '}
                 <label className="relative cursor-pointer">
                   <div
@@ -208,14 +228,7 @@ const AppHeader = () => {
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2 h-2"></div>
                   <div className="absolute top-0 right-0 -mr-0 -mt-1   w-2 h-2 text-[10px] text-[#1c7ed6] font-[900]">
-                    {data === undefined
-                      ? 0
-                      : data['Standard_Track']['Networking'] +
-                        data['Standard_Track']['ERC'] +
-                        data['Standard_Track']['Core'] +
-                        data['Standard_Track']['Interface'] +
-                        data['Meta'] +
-                        data['Informational']}
+                    {totalEIPs()}
                   </div>
                 </label>
               </CNavLink>
@@ -230,9 +243,8 @@ const AppHeader = () => {
               to="/typeAll"
               style={{ textDecoration: 'none', color: 'inherit' }}
               className="hover:text-black"
-              onClick={clickTab}
             >
-              <CNavLink to="/typeAll" component={NavLink} onClick={clickTab}>
+              <CNavLink to="/typeAll" component={NavLink}>
                 Type
               </CNavLink>
             </Link>
@@ -242,14 +254,8 @@ const AppHeader = () => {
               click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <Link
-              to="/statusAll"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              onClick={clickTab1}
-            >
-              <CNavLink href="/statusAll" onClick={clickTab}>
-                Status
-              </CNavLink>
+            <Link to="/statusAll" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <CNavLink href="/statusAll">Status</CNavLink>
             </Link>
           </CNavItem>
 
@@ -259,14 +265,13 @@ const AppHeader = () => {
             }`}
           >
             <Link
-              to="/Insight/currentMonth"
+              to="/currentMonth"
               state={{
                 from: `/october`,
                 year: 2022,
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}
               className="z-1"
-              onClick={clickTab2}
             >
               <CNavLink href="/Insight">
                 Insight{' '}
@@ -275,7 +280,7 @@ const AppHeader = () => {
                     className=" h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
                   >
-                    October <label className="text-[10px] cursor-pointer">2022</label>
+                    November <label className="text-[10px] cursor-pointer">2022</label>
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>

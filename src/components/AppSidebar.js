@@ -130,10 +130,10 @@ const AppSidebar = () => {
         if (yearArr[j] === '2022') {
           list.push({
             component: CNavItem,
-            name: `October`,
-            to: `/Insight/currentMonth`,
+            name: `November`,
+            to: `/currentMonth`,
             state: {
-              from: `/october`,
+              from: `/november`,
               year: 2022,
             },
           })
@@ -143,7 +143,7 @@ const AppSidebar = () => {
             list.push({
               component: CNavItem,
               name: `${datas[i].name}`,
-              to: `/Insight/${datas[i].name.toLowerCase()}-${datas[i].year}`,
+              to: `/${datas[i].name.toLowerCase()}-${datas[i].year}`,
               state: {
                 from: `/${datas[i].name.toLowerCase()}`,
                 year: datas[i].year,

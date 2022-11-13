@@ -30,6 +30,8 @@ export function UserAuthContextProvider({ children }) {
   const [click2, setClick2] = useState(false)
   const [click3, setClick3] = useState(false)
   const [click4, setClick4] = useState(false)
+  const [click5, setClick5] = useState(false)
+  const [allEIPs, setAllEIPs] = useState(0)
 
   // admin Check
   // function adminCheck() {
@@ -110,6 +112,19 @@ export function UserAuthContextProvider({ children }) {
     }
     return set()
   }
+  function setClick5Function(bool) {
+    const set = () => {
+      setClick5(bool)
+    }
+    return set()
+  }
+
+  function setAllEIPsFunction(num) {
+    const set = () => {
+      setAllEIPs(num)
+    }
+    return set()
+  }
 
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
@@ -148,11 +163,14 @@ export function UserAuthContextProvider({ children }) {
         click2,
         click3,
         click4,
+        click5,
+        allEIPs,
         setClick1Function,
         setClick2Function,
         setClick3Function,
         setClick4Function,
-
+        setClick5Function,
+        setAllEIPsFunction,
         // adminCheck,
         // adminCheckAgain,
       }}

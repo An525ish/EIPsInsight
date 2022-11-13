@@ -1057,12 +1057,6 @@ const Dashboard = () => {
     fetchDate()
     fetchAllEIPs()
     fetchAllStatus()
-    if (param['*'] === '') {
-      setClick1Function(false)
-      setClick2Function(false)
-      setClick3Function(false)
-      setClick4Function(false)
-    }
   }, [])
 
   // temparary
@@ -1160,7 +1154,7 @@ const Dashboard = () => {
                           }}
                         >
                           <Link
-                            to={`/EIPs/${item.Number}`}
+                            to={`/EIP-${item.Number}`}
                             className={`githubIcon h-7
             shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                             style={{

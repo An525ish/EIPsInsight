@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom'
 import ProtectedLogin from './components/protectedLogin'
 import ProtectedRoute from './components/ProtectedRoutes'
 import { UserAuthContextProvider } from './Context/AuthContext'
@@ -30,7 +30,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Suspense fallback={loading}>
         <UserAuthContextProvider>
           <Routes>
@@ -54,7 +54,9 @@ function App() {
             <Route exact path="/resetPassword" name="Reset Password" element={<ResetPassword />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route path="*" name="Home" element={<DefaultLayout />} />
+            {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
+            <Route exact path="*" name="Home" element={<DefaultLayout />} />
+
             <Route
               path="/form"
               name="Form"
@@ -78,7 +80,7 @@ function App() {
           </Routes>
         </UserAuthContextProvider>
       </Suspense>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
 
