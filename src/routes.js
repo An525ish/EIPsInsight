@@ -97,6 +97,7 @@ const statusLiving = React.lazy(() => import('./views/tables/status/statusLiving
 
 const typeAll = React.lazy(() => import('./views/tables/type/type.all'))
 const table = React.lazy(() => import('./views/tables/ExplicitTable/table'))
+const currentTable = React.lazy(() => import('./views/tables/ExplicitTable/tablecurrentmonth'))
 
 // Icons
 const CoreUIIcons = React.lazy(() => import('./views/icons/coreui-icons/CoreUIIcons'))
@@ -224,6 +225,7 @@ const routes = [
   { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
+  { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },
   { path: '/EIP-:id', name: 'EIPs', element: EIPs },
   { path: '/EIPS', name: 'EIPs', element: AllEIPs },
 ]

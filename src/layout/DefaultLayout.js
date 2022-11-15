@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import back from 'src/assets/back.png'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import useMediaQuery from 'src/scss/useMediaQuery'
 
 const DefaultLayout = () => {
   const {
@@ -18,6 +19,8 @@ const DefaultLayout = () => {
     setClick4Function,
     setAllEIPsFunction,
   } = useUserAuth()
+
+  const matches = useMediaQuery('(max-width: 767px)')
   const param = useParams()
   const navigate = useNavigate()
   const [par, isPar] = useState()
@@ -71,15 +74,15 @@ const DefaultLayout = () => {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
         <div className="body flex flex-grow-1 px-3">
-          {par?.length === 0 ? (
+          {par?.length === 0 || matches ? (
             ''
           ) : (
             <div
-              className="fixed rounded-[15px]  flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] text-[3rem] w-[3rem] h-[15rem] mt-[15rem] px-[2rem] py-3 border-[#1c7ed6] border-[1.5px] drop-shadow-sm cursor-pointer shadow-[#1c7ed6] ease-in-out shadow-lg transition hover:scale-95 motion-reduce:transition delay-100 motion-reduce:focus:scale-95"
+              className="fixed rounded-[15px] flex flex-col justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] text-[3rem] w-[3rem] h-[12rem] mt-[15rem] px-[2rem] py-3 border-[#1c7ed6] border-[1.5px] drop-shadow-sm cursor-pointer shadow-[#1c7ed6] ease-in-out shadow-lg transition hover:scale-95 motion-reduce:transition delay-100 motion-reduce:focus:scale-95 animate-pulse"
               onClick={() => navigate(-1)}
+              style={{ zIndex: 999 }}
             >
-              <label className="-rotate-90 text-[2rem] cursor-pointer">Back</label>
-              {/* <img src={back} alt="back" className="z-2" /> */}
+              <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
             </div>
           )}
           <AppContent />

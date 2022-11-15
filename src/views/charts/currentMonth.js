@@ -80,8 +80,7 @@ const CurrentMonth = () => {
     const response = await fetch(`${ip}/currentMonth`)
     const data = await response.json()
     console.log(data)
-    console.log(Object.values(data)[0])
-    setCurrentMonthData(Object.values(data)[0])
+    setCurrentMonthData(data)
     setLoading(true)
   }
 
@@ -572,13 +571,16 @@ const CurrentMonth = () => {
 
     for (let i = 0; i < monthData?.length; i++) {
       if (monthData[i].Status === status) {
-        sum += parseInt(monthData[i].Core) === -1 ? 0 : parseInt(monthData[i].Core)
-        sum += parseInt(monthData[i].ERC) === -1 ? 0 : parseInt(monthData[i].ERC)
-        sum += parseInt(monthData[i].Networking) === -1 ? 0 : parseInt(monthData[i].Networking)
-        sum += parseInt(monthData[i].Interface) === -1 ? 0 : parseInt(monthData[i].Interface)
-        sum += parseInt(monthData[i].Meta) === -1 ? 0 : parseInt(monthData[i].Meta)
+        sum += parseInt(monthData[i].Core[0]) === -1 ? 0 : parseInt(monthData[i].Core[0])
+        sum += parseInt(monthData[i].ERC[0]) === -1 ? 0 : parseInt(monthData[i].ERC[0])
         sum +=
-          parseInt(monthData[i].Informational) === -1 ? 0 : parseInt(monthData[i].Informational)
+          parseInt(monthData[i].Networking[0]) === -1 ? 0 : parseInt(monthData[i].Networking[0])
+        sum += parseInt(monthData[i].Interface[0]) === -1 ? 0 : parseInt(monthData[i].Interface[0])
+        sum += parseInt(monthData[i].Meta[0]) === -1 ? 0 : parseInt(monthData[i].Meta[0])
+        sum +=
+          parseInt(monthData[i].Informational[0]) === -1
+            ? 0
+            : parseInt(monthData[i].Informational[0])
       }
     }
 
@@ -626,27 +628,19 @@ const CurrentMonth = () => {
                 display: 'inline-block',
                 padding: '2rem',
 
-                // borderBottom: '4px solid #339af0',
-                // borderLeft: '2px solid #339af0',
-                // borderRight: '2px solid #339af0',
-                // borderBottomLeftRadius: '2rem',
-                // borderBottomRightRadius: '2rem',
-                // fontFamily: 'Quicksand',
-
                 borderRadius: '2rem',
                 border: '2px solid #1c7ed6',
-                // background: '#e7f5ff',
-                // borderTop: '4px solid #339af0',
-                // borderTop: '4px solid #339af0',
               }}
             >
               <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                2022
+                {currentMonthData === undefined ? '' : currentMonthData[0].Year}
                 {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
             <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
               </label>
               {/* <label className="text-[5rem]">O</label> */}
-              <label className="text-[#1c7ed6]">{'November '} </label>{' '}
+              <label className="text-[#1c7ed6]">
+                {currentMonthData === undefined ? '' : currentMonthData[0].Month}{' '}
+              </label>{' '}
               <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
                 Insights
               </label>
@@ -713,7 +707,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -723,11 +717,7 @@ const CurrentMonth = () => {
                                   className={`githubIcon h-7
               shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                                   state={{
-                                    type: '',
                                     status: 'Draft',
-                                    category: '',
-                                    month: `${month}`,
-                                    year: `${year}`,
                                   }}
                                 >
                                   {parseInt(
@@ -795,7 +785,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -877,7 +867,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -958,7 +948,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -1039,7 +1029,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -1120,7 +1110,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -1201,7 +1191,7 @@ const CurrentMonth = () => {
                                 }}
                               >
                                 <Link
-                                  to="/chartTable"
+                                  to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
 
@@ -1335,7 +1325,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1396,7 +1386,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1457,7 +1447,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1521,7 +1511,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1585,7 +1575,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1649,7 +1639,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',
@@ -1713,7 +1703,7 @@ const CurrentMonth = () => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <Link
-                  to="/chartTable"
+                  to="/currentMonthTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: '',

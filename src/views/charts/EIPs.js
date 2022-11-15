@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/heading-has-content */
+/* eslint-disable react/no-children-prop */
 import { CCardBody } from '@coreui/react'
 import {
   CCard,
@@ -12,6 +14,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ip } from 'src/constants'
 import Loading from '../theme/loading/loading'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 const EIPs = () => {
   const params = useParams()
@@ -44,6 +49,29 @@ const EIPs = () => {
     } catch (err) {
       console.log({ err })
     }
+  }
+
+  const factorAuthor = (data) => {
+    let ans
+    // console.log({ data })
+    let list = data.split(',')
+    // console.log({ list })
+    for (let i = 0; i < list.length; i++) {
+      list[i] = list[i].split(' ')
+    }
+    // console.log({ list })
+    if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
+      list.pop()
+    }
+    return list
+  }
+
+  const getString = (data) => {
+    let ans = ''
+    for (let i = 0; i < data.length - 1; i++) {
+      ans += data[i] + ' '
+    }
+    return ans
   }
 
   useEffect(() => {
@@ -94,7 +122,37 @@ const EIPs = () => {
                   <CTableRow>
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">Author</CTableDataCell>
                     <CTableDataCell>
-                      {allData === undefined ? 0 : allData[0]?.data?.author}
+                      <div className="flex">
+                        {factorAuthor(allData[0]?.data?.author).map((item, index) => {
+                          let t = item[item.length - 1].substring(
+                            1,
+                            item[item.length - 1].length - 1,
+                          )
+
+                          return (
+                            <div key={index} className="mr-1">
+                              <a
+                                key={index}
+                                href={`${
+                                  item[item.length - 1].substring(
+                                    item[item.length - 1].length - 1,
+                                  ) === '>'
+                                    ? 'mailto:' + t
+                                    : 'https://github.com/' + t.substring(1)
+                                }`}
+                                className="hover:border-b-[#339af0] hover:border-b-[2px] text-[#339af0]"
+                              >
+                                {getString(item)}
+                                {index === factorAuthor(allData[0]?.data?.author).length - 1
+                                  ? ''
+                                  : ', '}
+                              </a>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      {/* {allData === undefined ? 0 : allData[0]?.data?.author} */}
+                      {/* {factorAuthor(allData[0]?.data?.author)} */}
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
@@ -117,6 +175,56 @@ const EIPs = () => {
                   </CTableRow>
                 </CTableBody>
               </CTable>
+
+              <ReactMarkdown
+                children={allData === undefined ? '' : allData[0]?.content}
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  h2: ({ node, ...props }) => (
+                    <h2
+                      style={{
+                        fontSize: '17px',
+                        fontWeight: 'bold',
+                        color: `#339af0`,
+                        // borderBottom: `2px solid #339af0`,
+                        borderLeft: `4px solid #339af0`,
+                        display: 'inline-block',
+                      }}
+                      className="my-3 px-2 rounded-sm"
+                      {...props}
+                    />
+                  ),
+                  h1: ({ node, ...props }) => (
+                    <h2
+                      style={{
+                        fontSize: '22px',
+                        fontWeight: 'bold',
+                        color: `#339af0`,
+                        borderBottom: `2px solid #339af0`,
+                        borderLeft: `4px solid #339af0`,
+                        display: 'inline-block',
+                      }}
+                      className="my-3 px-2 rounded-sm"
+                      {...props}
+                    />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h2
+                      style={{
+                        fontSize: '17px',
+                        fontWeight: 'bold',
+                        color: `#339af0`,
+                        // borderBottom: `2px solid #339af0`,
+                        borderLeft: `4px solid #339af0`,
+                        display: 'inline-block',
+                      }}
+                      className="my-3 px-2 rounded-sm"
+                      {...props}
+                    />
+                  ),
+                }}
+              />
             </CCardBody>
           </CCard>
         </div>
