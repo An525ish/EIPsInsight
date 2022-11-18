@@ -1,6 +1,10 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { React, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import SidebarMenu from './SidebarMenu'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { ip } from 'src/constants'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -33,11 +37,37 @@ import {
   cilExpandLeft,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
+import { object } from 'prop-types'
+import SidebarMenuYear from './sideBarMenuYear'
+
 // sidebar nav config
 // import navigation from '../_nav'
+const routes = [
+  {
+    path: '/resources',
+    name: 'Resources',
+    icon: cilSpeedometer,
+
+    exact: true,
+    subRoutes: [
+      {
+        path: 'https://youtu.be/AyidVR6X6J8',
+        name: 'EIPs & Standardization Process',
+      },
+      {
+        path: 'https://medium.com/ethereum-cat-herders/shedding-light-on-the-ethereum-network-upgrade-process-4c6186ed442c',
+        name: 'Shedding light on the Ethereum Network Upgrade Process',
+      },
+      {
+        path: 'https://youtu.be/fwxkbUaa92w',
+        name: 'EIP-20: Token Standard',
+      },
+    ],
+  },
+]
 
 const AppSidebar = () => {
   const param = useParams()
@@ -53,10 +83,23 @@ const AppSidebar = () => {
     setClick3Function,
     setClick4Function,
   } = useUserAuth()
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [mainOpen, setMainOpen] = useState(false)
+  const itemVariants = {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 300, damping: 24 },
+    },
+    closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+  }
+
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [data, setData] = useState()
   const [navii, setNavii] = useState()
+  const [routesPastYears, setRoutesPastYears] = useState()
   const months = [
     'January',
     'February',
@@ -72,11 +115,7 @@ const AppSidebar = () => {
     'December',
   ]
   const sorter = (a, b) => {
-    if (a.year !== b.year) {
-      return a.year - b.year
-    } else {
-      return months.indexOf(a.name) - months.indexOf(b.name)
-    }
+    return months.indexOf(a.name) - months.indexOf(b.name)
   }
   const allData = async () => {
     try {
@@ -92,19 +131,15 @@ const AppSidebar = () => {
 
       const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
 
-      let list = []
+      let routes = []
+
       const completeList = []
-      completeList.push({
-        component: CNavItem,
+      routes.push({
+        path: '/',
         name: 'Dashboard',
-        to: '/',
-        icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-        // icon: <FontAwesomeIcon icon={faEnvelope} />,
-        badge: {
-          color: 'info',
-          text: 'NEW',
-        },
+        icon: cilSpeedometer,
       })
+
       // for app version
       if (matches) {
         completeList.push(
@@ -125,45 +160,45 @@ const AppSidebar = () => {
         )
       }
 
+      console.log({ yearArr })
+      console.log({ datas })
       for (let j = 0; j < yearArr.length; j++) {
-        list = []
+        const objYear = {}
+
+        objYear.path = `/${yearArr[j]}`
+        objYear.name = yearArr[j]
+        objYear.icon = cilChart
+
+        objYear.exact = true
+        objYear.subRoutes = []
+        console.log(objYear)
+
         if (yearArr[j] === '2022') {
-          list.push({
-            component: CNavItem,
-            name: `November`,
-            to: `/currentMonth`,
-            state: {
-              from: `/november`,
-              year: 2022,
-            },
+          objYear.subRoutes.push({
+            path: `/currentMonth`,
+            name: 'November',
           })
         }
         for (let i = 0; i < datas.length; i++) {
           if (datas[i].year === yearArr[j]) {
-            list.push({
-              component: CNavItem,
+            objYear.subRoutes.push({
+              path: `/${datas[i].name.toLowerCase()}-${datas[i].year}`,
               name: `${datas[i].name}`,
-              to: `/${datas[i].name.toLowerCase()}-${datas[i].year}`,
-              state: {
-                from: `/${datas[i].name.toLowerCase()}`,
-                year: datas[i].year,
-              },
             })
           }
         }
-        list.sort(sorter)
-        list.reverse()
-        completeList.push({
-          component: CNavGroup,
-          name: `${yearArr[j]}`,
-          to: '/base',
-          icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
-          items: list,
-        })
+        console.log('hello')
+        objYear.subRoutes.sort(sorter)
+        objYear.subRoutes.reverse()
+        console.log({ objYear })
+        routes.push(objYear)
       }
+
+      console.log({ routes })
 
       const _nav = completeList
       setData(_nav)
+      setRoutesPastYears(routes)
 
       if (!res.status === 200) {
         const error = new Error(res.error)
@@ -182,7 +217,44 @@ const AppSidebar = () => {
       setClick4Function(false)
       console.log(click4)
     }
+    console.log({ param })
   }, [])
+
+  // const [isOpen, setIsOpen] = useState(false)
+  const toggle = () => setIsOpen(!isOpen)
+  const inputAnimation = {
+    hidden: {
+      width: 0,
+      padding: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+    show: {
+      width: '140px',
+      padding: '5px 15px',
+      transition: {
+        duration: 0.2,
+      },
+    },
+  }
+
+  const showAnimation = {
+    hidden: {
+      width: 0,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+    show: {
+      opacity: 1,
+      width: 'auto',
+      transition: {
+        duration: 0.5,
+      },
+    },
+  }
 
   return (
     <CSidebar
@@ -203,11 +275,108 @@ const AppSidebar = () => {
         <SimpleBar>
           <AppSidebarNav items={data} d={data} />
         </SimpleBar>
+        <motion.div>
+          <section className="flex flex-col gap-[6px]">
+            {routesPastYears === undefined
+              ? ''
+              : routesPastYears.map((route, index) => {
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenuYear
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                      />
+                    )
+                  }
+
+                  return (
+                    <motion.div
+                      key={index}
+                      className={`flex p-2 pl-4 items-center w-full 
+                      ${param['*'] === '' ? 'border-b-[#339af0] border-b-2 ' : ''}
+                         ${
+                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
+                         } rounded-[13px] cursor-pointer `}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setMainOpen(true)}
+                    >
+                      <CIcon
+                        icon={cilSpeedometer}
+                        style={{ color: `${param['*'] === '' ? '#339af0' : '#adb5bd'}` }}
+                        customClassName="nav-icon"
+                      />
+                      <NavLink to={route.path} key={index} activeClassName="active">
+                        <AnimatePresence>
+                          (
+                          <motion.div
+                            variants={showAnimation}
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            className={`text-[17px] ${
+                              param['*'] === '' ? 'text-[#339af0]' : 'text-[#adb5bd]'
+                            }  pr-16`}
+                          >
+                            {route.name}
+                          </motion.div>
+                          )
+                        </AnimatePresence>
+                      </NavLink>
+                    </motion.div>
+                  )
+                })}
+          </section>
+        </motion.div>
+        <motion.div>
+          <section className="flex flex-col gap-[6px] mt-1">
+            {routes.map((route, index) => {
+              if (route.subRoutes) {
+                return (
+                  <SidebarMenu
+                    setIsOpen={setIsOpen}
+                    route={route}
+                    showAnimation={showAnimation}
+                    isOpen={isOpen}
+                  />
+                )
+              }
+
+              return (
+                <div key={index}>
+                  <CIcon
+                    icon={cilSpeedometer}
+                    style={{ color: `${isOpen ? '#339af0' : '#adb5bd'}` }}
+                    customClassName="nav-icon"
+                  />
+                  {/* <NavLink to={route.path} key={index}>
+                    <AnimatePresence>
+                      (
+                      <motion.div
+                        variants={showAnimation}
+                        initial="hidden"
+                        animate="show"
+                        exit="hidden"
+                        className={`text-[17px] ${
+                          isOpen ? 'text-[#339af0]' : 'text-[#adb5bd]'
+                        } pr-16`}
+                      >
+                        {route.name}
+                      </motion.div>
+                      )
+                    </AnimatePresence>
+                  </NavLink> */}
+                </div>
+              )
+            })}
+          </section>
+        </motion.div>
       </CSidebarNav>
-      <CSidebarToggler
+      {/* <CSidebarToggler
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-      />
+      /> */}
     </CSidebar>
   )
 }

@@ -20,3 +20,15 @@
 .clicked1:focus {
   color: white;
 }
+
+.active{
+  color: #339af0;
+}
+.active1{
+  border: 2px solid #339af0;
+}
+
+.active2{
+  color: white;
+  border-bottom: 2px solid #339af0;
+}

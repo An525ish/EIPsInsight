@@ -597,7 +597,7 @@ const autoCharts = (props) => {
     }
     allData()
     // setInfo(localStorage.getItem('count'))
-  }, [location.state.from, location.state.to])
+  }, [param['*']])
 
   return (
     <>

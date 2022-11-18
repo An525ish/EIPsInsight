@@ -606,7 +606,7 @@ const CurrentMonth = () => {
     }
     fetchCurrentMonthData()
     // setInfo(localStorage.getItem('count'))
-  }, [location.state.from, location.state.year])
+  }, [param['*']])
 
   return (
     <>

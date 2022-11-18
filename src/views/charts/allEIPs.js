@@ -46,6 +46,7 @@ const AllEIPs = () => {
               : `Type - ${eips[0]['Final'][i].type}`,
           status: eips[0]['Final'][i].status,
           Author: eips[0]['Final'][i].author,
+          'PR No.': 0,
         })
       }
       for (let i = 0; i < eips[1]['Draft'].length; i++) {
@@ -60,6 +61,7 @@ const AllEIPs = () => {
               : `Type - ${eips[1]['Draft'][i].type}`,
           status: eips[1]['Draft'][i].status,
           Author: eips[1]['Draft'][i].author,
+          'PR No.': 0,
         })
       }
       for (let i = 0; i < eips[2]['Review'].length; i++) {
@@ -74,6 +76,7 @@ const AllEIPs = () => {
               : `Type - ${eips[2]['Review'][i].type}`,
           status: eips[2]['Review'][i].status,
           Author: eips[2]['Review'][i].author,
+          'PR No.': 0,
         })
       }
       for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
@@ -88,6 +91,7 @@ const AllEIPs = () => {
               : `Type - ${eips[3]['Last_Call'][i].type}`,
           status: eips[3]['Last_Call'][i].status,
           Author: eips[3]['Last_Call'][i].author,
+          'PR No.': 0,
         })
       }
 
@@ -103,6 +107,7 @@ const AllEIPs = () => {
               : `Type - ${eips[4]['Stagnant'][i].type}`,
           status: eips[4]['Stagnant'][i].status,
           Author: eips[4]['Stagnant'][i].author,
+          'PR No.': 0,
         })
       }
       for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
@@ -117,6 +122,7 @@ const AllEIPs = () => {
               : `Type - ${eips[5]['Withdrawn'][i].type}`,
           status: eips[5]['Withdrawn'][i].status,
           Author: eips[5]['Withdrawn'][i].author,
+          'PR No.': 0,
         })
       }
       for (let i = 0; i < eips[6]['Living'].length; i++) {
@@ -131,6 +137,7 @@ const AllEIPs = () => {
               : `Type - ${eips[6]['Living'][i].type}`,
           status: eips[6]['Living'][i].status,
           Author: eips[6]['Living'][i].author,
+          'PR No.': 0,
         })
       }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
@@ -142,7 +149,7 @@ const AllEIPs = () => {
   const columns = [
     {
       key: 'Number',
-      _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+      _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
       _props: { className: 'fw-semibold' },
       sorter: true,
     },
@@ -164,6 +171,7 @@ const AllEIPs = () => {
     { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    { key: 'PR No.', _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   // colouring
   const getBadge = (status) => {

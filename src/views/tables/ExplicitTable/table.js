@@ -78,7 +78,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '50%',
+                width: '40%',
                 color: '#1c7ed6',
               },
             },
@@ -94,6 +94,11 @@ function table() {
             {
               key: 'status',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+            {
+              key: 'PR No.',
+
+              _style: { width: '10%', color: '#1c7ed6' },
             },
           ]
 
@@ -150,6 +155,7 @@ function table() {
             Type: eips[0]['Final'][i].type,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -162,6 +168,7 @@ function table() {
             Type: eips[1]['Draft'][i].type,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -174,6 +181,7 @@ function table() {
             Type: eips[2]['Review'][i].type,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -187,6 +195,7 @@ function table() {
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -200,6 +209,7 @@ function table() {
             Type: eips[4]['Stagnant'][i].type,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -212,6 +222,7 @@ function table() {
             Type: eips[5]['Withdrawn'][i].type,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -224,6 +235,7 @@ function table() {
             Type: eips[6]['Living'][i].type,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -370,6 +382,7 @@ function table() {
             Type: eips[0]['Final'][i].type,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -382,6 +395,7 @@ function table() {
             Type: eips[1]['Draft'][i].type,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -394,6 +408,7 @@ function table() {
             Type: eips[2]['Review'][i].type,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -407,6 +422,7 @@ function table() {
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -420,6 +436,7 @@ function table() {
             Type: eips[4]['Stagnant'][i].type,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -432,6 +449,7 @@ function table() {
             Type: eips[5]['Withdrawn'][i].type,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -444,6 +462,7 @@ function table() {
             Type: eips[6]['Living'][i].type,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -470,6 +489,7 @@ function table() {
             Type: eips[0]['Final'][i].type,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -486,6 +506,7 @@ function table() {
             Type: eips[1]['Draft'][i].type,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -502,6 +523,7 @@ function table() {
             Type: eips[2]['Review'][i].type,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -519,6 +541,7 @@ function table() {
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -536,6 +559,7 @@ function table() {
             Type: eips[4]['Stagnant'][i].type,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -552,6 +576,7 @@ function table() {
             Type: eips[5]['Withdrawn'][i].type,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -568,6 +593,7 @@ function table() {
             Type: eips[6]['Living'][i].type,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -589,6 +615,7 @@ function table() {
             Type: eips[0]['Final'][i].type,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -601,6 +628,7 @@ function table() {
             Type: eips[1]['Draft'][i].type,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -613,6 +641,7 @@ function table() {
             Type: eips[2]['Review'][i].type,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -629,6 +658,7 @@ function table() {
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -642,6 +672,7 @@ function table() {
             Type: eips[4]['Stagnant'][i].type,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -657,6 +688,7 @@ function table() {
             Type: eips[5]['Withdrawn'][i].type,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -669,6 +701,7 @@ function table() {
             Type: eips[6]['Living'][i].type,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -690,6 +723,7 @@ function table() {
             Type: eips[0]['Final'][i].type,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -702,6 +736,7 @@ function table() {
             Type: eips[1]['Draft'][i].type,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -714,6 +749,7 @@ function table() {
             Type: eips[2]['Review'][i].type,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -727,6 +763,7 @@ function table() {
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -740,6 +777,7 @@ function table() {
             Type: eips[4]['Stagnant'][i].type,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -752,6 +790,7 @@ function table() {
             Type: eips[5]['Withdrawn'][i].type,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
+            'PR No.': 0,
           })
         }
       }
@@ -764,6 +803,7 @@ function table() {
             Type: eips[6]['Living'][i].type,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
+            'PR No.': 0,
           })
         }
       }
