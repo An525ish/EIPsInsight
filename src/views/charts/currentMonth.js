@@ -89,6 +89,8 @@ const CurrentMonth = () => {
     let b = 0
     let c = 0
     let d = 0
+    let e = 0
+    let f = 0
     let arr = []
 
     console.log(data)
@@ -96,6 +98,8 @@ const CurrentMonth = () => {
     b = parseInt(fetchStatusCategorySum(data, name, 'ERC'))
     c = parseInt(fetchStatusCategorySum(data, name, 'Networking'))
     d = parseInt(fetchStatusCategorySum(data, name, 'Interface'))
+    e = parseInt(fetchStatusCategorySum(data, name, 'Meta'))
+    f = parseInt(fetchStatusCategorySum(data, name, 'Informational'))
 
     arr.push(
       {
@@ -113,6 +117,14 @@ const CurrentMonth = () => {
       {
         type: 'Interface',
         value: d,
+      },
+      {
+        type: 'Meta',
+        value: e,
+      },
+      {
+        type: 'Informational',
+        value: f,
       },
     )
 
@@ -348,43 +360,68 @@ const CurrentMonth = () => {
   const d1 = [
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Core),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Core[0]),
       type: 'Core',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.ERC),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.ERC[0]),
       type: 'ERC',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Networking),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Networking[0]),
       type: 'Networking',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Interface),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Interface[0]),
       type: 'Interface',
     },
     {
+      year: 'Draft',
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Meta[0]),
+      type: 'Meta',
+    },
+    {
+      year: 'Draft',
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Informational[0]),
+      type: 'Informational',
+    },
+    {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Core),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Core[0]),
       type: 'Core',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.ERC),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.ERC[0]),
       type: 'ERC',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Networking),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Networking[0]),
       type: 'Networking',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface),
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
       type: 'Interface',
+    },
+    {
+      year: 'Final',
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
+      type: 'Meta',
+    },
+    {
+      year: 'Final',
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Meta[0]),
+      type: 'Meta',
+    },
+    {
+      year: 'Final',
+      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Informational[0]),
+      type: 'Informational',
     },
   ]
   each(groupBy(d1, 'year'), (values, k) => {
@@ -591,7 +628,7 @@ const CurrentMonth = () => {
     let sum = 0
     for (let i = 0; i < monthData?.length; i++) {
       if (monthData[i].Status === status) {
-        sum = parseInt(monthData[i][category]) === -1 ? 0 : parseInt(monthData[i][category])
+        sum = parseInt(monthData[i][category][0]) === -1 ? 0 : parseInt(monthData[i][category][0])
       }
     }
 
