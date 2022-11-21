@@ -32,3 +32,28 @@
   color: white;
   border-bottom: 2px solid #339af0;
 }
+
+/* width */
+
+
+
+.scrollbarDesign::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+.scrollbarDesign::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--main-color-background); 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.scrollbarDesign::-webkit-scrollbar-thumb {
+  background: var(--main-color); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.scrollbarDesign::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color-background); 
+}

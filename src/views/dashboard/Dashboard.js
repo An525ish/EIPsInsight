@@ -1006,6 +1006,29 @@ const Dashboard = () => {
       },
     ],
   }
+
+  const factorAuthor = (data) => {
+    let ans
+    // console.log({ data })
+    let list = data.split(',')
+    // console.log({ list })
+    for (let i = 0; i < list.length; i++) {
+      list[i] = list[i].split(' ')
+    }
+    // console.log({ list })
+    if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
+      list.pop()
+    }
+    return list
+  }
+
+  const getString = (data) => {
+    let ans = ''
+    for (let i = 0; i < data.length - 1; i++) {
+      ans += data[i] + ' '
+    }
+    return ans
+  }
   // yearly Draft Component
   const yearlyInsights = (col, title, configName) => {
     return (
@@ -1094,6 +1117,8 @@ const Dashboard = () => {
                     height: '300px',
                     fontFamily: 'Roboto',
                     fontSize: '12px',
+                    '--main-color': `#1c7ed6`,
+                    '--main-color-background': `#e7f5ff`,
                   }}
                   className="scrollbarDesign"
                 >
@@ -1119,6 +1144,46 @@ const Dashboard = () => {
                           >
                             {item.status}
                           </CBadge>
+                        </td>
+                      ),
+                      Author: (it) => (
+                        <td>
+                          <div className="flex">
+                            {factorAuthor(it.Author).map((item, index) => {
+                              let t = item[item.length - 1].substring(
+                                1,
+                                item[item.length - 1].length - 1,
+                              )
+
+                              return (
+                                <CBadge
+                                  key={index}
+                                  className="mr-1"
+                                  style={{
+                                    color: `${getBadgeColor(it.status)}`,
+                                    backgroundColor: `${getBadge(it.status)}`,
+                                  }}
+                                >
+                                  <a
+                                    key={index}
+                                    href={`${
+                                      item[item.length - 1].substring(
+                                        item[item.length - 1].length - 1,
+                                      ) === '>'
+                                        ? 'mailto:' + t
+                                        : 'https://github.com/' + t.substring(1)
+                                    }`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="hoverAuthor text-[10px]"
+                                    style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                                  >
+                                    {getString(item)}
+                                  </a>
+                                </CBadge>
+                              )
+                            })}
+                          </div>
                         </td>
                       ),
                       Number: (item) => (

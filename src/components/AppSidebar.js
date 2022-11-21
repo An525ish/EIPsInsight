@@ -20,6 +20,7 @@ import { sygnet } from 'src/assets/brand/sygnet'
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 import './AppSidebar.css'
+
 import {
   cilBell,
   cilCalculator,
@@ -265,13 +266,14 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
       style={{ backgroundColor: '#000000' }}
+      className="scrollbarDesign"
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <div className="logoDesign"></div>
         </Link>
       </CSidebarBrand>
-      <CSidebarNav>
+      <CSidebarNav className="scrollbarDesign z-20">
         <SimpleBar>
           <AppSidebarNav items={data} d={data} />
         </SimpleBar>

@@ -1,0 +1,8 @@
+.hoverAuthor {
+    color: var(--author-color);
+}
+
+.hoverAuthor:hover {
+    border-bottom: 2px solid var(--author-color);
+    color: var(--author-color);
+}
