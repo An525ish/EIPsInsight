@@ -47,7 +47,7 @@ import Loading from '../theme/loading/loading'
 
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
-
+  const [monthName, setMonthName] = useState()
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
@@ -92,6 +92,7 @@ const autoCharts = (props) => {
       const y = list[1]
 
       console.log({ att, y })
+      setMonthName(list[0])
       setMonth(monthNum[list[0]])
       setYear(y)
 
@@ -717,6 +718,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Draft`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Draft)}*
@@ -786,6 +788,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Final`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Final)}*
@@ -857,6 +860,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Review`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Review)}*
@@ -927,6 +931,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Last_Call`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.LastCall)}*
@@ -997,6 +1002,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Stagnant`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Stagnant)}*
@@ -1067,6 +1073,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Withdrawn`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Withdrawn)}*
@@ -1137,6 +1144,7 @@ const autoCharts = (props) => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${monthName}_${year}_Living`,
                                   }}
                                 >
                                   {parseInt(data === undefined ? 0 : data[0]?.summary.Living)}*
@@ -1302,6 +1310,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Draft`,
                   }}
                 >
                   {header('Draft')}
@@ -1353,6 +1362,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Final`,
                   }}
                 >
                   {header('Final')}
@@ -1404,6 +1414,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Review`,
                   }}
                 >
                   {header('Review')}
@@ -1455,6 +1466,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Last_Call`,
                   }}
                 >
                   {header('LastCall')}
@@ -1506,6 +1518,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Stagnant`,
                   }}
                 >
                   {header('Stagnant')}
@@ -1557,6 +1570,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Withdrawn`,
                   }}
                 >
                   {header('Withdrawn')}
@@ -1608,6 +1622,7 @@ const autoCharts = (props) => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${monthName}_${year}_Living`,
                   }}
                 >
                   {header('Living')}

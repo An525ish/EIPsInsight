@@ -46,6 +46,7 @@ import SidebarMenuYear from './sideBarMenuYear'
 
 // sidebar nav config
 // import navigation from '../_nav'
+
 const routes = [
   {
     path: '/resources',
@@ -60,7 +61,7 @@ const routes = [
       },
       {
         path: 'https://medium.com/ethereum-cat-herders/shedding-light-on-the-ethereum-network-upgrade-process-4c6186ed442c',
-        name: 'Shedding light on the Ethereum Network Upgrade Process',
+        name: 'Ethereum Network Upgrade Process',
       },
       {
         path: 'https://youtu.be/fwxkbUaa92w',
@@ -100,6 +101,7 @@ const AppSidebar = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [data, setData] = useState()
   const [navii, setNavii] = useState()
+  const [routeDashboard, setRouteDashboard] = useState()
   const [routesPastYears, setRoutesPastYears] = useState()
   const months = [
     'January',
@@ -133,9 +135,10 @@ const AppSidebar = () => {
       const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
 
       let routes = []
+      let routes1 = []
 
       const completeList = []
-      routes.push({
+      routes1.push({
         path: '/',
         name: 'Dashboard',
         icon: cilSpeedometer,
@@ -199,6 +202,7 @@ const AppSidebar = () => {
 
       const _nav = completeList
       setData(_nav)
+      setRouteDashboard(routes1)
       setRoutesPastYears(routes)
 
       if (!res.status === 200) {
@@ -279,9 +283,9 @@ const AppSidebar = () => {
         </SimpleBar>
         <motion.div>
           <section className="flex flex-col gap-[6px]">
-            {routesPastYears === undefined
+            {routeDashboard === undefined
               ? ''
-              : routesPastYears.map((route, index) => {
+              : routeDashboard.map((route, index) => {
                   if (route.subRoutes) {
                     return (
                       <SidebarMenuYear
@@ -332,7 +336,7 @@ const AppSidebar = () => {
           </section>
         </motion.div>
         <motion.div>
-          <section className="flex flex-col gap-[6px] mt-1">
+          <section className="flex flex-col gap-[6px] mb-1">
             {routes.map((route, index) => {
               if (route.subRoutes) {
                 return (
@@ -372,6 +376,60 @@ const AppSidebar = () => {
                 </div>
               )
             })}
+          </section>
+        </motion.div>
+        <motion.div>
+          <section className="flex flex-col gap-[6px]">
+            {routesPastYears === undefined
+              ? ''
+              : routesPastYears.map((route, index) => {
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenuYear
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                      />
+                    )
+                  }
+
+                  return (
+                    <motion.div
+                      key={index}
+                      className={`flex p-2 pl-4 items-center w-full 
+                      ${param['*'] === '' ? 'border-b-[#339af0] border-b-2 ' : ''}
+                         ${
+                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
+                         } rounded-[13px] cursor-pointer `}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setMainOpen(true)}
+                    >
+                      <CIcon
+                        icon={cilSpeedometer}
+                        style={{ color: `${param['*'] === '' ? '#339af0' : '#adb5bd'}` }}
+                        customClassName="nav-icon"
+                      />
+                      <NavLink to={route.path} key={index} activeClassName="active">
+                        <AnimatePresence>
+                          (
+                          <motion.div
+                            variants={showAnimation}
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            className={`text-[17px] ${
+                              param['*'] === '' ? 'text-[#339af0]' : 'text-[#adb5bd]'
+                            }  pr-16`}
+                          >
+                            {route.name}
+                          </motion.div>
+                          )
+                        </AnimatePresence>
+                      </NavLink>
+                    </motion.div>
+                  )
+                })}
           </section>
         </motion.div>
       </CSidebarNav>

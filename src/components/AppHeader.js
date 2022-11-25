@@ -292,7 +292,7 @@ const AppHeader = () => {
         <CHeaderNav>
           {user === null ? null : user.email === 'contact@etherworld.co' ? (
             <CNavItem>
-              <CNavLink href="/#/form">
+              <CNavLink href="/insertForm">
                 <label className="relative cursor-pointer">
                   <label
                     className="h-7

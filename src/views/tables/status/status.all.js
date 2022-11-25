@@ -160,6 +160,32 @@ function statusAll(props) {
     }
   }
 
+  // get standard Track data
+  const getStandardTrackData = (name, dataName) => {
+    return post === undefined
+      ? 0
+      : post[name] === undefined
+      ? 0
+      : post[name]['Standard_Track'][dataName]
+  }
+
+  const getMetaAndInformational = (name, dataName) => {
+    return post === undefined ? 0 : post[name] === undefined ? 0 : post[name][dataName]
+  }
+
+  const totalData = (name) => {
+    return post === undefined
+      ? 0
+      : post[name] === undefined
+      ? 0
+      : post[name]['Standard_Track']['Core'] +
+        post[name]['Standard_Track']['ERC'] +
+        post[name]['Standard_Track']['Networking'] +
+        post[name]['Standard_Track']['Interface'] +
+        post[name]['Meta'] +
+        post[name]['Informational']
+  }
+
   const customTableChart = (name, title) => {
     return (
       <>
@@ -190,7 +216,7 @@ function statusAll(props) {
             <Link
               to="/chartTable"
               style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{ type: '', status: title, category: '' }}
+              state={{ type: '', status: title, category: '', name: `${title}` }}
             >
               <div
                 className={`className="h-7
@@ -201,16 +227,7 @@ function statusAll(props) {
                   backgroundColor: `${getBadge(name)}`,
                 }}
               >
-                {post === undefined
-                  ? 0
-                  : post[name] === undefined
-                  ? 0
-                  : post[name]['Standard_Track']['Core'] +
-                    post[name]['Standard_Track']['ERC'] +
-                    post[name]['Standard_Track']['Networking'] +
-                    post[name]['Standard_Track']['Interface'] +
-                    post[name]['Meta'] +
-                    post[name]['Informational']}
+                {totalData(name)}
               </div>
             </Link>
           </label>
@@ -261,6 +278,7 @@ function statusAll(props) {
                       <CTableHeaderCell scope="col">Type</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Category</CTableHeaderCell>
                       <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">%</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -268,7 +286,12 @@ function statusAll(props) {
                       <CTableHeaderCell scope="row">
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standards Track', status: name, category: '' }}
+                          state={{
+                            type: 'Standards Track',
+                            status: name,
+                            category: '',
+                            name: `${title}_Standard_Track`,
+                          }}
                         >
                           <label
                             className="h-7
@@ -281,7 +304,12 @@ function statusAll(props) {
                       <CTableDataCell>
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standards Track', status: name, category: 'Core' }}
+                          state={{
+                            type: 'Standards Track',
+                            status: name,
+                            category: 'Core',
+                            name: title + '_Standard_Track_Core',
+                          }}
                         >
                           <label
                             className="h-7
@@ -291,12 +319,9 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
+                      <CTableDataCell>{getStandardTrackData(name, 'Core')}</CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Standard_Track']['Core']}
+                        {((getStandardTrackData(name, 'Core') / totalData(name)) * 100).toFixed(2)}%
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -308,6 +333,7 @@ function statusAll(props) {
                             type: 'Standards Track',
                             status: name === 'Last_Call' ? 'Last Call' : name,
                             category: 'ERC',
+                            name: title + '_Standard_Track_ERC',
                           }}
                         >
                           <label
@@ -318,12 +344,9 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
+                      <CTableDataCell>{getStandardTrackData(name, 'ERC')}</CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Standard_Track']['ERC']}
+                        {((getStandardTrackData(name, 'ERC') / totalData(name)) * 100).toFixed(2)}%
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -331,7 +354,12 @@ function statusAll(props) {
                       <CTableDataCell>
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standards Track', status: name, category: 'Networking' }}
+                          state={{
+                            type: 'Standards Track',
+                            status: name,
+                            category: 'Networking',
+                            name: title + '_Standard_Track_Networking',
+                          }}
                         >
                           <label
                             className="h-7
@@ -341,12 +369,13 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
+                      <CTableDataCell>{getStandardTrackData(name, 'Networking')}</CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Standard_Track']['Networking']}
+                        {(
+                          (getStandardTrackData(name, 'Networking') / totalData(name)) *
+                          100
+                        ).toFixed(2)}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -354,7 +383,12 @@ function statusAll(props) {
                       <CTableDataCell>
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Standard_Track', status: name, category: 'Interface' }}
+                          state={{
+                            type: 'Standard_Track',
+                            status: name,
+                            category: 'Interface',
+                            name: title + '_Standard_Track_Interface',
+                          }}
                         >
                           <label
                             className="h-7
@@ -364,19 +398,25 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
+                      <CTableDataCell>{getStandardTrackData(name, 'Interface')}</CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Standard_Track']['Interface']}
+                        {(
+                          (getStandardTrackData(name, 'Interface') / totalData(name)) *
+                          100
+                        ).toFixed(2)}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row">
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Meta', status: name, category: '' }}
+                          state={{
+                            type: 'Meta',
+                            status: name,
+                            category: '',
+                            name: title + '_Meta',
+                          }}
                         >
                           <label
                             className="h-7
@@ -387,15 +427,24 @@ function statusAll(props) {
                         </NavLink>
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
+                      <CTableDataCell>{getMetaAndInformational(name, 'Meta')}</CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined ? 0 : post[name] === undefined ? 0 : post[name]['Meta']}
+                        {((getMetaAndInformational(name, 'Meta') / totalData(name)) * 100).toFixed(
+                          2,
+                        )}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell scope="row">
                         <NavLink
                           to="/chartTable"
-                          state={{ type: 'Informational', status: name, category: '' }}
+                          state={{
+                            type: 'Informational',
+                            status: name,
+                            category: '',
+                            name: title + '_Informational',
+                          }}
                         >
                           <label
                             className="h-7
@@ -407,11 +456,14 @@ function statusAll(props) {
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Informational']}
+                        {getMetaAndInformational(name, 'Informational')}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {(
+                          (getMetaAndInformational(name, 'Informational') / totalData(name)) *
+                          100
+                        ).toFixed(2)}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -426,22 +478,14 @@ function statusAll(props) {
                         style={{
                           fontWeight: '800',
                           fontSize: '15px',
-                          display: 'inline-block',
+                          display: 'inline-block  ',
                           borderRadius: '12px',
                           color: `${getBadgeColor(name)}`,
                           background: `${getBadge(name)}`,
                         }}
+                        className=""
                       >
-                        {post === undefined
-                          ? 0
-                          : post[name] === undefined
-                          ? 0
-                          : post[name]['Standard_Track']['Core'] +
-                            post[name]['Standard_Track']['ERC'] +
-                            post[name]['Standard_Track']['Networking'] +
-                            post[name]['Standard_Track']['Interface'] +
-                            post[name]['Meta'] +
-                            post[name]['Informational']}
+                        {totalData(name)}
                       </CTableDataCell>
                     </CTableRow>
                   </CTableBody>

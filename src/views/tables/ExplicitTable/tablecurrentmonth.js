@@ -1,8 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { CBadge, CCard, CCardBody, CCardFooter, CSmartTable } from '@coreui/react-pro'
+import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
+import { CSVLink } from 'react-csv'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Loading from 'src/views/theme/loading/loading'
+import { motion } from 'framer-motion'
+import downloadIcon from 'src/assets/download.png'
 
 function tableCurrent() {
   const location = useLocation()
@@ -14,6 +17,7 @@ function tableCurrent() {
   const API2 = 'https://eipsinsight.com/api/rawData'
   const API3 = 'https://eipsinsight.com/api/currentMonth'
   const [loading, setLoading] = useState(true)
+  const [name, setName] = useState()
 
   const fetchAllEIPs = () => {
     fetch(API2)
@@ -51,7 +55,7 @@ function tableCurrent() {
             {
               key: 'Title',
               _style: {
-                width: '35%',
+                width: '30%',
                 color: '#1c7ed6',
               },
             },
@@ -64,7 +68,9 @@ function tableCurrent() {
               },
             },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+
             { key: 'Last-Call Deadline', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Category', _style: { width: '5%', color: '#1c7ed6' } },
             {
               key: 'status',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
@@ -86,19 +92,20 @@ function tableCurrent() {
             {
               key: 'Title',
               _style: {
-                width: '50%',
+                width: '40%',
                 color: '#1c7ed6',
               },
             },
             {
               key: 'Author',
               _style: {
-                width: '20%',
+                width: '15%',
                 color: '#1c7ed6',
                 backgroundColor: '#e7f5ff',
               },
             },
-            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Type', _style: { width: '15%', color: '#1c7ed6' } },
+            { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
             {
               key: 'status',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
@@ -114,6 +121,8 @@ function tableCurrent() {
         return '#c3fae8'
       case 'Last_Call':
         return '#d3f9d8'
+      case 'Last Call':
+        return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
       case 'Stagnant':
@@ -122,8 +131,10 @@ function tableCurrent() {
         return '#ffe3e3'
       case 'Review':
         return '#d0ebff'
-      default:
+      case 'Living':
         return '#c5f6fa'
+      default:
+        return '#e7f5ff'
     }
   }
   const getBadgeColor = (status) => {
@@ -131,6 +142,8 @@ function tableCurrent() {
       case 'Final':
         return '#0ca678'
       case 'Last_Call':
+        return '#37b24d'
+      case 'Last Call':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -140,8 +153,10 @@ function tableCurrent() {
         return '#e03131'
       case 'Review':
         return '#1971c2'
-      default:
+      case 'Living':
         return '#0c8599'
+      default:
+        return '#1c7ed6'
     }
   }
 
@@ -158,7 +173,7 @@ function tableCurrent() {
   }
   const findAllEIPs = (eips, data, status) => {
     let arr = []
-    let inc = 0
+    let inc = 1
     if (data.length !== 0 && eips.length !== 0) {
       console.log({ data })
       let filterData = data?.filter((item) => item.Status === status)
@@ -170,6 +185,8 @@ function tableCurrent() {
       ans.push(findEIPNum(filterData[0], 'Networking'))
       ans.push(findEIPNum(filterData[0], 'Interface'))
       ans.push(findEIPNum(filterData[0], 'Meta'))
+      // category
+      // ans.push(findEIPNum(filterData[0], 'Category'))
       ans.push(findEIPNum(filterData[0], 'Informational'))
 
       ans = ans.flat(Infinity)
@@ -183,6 +200,10 @@ function tableCurrent() {
           Number: findEip[0].data.eip,
           Title: findEip[0].data.title,
           Type: findEip[0].data.type,
+          Category:
+            findEip[0].type === 'Standards Track'
+              ? findEip[0].category
+              : `Type - ${findEip[0].type}`,
           status: findEip[0].data.status,
           Author: findEip[0].data.author,
         })
@@ -197,10 +218,98 @@ function tableCurrent() {
     let date = new Date().toDateString()
     setDate(date)
   }
+  // csv Download
+  const headers = [
+    {
+      label: 'EIP No.',
+      key: 'Number',
+    },
+    {
+      label: 'Title',
+      key: 'Title',
+    },
+    {
+      label: 'Author',
+      key: 'Author',
+    },
+    {
+      label: 'Type',
+      key: 'Type',
+    },
+    {
+      label: 'Category',
+      key: 'Category',
+    },
+    { label: 'Last Call Deadline', key: 'Last-Call Deadline' },
+    {
+      label: 'Status',
+      key: 'status',
+    },
+    {
+      label: 'PR No.',
+      key: 'PR No.',
+    },
+  ]
+  const csvLink = {
+    filename: name,
+    headers: headers,
+    data: findAllEIPs(
+      eips === undefined ? [] : eips,
+      currentMonth === undefined ? [] : currentMonth,
+      status,
+    ),
+  }
+
+  const factorAuthor = (data) => {
+    let ans
+    // console.log({ data })
+    let list = data.split(',')
+    // console.log({ list })
+    for (let i = 0; i < list.length; i++) {
+      list[i] = list[i].split(' ')
+    }
+    // console.log({ list })
+    if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
+      list.pop()
+    }
+    return list
+  }
+
+  const getString = (data) => {
+    let ans = ''
+    for (let i = 0; i < data.length - 1; i++) {
+      ans += data[i] + ' '
+    }
+    return ans
+  }
+
+  // headers
+  const header = (text) => {
+    return (
+      <CCardHeader
+        className="cardHeader flex justify-between items-center"
+        style={{
+          fontFamily: 'Roboto',
+          fontWeight: '800',
+          fontSize: '14px',
+          color: `${getBadgeColor(text)}`,
+          background: `${getBadge(text)}`,
+          borderBottom: `2px solid ${getBadgeColor(text)}`,
+        }}
+      >
+        <div>{text}</div>
+
+        <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
+          <motion.img src={downloadIcon} alt="Download Icon" whileTap={{ scale: 0.8 }} />
+        </CSVLink>
+      </CCardHeader>
+    )
+  }
 
   useEffect(() => {
     fetchCurrentMonthEIPs()
     setStatus(location.state.status)
+    setName(location.state.name)
     fetchDate()
     fetchAllEIPs()
   }, [])
@@ -209,7 +318,16 @@ function tableCurrent() {
 
   return (
     <>
-      <CCard>
+      <CCard style={{ border: '2px solid #a5d8ff' }}>
+        {header(
+          `${name
+            ?.split('_')
+            .toString()
+            .replace(',', ' ')
+            .replace(',', ' - ')
+            .replace(',', ' - ')
+            .replace(/^./, name[0].toUpperCase())}`,
+        )}
         <CCardBody
           style={{
             overflowX: 'auto',
@@ -245,6 +363,43 @@ function tableCurrent() {
                     >
                       {item.status}
                     </CBadge>
+                  </td>
+                ),
+                Author: (it) => (
+                  <td>
+                    <div className="flex">
+                      {factorAuthor(it.Author).map((item, index) => {
+                        let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
+
+                        return (
+                          <CBadge
+                            key={index}
+                            className="mr-1"
+                            style={{
+                              color: `${getBadgeColor(it.status)}`,
+                              backgroundColor: `${getBadge(it.status)}`,
+                            }}
+                          >
+                            <a
+                              key={index}
+                              href={`${
+                                item[item.length - 1].substring(
+                                  item[item.length - 1].length - 1,
+                                ) === '>'
+                                  ? 'mailto:' + t
+                                  : 'https://github.com/' + t.substring(1)
+                              }`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="hoverAuthor text-[10px]"
+                              style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                            >
+                              {getString(item)}
+                            </a>
+                          </CBadge>
+                        )
+                      })}
+                    </div>
                   </td>
                 ),
                 Number: (item) => (

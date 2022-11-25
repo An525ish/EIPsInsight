@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { CSmartTable, CMultiSelect } from '@coreui/react-pro'
+import { CSVLink } from 'react-csv'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import PropTypes from 'prop-types'
 import github from '../../assets/grey_logo.png'
@@ -28,50 +29,7 @@ import {
   CTableRow,
   CBadge,
 } from '@coreui/react'
-import {
-  CChartBar,
-  CChartLine,
-  CChartDoughnut,
-  CChartRadar,
-  CChartPolarArea,
-  CChartPie,
-} from '@coreui/react-chartjs'
-import { ResponsivePie } from '@nivo/pie'
-import { getStyle, hexToRgba } from '@coreui/utils'
-import CIcon from '@coreui/icons-react'
-import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
-  cilCloudDownload,
-  cilPeople,
-  cilUser,
-  cilUserFemale,
-} from '@coreui/icons'
 
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
-
-import WidgetsBrand from '../widgets/WidgetsBrand'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import { Chart } from 'react-google-charts'
 import { Link, useParams } from 'react-router-dom'
 import { ip } from 'src/constants'
 
@@ -106,6 +64,7 @@ const Dashboard = () => {
   const [years, setYears] = useState()
 
   const matches = useMediaQuery('(max-width: 767px)')
+  const matches1 = useMediaQuery('(max-width: 950px)')
 
   const API = 'https://eipsinsight.com/api/overallData'
   const API2 = 'https://eipsinsight.com/api/allinfo'
@@ -397,61 +356,64 @@ const Dashboard = () => {
     return arr
   }
 
-  const monthlyDraftConfig = {
-    data: draftDataFinding('Draft', data === undefined ? [] : data),
-    xField: 'year',
-    yField: 'gdp',
-    seriesField: 'name',
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
-    // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
-    yAxis: {
-      label: {
-        // 数值格式化为千分位
-        formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+  const monthlyStatusConfig = (name, data) => {
+    const config = {
+      data: draftDataFinding(name, data === undefined ? [] : data),
+      xField: 'year',
+      yField: 'gdp',
+      seriesField: 'name',
+      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+      // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
+      yAxis: {
+        label: {
+          // 数值格式化为千分位
+          formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+        },
       },
-    },
-    legend: {
-      position: 'top',
-    },
-    smooth: true,
-    // @TODO 后续会换一种动画方式
-    animation: {
-      appear: {
-        animation: 'path-in',
-        duration: 5000,
+      legend: {
+        position: 'top',
       },
-    },
-    slider: {
-      start: 0.0,
-      end: 1.0,
-    },
+      smooth: true,
+      // @TODO 后续会换一种动画方式
+      animation: {
+        appear: {
+          animation: 'path-in',
+          duration: 5000,
+        },
+      },
+      slider: {
+        start: 0.0,
+        end: 1.0,
+      },
+    }
+    return config
   }
-  const monthlyFinalConfig = {
-    data: draftDataFinding('Final', data === undefined ? [] : data),
-    isGroup: true,
-    xField: 'year',
-    yField: 'gdp',
-    seriesField: 'name',
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
-    label: {
-      position: 'middle',
-      layout: [
-        {
-          type: 'interval-adjust-position',
-        },
-        {
-          type: 'interval-hide-overlap',
-        },
-        {
-          type: 'adjust-color',
-        },
-      ],
-    },
-    slider: {
-      start: 0.0,
-      end: 1.0,
-    },
-  }
+  // const monthlyFinalConfig = {
+  //   data: draftDataFinding('Final', data === undefined ? [] : data),
+  //   isGroup: true,
+  //   xField: 'year',
+  //   yField: 'gdp',
+  //   seriesField: 'name',
+  //   color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+  //   label: {
+  //     position: 'middle',
+  //     layout: [
+  //       {
+  //         type: 'interval-adjust-position',
+  //       },
+  //       {
+  //         type: 'interval-hide-overlap',
+  //       },
+  //       {
+  //         type: 'adjust-color',
+  //       },
+  //     ],
+  //   },
+  //   slider: {
+  //     start: 0.0,
+  //     end: 1.0,
+  //   },
+  // }
 
   const montlyDraftvsFinalconfig = {
     data: DraftvsPotentialData('summary', data === undefined ? [] : data),
@@ -958,45 +920,62 @@ const Dashboard = () => {
     angleField: 'value',
     colorField: 'type',
     radius: 0.75,
+    legend: matches1
+      ? {
+          layout: 'vertical',
+          position: 'right',
+        }
+      : false,
     color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
-    label: {
-      type: 'spider',
-      labelHeight: 40,
-      formatter: (data, mappingData) => {
-        const group = new G.Group({})
-        group.addShape({
-          type: 'circle',
-          attrs: {
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 50,
-            r: 5,
-            fill: mappingData.color,
+    label: matches1
+      ? {
+          type: 'inner',
+          offset: '-30%',
+          content: (data) => `${data.value}`,
+          style: {
+            fontSize: 8,
+            textAlign: 'center',
+            fontWeight: 'bold',
           },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 10,
-            y: 8,
-            text: `${data.type}`,
-            fill: mappingData.color,
+        }
+      : {
+          type: 'spider',
+          labelHeight: 40,
+          formatter: (data, mappingData) => {
+            const group = new G.Group({})
+            group.addShape({
+              type: 'circle',
+              attrs: {
+                x: 0,
+                y: 0,
+                width: 40,
+                height: 50,
+                r: 5,
+                fill: mappingData.color,
+              },
+            })
+            group.addShape({
+              type: 'text',
+              attrs: {
+                x: 10,
+                y: 8,
+                text: `${data.type}`,
+                fill: mappingData.color,
+              },
+            })
+            group.addShape({
+              type: 'text',
+              attrs: {
+                x: 0,
+                y: 25,
+                text: `${data.value}`,
+                fill: 'rgba(0, 0, 0, 0.65)',
+                fontWeight: 700,
+              },
+            })
+            return group
           },
-        })
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 0,
-            y: 25,
-            text: `${data.value}`,
-            fill: 'rgba(0, 0, 0, 0.65)',
-            fontWeight: 700,
-          },
-        })
-        return group
-      },
-    },
+        },
     interactions: [
       {
         type: 'element-selected',
@@ -1278,7 +1257,7 @@ const Dashboard = () => {
             </CCol>
             <CCol xs={12}>
               <CCard className="mb-2 cardBorder">
-                {header('Draft')}
+                {header('Living')}
                 <CCardBody
                   style={{
                     // backgroundColor: '#fff9db',
@@ -1289,9 +1268,9 @@ const Dashboard = () => {
                     // backgroundPosition: 'right -12px bottom -40px',
                   }}
                 >
-                  <Line {...monthlyDraftConfig} />
+                  <Line {...monthlyStatusConfig('Living', data)} />
                 </CCardBody>
-                {footer(date, 'Draft')}
+                {footer(date, 'Living')}
               </CCard>
             </CCol>
 
@@ -1308,15 +1287,15 @@ const Dashboard = () => {
                     // backgroundPosition: 'right -12px bottom -40px',
                   }}
                 >
-                  <Column {...monthlyFinalConfig} />
+                  <Line {...monthlyStatusConfig('Final', data)} />
                 </CCardBody>
                 {footer(date, 'Final')}
               </CCard>
             </CCol>
 
-            <CCol xs={matches ? 12 : 6}>
-              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-                {header('Final vs Draft')}
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Last Call')}
                 <CCardBody
                   style={{
                     // backgroundColor: '#fff9db',
@@ -1327,14 +1306,15 @@ const Dashboard = () => {
                     // backgroundPosition: 'right -12px bottom -40px',
                   }}
                 >
-                  <Column {...finalvsDraftconfig} />
+                  <Line {...monthlyStatusConfig('LastCall', data)} />
                 </CCardBody>
-                {footer(date)}
+                {footer(date, 'Last_Call')}
               </CCard>
             </CCol>
-            <CCol xs={matches ? 12 : 6}>
-              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
-                {header('DraftEIPs vs Potential Proposal')}
+
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Review')}
                 <CCardBody
                   style={{
                     // backgroundColor: '#fff9db',
@@ -1345,9 +1325,66 @@ const Dashboard = () => {
                     // backgroundPosition: 'right -12px bottom -40px',
                   }}
                 >
-                  <Area {...montlyDraftvsFinalconfig} />
+                  <Line {...monthlyStatusConfig('Review', data)} />
                 </CCardBody>
-                {footer(date)}
+                {footer(date, 'Review')}
+              </CCard>
+            </CCol>
+
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Draft')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Line {...monthlyStatusConfig('Draft', data)} />
+                </CCardBody>
+                {footer(date, 'Draft')}
+              </CCard>
+            </CCol>
+
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Stagnant')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Line {...monthlyStatusConfig('Stagnant', data)} />
+                </CCardBody>
+                {footer(date, 'Stagnant')}
+              </CCard>
+            </CCol>
+
+            <CCol xs={12}>
+              <CCard className="mb-2 cardBorder">
+                {header('Withdrawn')}
+                <CCardBody
+                  style={{
+                    // backgroundColor: '#fff9db',
+                    height: '300px',
+                    // backgroundImage: `url(${github})`,
+                    // backgroundSize: '33% 30%',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundPosition: 'right -12px bottom -40px',
+                  }}
+                >
+                  <Line {...monthlyStatusConfig('Withdrawn', data)} />
+                </CCardBody>
+                {footer(date, 'Withdrawn')}
               </CCard>
             </CCol>
           </CRow>

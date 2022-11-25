@@ -394,7 +394,7 @@ const mForm = () => {
         <CDropdown>
           <CDropdownToggle color="secondary">Other Action</CDropdownToggle>
           <CDropdownMenu>
-            <CDropdownItem href="/#/UpdateForm">Update Form</CDropdownItem>
+            <CDropdownItem href="/updateForm">Update Form</CDropdownItem>
           </CDropdownMenu>
         </CDropdown>
       </div>

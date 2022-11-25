@@ -228,6 +228,8 @@ const routes = [
   { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },
   { path: '/EIP-:id', name: 'EIPs', element: EIPs },
   { path: '/EIPS', name: 'EIPs', element: AllEIPs },
+  { path: '/insertForm', name: 'EIPs', element: mForm },
+  { path: '/updateForm', name: 'EIPs', element: mForm2 },
 ]
 
 export default routes

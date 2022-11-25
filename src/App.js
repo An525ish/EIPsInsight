@@ -57,24 +57,8 @@ function App() {
             {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
             <Route exact path="*" name="Home" element={<DefaultLayout />} />
 
-            <Route
-              path="/form"
-              name="Form"
-              element={
-                <ProtectedRouteAdmin>
-                  <MForm />
-                </ProtectedRouteAdmin>
-              }
-            />
-            <Route
-              path="/updateForm"
-              name="Update Form"
-              element={
-                <ProtectedRouteAdmin>
-                  <MForm2 />
-                </ProtectedRouteAdmin>
-              }
-            />
+            {/* <Route path="/insertForm" name="Form" element={<MForm />} />
+            <Route path="/updateForm" name="Update Form" element={<MForm2 />} /> */}
             {/* route for each EIP */}
             {/* <Route path="/EIPS/:EIPid" element={<EIPs />} /> */}
           </Routes>

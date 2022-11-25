@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { CBadge, CCard, CCardBody, CCardFooter, CSmartTable } from '@coreui/react-pro'
+import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { CSVLink } from 'react-csv'
+import { Link, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import downloadIcon from 'src/assets/download.png'
 
 function table() {
   const location = useLocation()
@@ -12,7 +15,7 @@ function table() {
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
-  const navigate = useNavigate()
+  const [name, setName] = useState()
   const API2 = 'https://eipsinsight.com/api/allinfo'
 
   const fetchAllEIPs = () => {
@@ -35,7 +38,7 @@ function table() {
             },
             {
               key: 'Number',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
@@ -56,10 +59,11 @@ function table() {
               },
             },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
             { key: 'Last-Call Deadline', _style: { width: '10%', color: '#1c7ed6' } },
             {
               key: 'status',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
             },
           ]
         : [
@@ -78,7 +82,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '40%',
+                width: '35%',
                 color: '#1c7ed6',
               },
             },
@@ -92,24 +96,34 @@ function table() {
             },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
             {
+              key: 'Category',
+              _style: {
+                width: '10%',
+                color: '#1c7ed6',
+              },
+            },
+            {
               key: 'status',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
             },
-            {
-              key: 'PR No.',
+            // {
+            //   key: 'PR No.',
 
-              _style: { width: '10%', color: '#1c7ed6' },
-            },
+            //   _style: { width: '10%', color: '#1c7ed6' },
+            // },
           ]
 
     return columns
   }
+  // colouring
 
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
         return '#c3fae8'
       case 'Last_Call':
+        return '#d3f9d8'
+      case 'Last Call':
         return '#d3f9d8'
       case 'Draft':
         return '#fff3bf'
@@ -119,8 +133,10 @@ function table() {
         return '#ffe3e3'
       case 'Review':
         return '#d0ebff'
-      default:
+      case 'Living':
         return '#c5f6fa'
+      default:
+        return '#e7f5ff'
     }
   }
   const getBadgeColor = (status) => {
@@ -128,6 +144,8 @@ function table() {
       case 'Final':
         return '#0ca678'
       case 'Last_Call':
+        return '#37b24d'
+      case 'Last Call':
         return '#37b24d'
       case 'Draft':
         return '#f08c00'
@@ -137,15 +155,17 @@ function table() {
         return '#e03131'
       case 'Review':
         return '#1971c2'
-      default:
+      case 'Living':
         return '#0c8599'
+      default:
+        return '#1c7ed6'
     }
   }
   const eipData = (eips, status, type) => {
     let arr = []
     console.log('eipData')
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (eips[0]['Final'][i].status === status && eips[0]['Final'][i].type === type) {
           arr.push({
@@ -153,6 +173,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
             'PR No.': 0,
@@ -166,6 +190,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
             'PR No.': 0,
@@ -179,6 +207,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
             'PR No.': 0,
@@ -192,6 +224,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -207,6 +243,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
             'PR No.': 0,
@@ -219,7 +259,11 @@ function table() {
             id: inc++,
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
+
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
             'PR No.': 0,
@@ -233,6 +277,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
             'PR No.': 0,
@@ -247,7 +295,7 @@ function table() {
     console.log('eipDataCategory')
     let arr = []
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (
           eips[0]['Final'][i].status === status &&
@@ -259,6 +307,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
           })
@@ -275,6 +327,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
           })
@@ -291,6 +347,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
           })
@@ -307,6 +367,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -325,6 +389,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
           })
@@ -340,7 +408,11 @@ function table() {
             id: inc++,
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
+
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
           })
@@ -357,6 +429,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
           })
@@ -372,7 +448,7 @@ function table() {
     status = status === 'Last_Call' ? 'Last Call' : status
     console.log({ status })
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (eips[0]['Final'][i].status === status) {
           arr.push({
@@ -380,6 +456,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
             'PR No.': 0,
@@ -393,6 +473,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
             'PR No.': 0,
@@ -406,6 +490,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
             'PR No.': 0,
@@ -419,6 +507,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -434,6 +526,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
             'PR No.': 0,
@@ -446,7 +542,11 @@ function table() {
             id: inc++,
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
+
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
             'PR No.': 0,
@@ -460,6 +560,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
             'PR No.': 0,
@@ -475,7 +579,7 @@ function table() {
     status = status === 'Last_Call' ? 'Last Call' : status
     let arr = []
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (
           eips[0]['Final'][i].status === status &&
@@ -487,6 +591,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
             'PR No.': 0,
@@ -504,6 +612,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
             'PR No.': 0,
@@ -521,6 +633,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
             'PR No.': 0,
@@ -538,6 +654,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -557,6 +677,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
             'PR No.': 0,
@@ -573,7 +697,11 @@ function table() {
             id: inc++,
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
+
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
             'PR No.': 0,
@@ -591,6 +719,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
             'PR No.': 0,
@@ -605,7 +737,7 @@ function table() {
     console.log('eipDataCategoryType')
     let arr = []
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (eips[0]['Final'][i].type === type && eips[0]['Final'][i].category === category) {
           arr.push({
@@ -613,6 +745,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
             'PR No.': 0,
@@ -626,6 +762,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
             'PR No.': 0,
@@ -639,6 +779,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
             'PR No.': 0,
@@ -655,6 +799,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -670,6 +818,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
             'PR No.': 0,
@@ -685,7 +837,12 @@ function table() {
             id: inc++,
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
+
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
+
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
             'PR No.': 0,
@@ -699,6 +856,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
             'PR No.': 0,
@@ -713,7 +874,7 @@ function table() {
     console.log('main')
     let arr = []
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (eips[0]['Final'][i].type === type) {
           arr.push({
@@ -721,6 +882,10 @@ function table() {
             Number: eips[0]['Final'][i].eip,
             Title: eips[0]['Final'][i].title,
             Type: eips[0]['Final'][i].type,
+            Category:
+              eips[0]['Final'][i].type === 'Standards Track'
+                ? eips[0]['Final'][i].category
+                : `Type - ${eips[0]['Final'][i].type}`,
             status: eips[0]['Final'][i].status,
             Author: eips[0]['Final'][i].author,
             'PR No.': 0,
@@ -734,6 +899,10 @@ function table() {
             Number: eips[1]['Draft'][i].eip,
             Title: eips[1]['Draft'][i].title,
             Type: eips[1]['Draft'][i].type,
+            Category:
+              eips[1]['Draft'][i].type === 'Standards Track'
+                ? eips[1]['Draft'][i].category
+                : `Type - ${eips[1]['Draft'][i].type}`,
             status: eips[1]['Draft'][i].status,
             Author: eips[1]['Draft'][i].author,
             'PR No.': 0,
@@ -747,6 +916,10 @@ function table() {
             Number: eips[2]['Review'][i].eip,
             Title: eips[2]['Review'][i].title,
             Type: eips[2]['Review'][i].type,
+            Category:
+              eips[2]['Review'][i].type === 'Standards Track'
+                ? eips[2]['Review'][i].category
+                : `Type - ${eips[2]['Review'][i].type}`,
             status: eips[2]['Review'][i].status,
             Author: eips[2]['Review'][i].author,
             'PR No.': 0,
@@ -760,6 +933,10 @@ function table() {
             Number: eips[3]['Last_Call'][i].eip,
             Title: eips[3]['Last_Call'][i].title,
             Type: eips[3]['Last_Call'][i].type,
+            Category:
+              eips[3]['Last_Call'][i].type === 'Standards Track'
+                ? eips[3]['Last_Call'][i].category
+                : `Type - ${eips[3]['Last_Call'][i].type}`,
             status: eips[3]['Last_Call'][i].status,
             'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
             Author: eips[3]['Last_Call'][i].author,
@@ -775,6 +952,10 @@ function table() {
             Number: eips[4]['Stagnant'][i].eip,
             Title: eips[4]['Stagnant'][i].title,
             Type: eips[4]['Stagnant'][i].type,
+            Category:
+              eips[4]['Stagnant'][i].type === 'Standards Track'
+                ? eips[4]['Stagnant'][i].category
+                : `Type - ${eips[4]['Stagnant'][i].type}`,
             status: eips[4]['Stagnant'][i].status,
             Author: eips[4]['Stagnant'][i].author,
             'PR No.': 0,
@@ -788,6 +969,10 @@ function table() {
             Number: eips[5]['Withdrawn'][i].eip,
             Title: eips[5]['Withdrawn'][i].title,
             Type: eips[5]['Withdrawn'][i].type,
+            Category:
+              eips[5]['Withdrawn'][i].type === 'Standards Track'
+                ? eips[5]['Withdrawn'][i].category
+                : `Type - ${eips[5]['Withdrawn'][i].type}`,
             status: eips[5]['Withdrawn'][i].status,
             Author: eips[5]['Withdrawn'][i].author,
             'PR No.': 0,
@@ -801,6 +986,10 @@ function table() {
             Number: eips[6]['Living'][i].eip,
             Title: eips[6]['Living'][i].title,
             Type: eips[6]['Living'][i].type,
+            Category:
+              eips[6]['Living'][i].type === 'Standards Track'
+                ? eips[6]['Living'][i].category
+                : `Type - ${eips[6]['Living'][i].type}`,
             status: eips[6]['Living'][i].status,
             Author: eips[6]['Living'][i].author,
             'PR No.': 0,
@@ -816,6 +1005,126 @@ function table() {
     let date = new Date().toDateString()
     setDate(date)
   }
+  const whatData = () => {
+    let data =
+      month === undefined && year === undefined
+        ? category === '' && status === ''
+          ? eipDataMain(eips === undefined ? [] : eips, type === undefined ? '' : type)
+          : category === '' && type === ''
+          ? eipDataStatus(eips === undefined ? [] : eips, status === undefined ? '' : status)
+          : category === ''
+          ? eipData(
+              eips === undefined ? [] : eips,
+              status === undefined ? '' : status,
+              type === undefined ? '' : type,
+            )
+          : status === ''
+          ? eipDataCategoryType(
+              eips === undefined ? [] : eips,
+              type === undefined ? '' : type,
+              category === undefined ? '' : category,
+            )
+          : eipDataCategory(
+              eips === undefined ? [] : eips,
+              type === undefined ? '' : type,
+              status === undefined ? '' : status,
+              category === undefined ? '' : category,
+            )
+        : category === '' && type === ''
+        ? eipDataStatusExtra(
+            eips === undefined ? [] : eips,
+            status === undefined ? '' : status,
+            month === undefined ? '' : month,
+            year === undefined ? '' : year,
+          )
+        : null
+
+    return data
+  }
+
+  // csv Download
+  const headers = [
+    {
+      label: 'EIP No.',
+      key: 'Number',
+    },
+    {
+      label: 'Title',
+      key: 'Title',
+    },
+    {
+      label: 'Author',
+      key: 'Author',
+    },
+    {
+      label: 'Type',
+      key: 'Type',
+    },
+    {
+      label: 'Category',
+      key: 'Category',
+    },
+    { label: 'Last Call Deadline', key: 'Last-Call Deadline' },
+    {
+      label: 'Status',
+      key: 'status',
+    },
+    {
+      label: 'PR No.',
+      key: 'PR No.',
+    },
+  ]
+  const csvLink = {
+    filename: name,
+    headers: headers,
+    data: whatData(),
+  }
+
+  const factorAuthor = (data) => {
+    let ans
+    // console.log({ data })
+    let list = data.split(',')
+    // console.log({ list })
+    for (let i = 0; i < list.length; i++) {
+      list[i] = list[i].split(' ')
+    }
+    // console.log({ list })
+    if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
+      list.pop()
+    }
+    return list
+  }
+
+  const getString = (data) => {
+    let ans = ''
+    for (let i = 0; i < data.length - 1; i++) {
+      ans += data[i] + ' '
+    }
+    return ans
+  }
+
+  // headers
+  const header = (text) => {
+    return (
+      <CCardHeader
+        className="cardHeader flex justify-between items-center"
+        style={{
+          fontFamily: 'Roboto',
+          fontWeight: '800',
+          fontSize: '14px',
+          color: `${getBadgeColor(text)}`,
+          background: `${getBadge(text)}`,
+          borderBottom: `2px solid ${getBadgeColor(text)}`,
+        }}
+      >
+        <div>{text}</div>
+
+        <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
+          <motion.img src={downloadIcon} alt="Download Icon" whileTap={{ scale: 0.8 }} />
+        </CSVLink>
+      </CCardHeader>
+    )
+  }
 
   useEffect(() => {
     fetchAllEIPs()
@@ -824,6 +1133,7 @@ function table() {
     setStatus(location.state.status)
     setMonth(location.state.month)
     setYear(location.state.year)
+    setName(location.state.name)
     fetchDate()
   }, [])
 
@@ -833,7 +1143,16 @@ function table() {
 
   return (
     <>
-      <CCard>
+      <CCard style={{ border: '2px solid #a5d8ff' }}>
+        {header(
+          `${name
+            ?.split('_')
+            .toString()
+            .replace(',', ' ')
+            .replace(',', ' - ')
+            .replace(',', ' - ')
+            .replace(/^./, name[0].toUpperCase())}`, // regex for making upper case
+        )}
         <CCardBody
           style={{
             overflowX: 'auto',
@@ -845,42 +1164,7 @@ function table() {
           className="scrollbarDesign"
         >
           <CSmartTable
-            items={
-              month === undefined && year === undefined
-                ? category === '' && status === ''
-                  ? eipDataMain(eips === undefined ? [] : eips, type === undefined ? '' : type)
-                  : category === '' && type === ''
-                  ? eipDataStatus(
-                      eips === undefined ? [] : eips,
-                      status === undefined ? '' : status,
-                    )
-                  : category === ''
-                  ? eipData(
-                      eips === undefined ? [] : eips,
-                      status === undefined ? '' : status,
-                      type === undefined ? '' : type,
-                    )
-                  : status === ''
-                  ? eipDataCategoryType(
-                      eips === undefined ? [] : eips,
-                      type === undefined ? '' : type,
-                      category === undefined ? '' : category,
-                    )
-                  : eipDataCategory(
-                      eips === undefined ? [] : eips,
-                      type === undefined ? '' : type,
-                      status === undefined ? '' : status,
-                      category === undefined ? '' : category,
-                    )
-                : category === '' && type === ''
-                ? eipDataStatusExtra(
-                    eips === undefined ? [] : eips,
-                    status === undefined ? '' : status,
-                    month === undefined ? '' : month,
-                    year === undefined ? '' : year,
-                  )
-                : null
-            }
+            items={whatData()}
             activePage={1}
             clickableRows
             columns={fetchColumn(status)}
@@ -899,6 +1183,43 @@ function table() {
                   >
                     {item.status}
                   </CBadge>
+                </td>
+              ),
+
+              Author: (it) => (
+                <td>
+                  <div className="flex">
+                    {factorAuthor(it.Author).map((item, index) => {
+                      let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
+
+                      return (
+                        <CBadge
+                          key={index}
+                          className="mr-1"
+                          style={{
+                            color: `${getBadgeColor(it.status)}`,
+                            backgroundColor: `${getBadge(it.status)}`,
+                          }}
+                        >
+                          <a
+                            key={index}
+                            href={`${
+                              item[item.length - 1].substring(item[item.length - 1].length - 1) ===
+                              '>'
+                                ? 'mailto:' + t
+                                : 'https://github.com/' + t.substring(1)
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hoverAuthor text-[10px]"
+                            style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                          >
+                            {getString(item)}
+                          </a>
+                        </CBadge>
+                      )
+                    })}
+                  </div>
                 </td>
               ),
               Number: (item) => (

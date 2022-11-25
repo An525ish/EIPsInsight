@@ -747,7 +747,6 @@ const CurrentMonth = () => {
                                   to="/currentMonthTable"
                                   style={{
                                     textDecoration: 'none',
-
                                     color: `${getBadgeColor('Draft')}`,
                                     backgroundColor: `${getBadge('Draft')}`,
                                   }}
@@ -755,6 +754,7 @@ const CurrentMonth = () => {
               shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                                   state={{
                                     status: 'Draft',
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Draft`,
                                   }}
                                 >
                                   {parseInt(
@@ -837,6 +837,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Final`,
                                   }}
                                 >
                                   {parseInt(
@@ -919,6 +920,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Review`,
                                   }}
                                 >
                                   {parseInt(
@@ -1000,6 +1002,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Last_Call`,
                                   }}
                                 >
                                   {parseInt(
@@ -1081,6 +1084,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Stagnant`,
                                   }}
                                 >
                                   {parseInt(
@@ -1162,6 +1166,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Withdrawn`,
                                   }}
                                 >
                                   {parseInt(
@@ -1243,6 +1248,7 @@ const CurrentMonth = () => {
                                     category: '',
                                     month: `${month}`,
                                     year: `${year}`,
+                                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Living`,
                                   }}
                                 >
                                   {parseInt(
@@ -1370,6 +1376,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Draft`,
                   }}
                 >
                   {header('Draft')}
@@ -1431,6 +1438,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Final`,
                   }}
                 >
                   {header('Final')}
@@ -1492,6 +1500,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Review`,
                   }}
                 >
                   {header('Review')}
@@ -1556,6 +1565,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Last_Call`,
                   }}
                 >
                   {header('Last Call')}
@@ -1620,6 +1630,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Stagnant`,
                   }}
                 >
                   {header('Stagnant')}
@@ -1684,6 +1695,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Withdrawn`,
                   }}
                 >
                   {header('Withdrawn')}
@@ -1748,6 +1760,7 @@ const CurrentMonth = () => {
                     category: '',
                     month: `${month}`,
                     year: `${year}`,
+                    name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Living`,
                   }}
                 >
                   {header('Living')}

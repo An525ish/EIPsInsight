@@ -183,6 +183,19 @@ function typeAll() {
         post['Withdrawn']['Standard_Track'][name] +
         post['Living']['Standard_Track'][name]
   }
+
+  // get meta and informational Data
+  const getMetaAndInformational = (name) => {
+    return post === undefined
+      ? 0
+      : fetchTableDataExtra(post === undefined ? [] : post, name, 'Living') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
+  }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
     arr.push(
@@ -335,7 +348,12 @@ function typeAll() {
               <Link
                 to="/chartTable"
                 style={{ textDecoration: 'none', color: 'inherit' }}
-                state={{ type: 'Standards Track', status: '', category: '' }}
+                state={{
+                  type: 'Standards Track',
+                  status: '',
+                  category: '',
+                  name: 'Standard_Track',
+                }}
               >
                 <div
                   className='className="h-7
@@ -409,7 +427,7 @@ function typeAll() {
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Type-Category</CTableHeaderCell>
                         <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
                         <CTableHeaderCell scope="col">%</CTableHeaderCell>
                       </CTableRow>
@@ -420,13 +438,18 @@ function typeAll() {
                           <Link
                             to="/chartTable"
                             style={{ textDecoration: 'none', color: 'inherit' }}
-                            state={{ type: 'Standards Track', status: '', category: 'Core' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Core',
+                              name: 'Standard_Track_Core',
+                            }}
                           >
                             <div
                               className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
-                              Core
+                              Standard - Core
                             </div>
                           </Link>
                         </CTableDataCell>
@@ -449,13 +472,18 @@ function typeAll() {
                           <Link
                             to="/chartTable"
                             style={{ textDecoration: 'none', color: 'inherit' }}
-                            state={{ type: 'Standards Track', status: '', category: 'ERC' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'ERC',
+                              name: 'Standard_Track_ERC',
+                            }}
                           >
                             <div
                               className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
-                              ERC
+                              Standard - ERC
                             </div>
                           </Link>
                         </CTableDataCell>
@@ -478,13 +506,18 @@ function typeAll() {
                           <Link
                             to="/chartTable"
                             style={{ textDecoration: 'none', color: 'inherit' }}
-                            state={{ type: 'Standards Track', status: '', category: 'Networking' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Networking',
+                              name: 'Standard_Track_Networking',
+                            }}
                           >
                             <div
                               className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
-                              Networking
+                              Standard - Networking
                             </div>
                           </Link>
                         </CTableDataCell>
@@ -507,13 +540,18 @@ function typeAll() {
                           <Link
                             to="/chartTable"
                             style={{ textDecoration: 'none', color: 'inherit' }}
-                            state={{ type: 'Standards Track', status: '', category: 'Interface' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Interface',
+                              name: 'Standard_Track_Interface',
+                            }}
                           >
                             <div
                               className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
-                              Interface
+                              Standard - Interface
                             </div>
                           </Link>
                         </CTableDataCell>
@@ -525,6 +563,64 @@ function typeAll() {
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
                                 totalEIPs()) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Interface',
+                              name: 'Standard_Track_Interface',
+                            }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Meta
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>{getMetaAndInformational('Meta')}</CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {((getMetaAndInformational('Meta') / totalEIPs()) * 100).toFixed(2)}%
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/chartTable"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Interface',
+                              name: 'Standard_Track_Interface',
+                            }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Informational
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>{getMetaAndInformational('Informational')}</CTableDataCell>
+                        <CTableDataCell>
+                          <label className="font-[800]">
+                            {(
+                              (getMetaAndInformational('Informational') / totalEIPs()) *
                               100
                             ).toFixed(2)}
                             %
@@ -575,21 +671,13 @@ function typeAll() {
                 <Link
                   to="/chartTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
-                  state={{ type: 'Meta', status: '', category: '' }}
+                  state={{ type: 'Meta', status: '', category: '', name: 'Meta' }}
                 >
                   <div
                     className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                   >
-                    {post === undefined
-                      ? 0
-                      : fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
-                        fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant')}
+                    {getMetaAndInformational('Meta')}
                   </div>
                 </Link>
               </label>
@@ -620,49 +708,13 @@ function typeAll() {
                 <Link
                   to="/chartTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
-                  state={{ type: 'Informational', status: '', category: '' }}
+                  state={{ type: 'Informational', status: '', category: '', name: 'Informational' }}
                 >
                   <div
                     className='className="h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                   >
-                    {post === undefined
-                      ? 0
-                      : fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Living',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Final',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Withdrawn',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Draft',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Review',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Last_Call',
-                        ) +
-                        fetchTableDataExtra(
-                          post === undefined ? [] : post,
-                          'Informational',
-                          'Stagnant',
-                        )}
+                    {getMetaAndInformational('Informational')}
                   </div>
                 </Link>
               </label>

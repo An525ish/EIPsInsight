@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
+import { CSVLink } from 'react-csv'
+import downloadIcon from 'src/assets/download.png'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
 import './allEIPs.css'
+import { MotionConfig } from 'framer-motion'
 
 const AllEIPs = () => {
   const [eips, setEips] = useState()
@@ -34,10 +38,9 @@ const AllEIPs = () => {
   const eipData = (eips) => {
     let arr = []
     if (eips[0] !== undefined) {
-      let inc = 0
+      let inc = 1
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[0]['Final'][i].eip,
           Title: eips[0]['Final'][i].title,
           Type: eips[0]['Final'][i].type,
@@ -52,7 +55,6 @@ const AllEIPs = () => {
       }
       for (let i = 0; i < eips[1]['Draft'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[1]['Draft'][i].eip,
           Title: eips[1]['Draft'][i].title,
           Type: eips[1]['Draft'][i].type,
@@ -67,7 +69,6 @@ const AllEIPs = () => {
       }
       for (let i = 0; i < eips[2]['Review'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[2]['Review'][i].eip,
           Title: eips[2]['Review'][i].title,
           Type: eips[2]['Review'][i].type,
@@ -82,7 +83,6 @@ const AllEIPs = () => {
       }
       for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[3]['Last_Call'][i].eip,
           Title: eips[3]['Last_Call'][i].title,
           Type: eips[3]['Last_Call'][i].type,
@@ -98,7 +98,6 @@ const AllEIPs = () => {
 
       for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[4]['Stagnant'][i].eip,
           Title: eips[4]['Stagnant'][i].title,
           Type: eips[4]['Stagnant'][i].type,
@@ -113,7 +112,6 @@ const AllEIPs = () => {
       }
       for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[5]['Withdrawn'][i].eip,
           Title: eips[5]['Withdrawn'][i].title,
           Type: eips[5]['Withdrawn'][i].type,
@@ -128,7 +126,6 @@ const AllEIPs = () => {
       }
       for (let i = 0; i < eips[6]['Living'].length; i++) {
         arr.push({
-          id: inc++,
           Number: eips[6]['Living'][i].eip,
           Title: eips[6]['Living'][i].title,
           Type: eips[6]['Living'][i].type,
@@ -172,7 +169,7 @@ const AllEIPs = () => {
     { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
-    { key: 'PR No.', _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    // { key: 'PR No.', _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   // colouring
   const getBadge = (status) => {
@@ -224,7 +221,7 @@ const AllEIPs = () => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex justify-between items-center"
         style={{
           fontFamily: 'Roboto',
           fontWeight: '800',
@@ -234,7 +231,13 @@ const AllEIPs = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        {text} ({allEIPs})
+        <div>
+          {text} ({allEIPs})
+        </div>
+
+        <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
+          <motion.img src={downloadIcon} alt="Download Icon" whileTap={{ scale: 0.8 }} />
+        </CSVLink>
       </CCardHeader>
     )
   }
@@ -268,6 +271,38 @@ const AllEIPs = () => {
     setDate(date)
   }
 
+  // csv Download
+  const headers = [
+    {
+      label: 'EIP No.',
+      key: 'Number',
+    },
+    {
+      label: 'Title',
+      key: 'Title',
+    },
+    {
+      label: 'Type',
+      key: 'Type',
+    },
+    {
+      label: 'Category',
+      key: 'Category',
+    },
+    {
+      label: 'Status',
+      key: 'status',
+    },
+    {
+      label: 'PR No.',
+      key: 'PR No.',
+    },
+  ]
+  const csvLink = {
+    filename: 'EIPs.csv',
+    headers: headers,
+    data: eipData(eips === undefined ? [] : eips),
+  }
   useEffect(() => {
     fetchAllEIPs()
     fetchDate()
@@ -401,6 +436,7 @@ const AllEIPs = () => {
                 striped: true,
                 hover: true,
                 responsive: true,
+                className: '',
               }}
             />
           ) : (
