@@ -178,10 +178,16 @@ const AppSidebar = () => {
         console.log(objYear)
 
         if (yearArr[j] === '2022') {
-          objYear.subRoutes.push({
-            path: `/currentMonth`,
-            name: 'November',
-          })
+          objYear.subRoutes.push(
+            {
+              path: `/currentMonth`,
+              name: 'November',
+            },
+            {
+              path: `/october-2022`,
+              name: 'October',
+            },
+          )
         }
         for (let i = 0; i < datas.length; i++) {
           if (datas[i].year === yearArr[j]) {

@@ -96,9 +96,42 @@ const autoCharts = (props) => {
       setMonth(monthNum[list[0]])
       setYear(y)
 
-      let filterData = datas.filter((e) => {
-        return e.name.toLowerCase() === att.toLowerCase() && e.year === y
-      }) // we filter from here
+      let filterData =
+        att.toLowerCase() === 'october' && y === '2022'
+          ? [
+              {
+                _id: { $oid: '6309ef70756fa134910777ed' },
+                name: 'October',
+                year: '2022',
+                summary: {
+                  Draft: '9',
+                  Final: '1',
+                  LastCall: '6',
+                  Review: '8',
+                  Stagnant: '0',
+                  Withdrawn: '0',
+                  Living: '0',
+                  potentialProposal: '0',
+                  SummaryInfo:
+                    'In October, we have added 9 new EIPs as Draft. 8 EIPs are available in Review status. 6 EIPs are available in Last Call status. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.',
+                  HighlightText:
+                    'This repo has 3958 Forks and 925 users have put it on the watchlist. Open Pull Request-84 & Issues-26.',
+                },
+                Draft: { Core: '1', ERC: '8', Networking: '0', Interface: '0' },
+                Final: { Core: '0', ERC: '1', Networking: '0', Interface: '0' },
+                Review: { Core: '2', ERC: '6', Networking: '0', Interface: '0' },
+                LastCall: { Core: '0', ERC: '6', Networking: '0', Interface: '0' },
+                Stagnant: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                Withdrawn: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                Living: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                GeneralStats: { OpenPR: '27', MergedPR: '87', ClosedIssues: '8', NewIssues: '1' },
+                OtherStats: { Forks: '3958', Users: '925', Authors: '47', Files: '102' },
+                __v: { $numberInt: '0' },
+              },
+            ]
+          : datas.filter((e) => {
+              return e.name.toLowerCase() === att.toLowerCase() && e.year === y
+            }) // we filter from here
 
       console.log({ filterData })
       setData(filterData)

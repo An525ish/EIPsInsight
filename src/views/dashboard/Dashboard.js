@@ -8,6 +8,7 @@ import { CSVLink } from 'react-csv'
 import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import PropTypes from 'prop-types'
 import github from '../../assets/grey_logo.png'
+import { motion } from 'framer-motion'
 import {
   CAvatar,
   CDataTable,
@@ -41,6 +42,7 @@ import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
+import { MotionConfig } from 'framer-motion'
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
@@ -1032,6 +1034,38 @@ const Dashboard = () => {
     )
   }
 
+  // text animation
+  const container = {
+    hidden: { opacity: 0 },
+    visible: (i = 1) => ({
+      opacity: 1,
+      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
+    }),
+  }
+
+  const child = {
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        type: 'spring',
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      x: -20,
+      y: 10,
+      transition: {
+        type: 'spring',
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+  }
+
   useEffect(() => {
     // fetchData()
 
@@ -1225,9 +1259,20 @@ const Dashboard = () => {
                   className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                    *Click to see more
-                  </label>
+                  {loading ? (
+                    <motion.div
+                      style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}
+                      className="flex justify-between items-center"
+                      variants={container}
+                    >
+                      <label>* </label>
+                      <motion.div className="ml-2 bg-white px-2 rounded-lg border-[#1c7ed6] border-l-[2px]">
+                        <motion.span variants={child} key={1}>
+                          Click to see more
+                        </motion.span>
+                      </motion.div>
+                    </motion.div>
+                  ) : null}
                   <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
                 </CCardFooter>
               </CCard>

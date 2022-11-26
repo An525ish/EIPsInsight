@@ -195,15 +195,16 @@ function tableCurrent() {
       for (let i = 0; i < ans.length; i++) {
         let findEip = eips.filter((item) => item.data.eip === ans[i])
         console.log({ findEip })
+        console.log(findEip[0].type)
         arr.push({
           id: inc++,
           Number: findEip[0].data.eip,
           Title: findEip[0].data.title,
           Type: findEip[0].data.type,
           Category:
-            findEip[0].type === 'Standards Track'
-              ? findEip[0].category
-              : `Type - ${findEip[0].type}`,
+            findEip[0].data.type === 'Standards Track'
+              ? findEip[0].data.category
+              : `Type - ${findEip[0].data.type}`,
           status: findEip[0].data.status,
           Author: findEip[0].data.author,
         })

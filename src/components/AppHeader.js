@@ -310,7 +310,7 @@ const AppHeader = () => {
             <CNavLink href="#">
               <CTooltip content="Github source" placement="bottom">
                 <a
-                  href="https://github.com/ethereum/EIPs"
+                  href="https://github.com/Avarch-org/EIPsInsight/tree/main"
                   target="_blank"
                   rel="noreferrer"
                   className="githubIcon"
