@@ -16,6 +16,7 @@ function table() {
   const [year, setYear] = useState()
   const [date, setDate] = useState()
   const [name, setName] = useState()
+  const [data, setData] = useState()
   const API2 = 'https://eipsinsight.com/api/allinfo'
 
   const fetchAllEIPs = () => {
@@ -53,9 +54,10 @@ function table() {
             {
               key: 'Author',
               _style: {
-                width: '20%',
+                width: '15%',
                 color: '#1c7ed6',
                 backgroundColor: '#e7f5ff',
+                display: 'block',
               },
             },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
@@ -64,6 +66,11 @@ function table() {
             {
               key: 'status',
               _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+            {
+              key: 'PR No.',
+
+              _style: { width: '5%', color: '#1c7ed6' },
             },
           ]
         : [
@@ -89,7 +96,7 @@ function table() {
             {
               key: 'Author',
               _style: {
-                width: '20%',
+                width: '15%',
                 color: '#1c7ed6',
                 backgroundColor: '#e7f5ff',
               },
@@ -106,11 +113,11 @@ function table() {
               key: 'status',
               _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
             },
-            // {
-            //   key: 'PR No.',
+            {
+              key: 'PR No.',
 
-            //   _style: { width: '10%', color: '#1c7ed6' },
-            // },
+              _style: { width: '5%', color: '#1c7ed6' },
+            },
           ]
 
     return columns
@@ -1005,42 +1012,6 @@ function table() {
     let date = new Date().toDateString()
     setDate(date)
   }
-  const whatData = () => {
-    let data =
-      month === undefined && year === undefined
-        ? category === '' && status === ''
-          ? eipDataMain(eips === undefined ? [] : eips, type === undefined ? '' : type)
-          : category === '' && type === ''
-          ? eipDataStatus(eips === undefined ? [] : eips, status === undefined ? '' : status)
-          : category === ''
-          ? eipData(
-              eips === undefined ? [] : eips,
-              status === undefined ? '' : status,
-              type === undefined ? '' : type,
-            )
-          : status === ''
-          ? eipDataCategoryType(
-              eips === undefined ? [] : eips,
-              type === undefined ? '' : type,
-              category === undefined ? '' : category,
-            )
-          : eipDataCategory(
-              eips === undefined ? [] : eips,
-              type === undefined ? '' : type,
-              status === undefined ? '' : status,
-              category === undefined ? '' : category,
-            )
-        : category === '' && type === ''
-        ? eipDataStatusExtra(
-            eips === undefined ? [] : eips,
-            status === undefined ? '' : status,
-            month === undefined ? '' : month,
-            year === undefined ? '' : year,
-          )
-        : null
-
-    return data
-  }
 
   // csv Download
   const headers = [
@@ -1074,10 +1045,69 @@ function table() {
       key: 'PR No.',
     },
   ]
+
+  const getDataFromLocationData = (data) => {
+    let id = 1
+    let arr = []
+    for (let i = 0; i < data.length; i++) {
+      arr.push({
+        id: id++,
+        Number: data[i].eip.substring(4, 8),
+        Title: data[i].title,
+        Type: data[i].type,
+        Category: data[i].category,
+        status: data[i].status,
+        Author: data[i].author,
+        'PR No.': data[i].pull,
+      })
+    }
+
+    return arr
+  }
+
+  const whatData = (data) => {
+    let datafromData = getDataFromLocationData(data === undefined ? [] : data)
+    let getData =
+      datafromData.length !== 0
+        ? datafromData
+        : month === undefined && year === undefined
+        ? category === '' && status === ''
+          ? eipDataMain(eips === undefined ? [] : eips, type === undefined ? '' : type)
+          : category === '' && type === ''
+          ? eipDataStatus(eips === undefined ? [] : eips, status === undefined ? '' : status)
+          : category === ''
+          ? eipData(
+              eips === undefined ? [] : eips,
+              status === undefined ? '' : status,
+              type === undefined ? '' : type,
+            )
+          : status === ''
+          ? eipDataCategoryType(
+              eips === undefined ? [] : eips,
+              type === undefined ? '' : type,
+              category === undefined ? '' : category,
+            )
+          : eipDataCategory(
+              eips === undefined ? [] : eips,
+              type === undefined ? '' : type,
+              status === undefined ? '' : status,
+              category === undefined ? '' : category,
+            )
+        : category === '' && type === ''
+        ? eipDataStatusExtra(
+            eips === undefined ? [] : eips,
+            status === undefined ? '' : status,
+            month === undefined ? '' : month,
+            year === undefined ? '' : year,
+          )
+        : null
+
+    return getData
+  }
   const csvLink = {
     filename: name,
     headers: headers,
-    data: whatData(),
+    data: whatData(data === undefined ? [] : data),
   }
 
   const factorAuthor = (data) => {
@@ -1134,12 +1164,14 @@ function table() {
     setMonth(location.state.month)
     setYear(location.state.year)
     setName(location.state.name)
+    setData(location.state.data)
     fetchDate()
   }, [])
 
   console.log({ year })
   console.log({ month })
   console.log({ status })
+  console.log({ data })
 
   return (
     <>
@@ -1164,7 +1196,7 @@ function table() {
           className="scrollbarDesign"
         >
           <CSmartTable
-            items={whatData()}
+            items={whatData(data === undefined ? [] : data)}
             activePage={1}
             clickableRows
             columns={fetchColumn(status)}
@@ -1183,6 +1215,24 @@ function table() {
                   >
                     {item.status}
                   </CBadge>
+                </td>
+              ),
+              'PR No.': (item) => (
+                <td>
+                  <a
+                    href={`https://github.com/ethereum/EIPs/pull/${item.Number}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <CBadge
+                      style={{
+                        color: `${getBadgeColor('Random')}`,
+                        backgroundColor: `${getBadge('Random')}`,
+                      }}
+                    >
+                      #{item.Number}
+                    </CBadge>
+                  </a>
                 </td>
               ),
 

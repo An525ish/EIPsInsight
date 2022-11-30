@@ -73,7 +73,11 @@ function tableCurrent() {
             { key: 'Category', _style: { width: '5%', color: '#1c7ed6' } },
             {
               key: 'status',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+            {
+              key: 'PR No.',
+              _style: { width: '5%', color: '#1c7ed6' },
             },
           ]
         : [
@@ -92,7 +96,7 @@ function tableCurrent() {
             {
               key: 'Title',
               _style: {
-                width: '40%',
+                width: '35%',
                 color: '#1c7ed6',
               },
             },
@@ -108,7 +112,11 @@ function tableCurrent() {
             { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
             {
               key: 'status',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+            },
+            {
+              key: 'PR No.',
+              _style: { width: '5%', color: '#1c7ed6' },
             },
           ]
 
@@ -207,6 +215,7 @@ function tableCurrent() {
               : `Type - ${findEip[0].data.type}`,
           status: findEip[0].data.status,
           Author: findEip[0].data.author,
+          'PR No.': '#' + findEip[0].data.eip,
         })
       }
       // console.log({ arr })
@@ -364,6 +373,24 @@ function tableCurrent() {
                     >
                       {item.status}
                     </CBadge>
+                  </td>
+                ),
+                'PR No.': (item) => (
+                  <td>
+                    <a
+                      href={`https://github.com/ethereum/EIPs/pull/${item.Number}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <CBadge
+                        style={{
+                          color: `${getBadgeColor('Random')}`,
+                          backgroundColor: `${getBadge('Random')}`,
+                        }}
+                      >
+                        #{item.Number}
+                      </CBadge>
+                    </a>
                   </td>
                 ),
                 Author: (it) => (
