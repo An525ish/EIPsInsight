@@ -428,6 +428,8 @@ const autoCharts = (props) => {
     let metaData = statusData.filter((item) => item.type === 'Meta')
     let informationalData = statusData.filter((item) => item.type === 'Informational')
 
+    // console.log({ statusData })
+
     let findArr = [
       statusData.length,
       coreData.length,
@@ -848,7 +850,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 {data === undefined ? '' : data[0]?.name}{' '}
               </label>{' '}
               <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                Insights
+                Insight
               </label>
             </CCard>
           </div>

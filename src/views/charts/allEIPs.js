@@ -50,7 +50,7 @@ const AllEIPs = () => {
               : `Type - ${eips[0]['Final'][i].type}`,
           status: eips[0]['Final'][i].status,
           Author: eips[0]['Final'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[0]['Final'][i].eip,
         })
       }
       for (let i = 0; i < eips[1]['Draft'].length; i++) {
@@ -64,7 +64,7 @@ const AllEIPs = () => {
               : `Type - ${eips[1]['Draft'][i].type}`,
           status: eips[1]['Draft'][i].status,
           Author: eips[1]['Draft'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[1]['Draft'][i].eip,
         })
       }
       for (let i = 0; i < eips[2]['Review'].length; i++) {
@@ -78,7 +78,7 @@ const AllEIPs = () => {
               : `Type - ${eips[2]['Review'][i].type}`,
           status: eips[2]['Review'][i].status,
           Author: eips[2]['Review'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[2]['Review'][i].eip,
         })
       }
       for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
@@ -92,7 +92,7 @@ const AllEIPs = () => {
               : `Type - ${eips[3]['Last_Call'][i].type}`,
           status: eips[3]['Last_Call'][i].status,
           Author: eips[3]['Last_Call'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[3]['Last_Call'][i].eip,
         })
       }
 
@@ -107,7 +107,7 @@ const AllEIPs = () => {
               : `Type - ${eips[4]['Stagnant'][i].type}`,
           status: eips[4]['Stagnant'][i].status,
           Author: eips[4]['Stagnant'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[4]['Stagnant'][i].eip,
         })
       }
       for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
@@ -121,7 +121,7 @@ const AllEIPs = () => {
               : `Type - ${eips[5]['Withdrawn'][i].type}`,
           status: eips[5]['Withdrawn'][i].status,
           Author: eips[5]['Withdrawn'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[5]['Withdrawn'][i].eip,
         })
       }
       for (let i = 0; i < eips[6]['Living'].length; i++) {
@@ -135,7 +135,7 @@ const AllEIPs = () => {
               : `Type - ${eips[6]['Living'][i].type}`,
           status: eips[6]['Living'][i].status,
           Author: eips[6]['Living'][i].author,
-          'PR No.': 0,
+          'PR No.': '#' + eips[6]['Living'][i].eip,
         })
       }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
@@ -154,7 +154,7 @@ const AllEIPs = () => {
     {
       key: 'Title',
       _style: {
-        width: '40%',
+        width: '30%',
         color: '#1c7ed6',
       },
     },
@@ -166,10 +166,25 @@ const AllEIPs = () => {
         backgroundColor: '#e7f5ff',
       },
     },
-    { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
-    // { key: 'PR No.', _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    {
+      key: 'Start Date',
+      _style: {
+        width: '10%',
+        color: '#1c7ed6',
+      },
+    },
+    {
+      key: 'Final Date',
+      _style: {
+        width: '8%',
+        color: '#1c7ed6',
+        backgroundColor: '#e7f5ff',
+      },
+    },
+    { key: 'Type', _style: { width: '7%', color: '#1c7ed6' } },
+    { key: 'Category', _style: { width: '7%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    { key: 'status', _style: { width: '8%', color: '#1c7ed6' } },
+    { key: 'PR No.', _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   // colouring
   const getBadge = (status) => {
@@ -345,6 +360,25 @@ const AllEIPs = () => {
                     >
                       {item.status}
                     </CBadge>
+                  </td>
+                ),
+
+                'PR No.': (item) => (
+                  <td>
+                    <a
+                      href={`https://github.com/ethereum/EIPs/pull/${item.Number}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <CBadge
+                        style={{
+                          color: `${getBadgeColor('Random')}`,
+                          backgroundColor: `${getBadge('Random')}`,
+                        }}
+                      >
+                        #{item.Number}
+                      </CBadge>
+                    </a>
                   </td>
                 ),
 

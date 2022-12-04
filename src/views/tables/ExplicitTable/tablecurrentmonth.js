@@ -15,7 +15,7 @@ function tableCurrent() {
   const [currentMonth, setCurrentMonth] = useState()
   const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/rawData'
-  const API3 = 'https://eipsinsight.com/api/currentMonth'
+  const API3 = 'https://eipsinsight.com/api/currentMonth/2022/December'
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState()
 
@@ -103,13 +103,13 @@ function tableCurrent() {
             {
               key: 'Author',
               _style: {
-                width: '15%',
+                width: '25%',
                 color: '#1c7ed6',
                 backgroundColor: '#e7f5ff',
               },
             },
-            { key: 'Type', _style: { width: '15%', color: '#1c7ed6' } },
-            { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Category', _style: { width: '5%', color: '#1c7ed6' } },
             {
               key: 'status',
               _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
@@ -395,7 +395,7 @@ function tableCurrent() {
                 ),
                 Author: (it) => (
                   <td>
-                    <div className="flex">
+                    <div>
                       {factorAuthor(it.Author).map((item, index) => {
                         let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
 

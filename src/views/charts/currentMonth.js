@@ -77,7 +77,7 @@ const CurrentMonth = () => {
   }
 
   const fetchCurrentMonthData = async () => {
-    const response = await fetch(`${ip}/currentMonth`)
+    const response = await fetch(`${ip}/currentMonth/2022/December`)
     const data = await response.json()
     console.log(data)
     setCurrentMonthData(data)

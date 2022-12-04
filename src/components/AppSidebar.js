@@ -46,7 +46,7 @@ import SidebarMenuYear from './sideBarMenuYear'
 
 // sidebar nav config
 // import navigation from '../_nav'
-
+const date = new Date()
 const routes = [
   {
     path: '/resources',
@@ -103,6 +103,8 @@ const AppSidebar = () => {
   const [navii, setNavii] = useState()
   const [routeDashboard, setRouteDashboard] = useState()
   const [routesPastYears, setRoutesPastYears] = useState()
+  const [pastData, setPastData] = useState()
+  const [pastYears, setPastYears] = useState([])
   const months = [
     'January',
     'February',
@@ -120,106 +122,125 @@ const AppSidebar = () => {
   const sorter = (a, b) => {
     return months.indexOf(a.name) - months.indexOf(b.name)
   }
-  const allData = async () => {
-    try {
-      const res = await fetch(`${ip}/register`, {
-        // method: 'GET',
-        // headers: {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application',
-        // },
-        // credentials: 'include',
-      })
-      const datas = await res.json()
+  const fetchAllYears = (data) => {
+    let years = []
+    data.forEach((element) => {
+      if (element['created'] !== undefined) {
+        if (!years.includes(parseInt(element['created'].substring(0, 4)))) {
+          years.push(parseInt(element.created.substring(0, 4)))
+        }
+      }
+    })
+    return years
+  }
 
-      const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
+  const fetchPastMonthData = async () => {
+    const response = await fetch(`${ip}/getAll`)
+    let data = await response.json()
+    data = Object.values(data[0])
+    data.shift()
 
-      let routes = []
-      let routes1 = []
+    console.log(data)
+    setPastData(data)
 
-      const completeList = []
-      routes1.push({
-        path: '/',
-        name: 'Dashboard',
-        icon: cilSpeedometer,
-      })
+    // fetchAllYears
+    let allYears = fetchAllYears(data).sort()
+    allYears.shift()
+    allYears.shift()
+    allYears.reverse()
+    console.log({ allYears })
+    setPastYears(allYears)
 
-      // for app version
-      if (matches) {
-        completeList.push(
+    //
+    let routes = []
+    let routes1 = []
+
+    const completeList = []
+    routes1.push({
+      path: '/',
+      name: 'Dashboard',
+      icon: cilSpeedometer,
+    })
+
+    // for app version
+    if (matches) {
+      completeList.push(
+        {
+          component: CNavItem,
+          name: 'Type',
+          to: '/typeAll',
+          icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+          // icon: <FontAwesomeIcon icon={faEnvelope} />,
+        },
+        {
+          component: CNavItem,
+          name: 'Status',
+          to: '/statusAll',
+          icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+          // icon: <FontAwesomeIcon icon={faEnvelope} />,
+        },
+      )
+    }
+
+    // past years
+    for (let j = 0; j < allYears.length; j++) {
+      const objYear = {}
+
+      objYear.path = `/${allYears[j]}`
+      objYear.name = allYears[j]
+      objYear.icon = cilChart
+
+      objYear.exact = true
+      objYear.subRoutes = []
+
+      if (pastYears[j] === 2022) {
+        objYear.subRoutes.push(
           {
-            component: CNavItem,
-            name: 'Type',
-            to: '/typeAll',
-            icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
-            // icon: <FontAwesomeIcon icon={faEnvelope} />,
+            path: `/currentMonth`,
+            name: `${months[date.getMonth()]}`,
           },
           {
-            component: CNavItem,
-            name: 'Status',
-            to: '/statusAll',
-            icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-            // icon: <FontAwesomeIcon icon={faEnvelope} />,
+            path: `/october-2022`,
+            name: 'October',
           },
         )
-      }
 
-      console.log({ yearArr })
-      console.log({ datas })
-      for (let j = 0; j < yearArr.length; j++) {
-        const objYear = {}
+        let lastIndex = date.getMonth() - 2
 
-        objYear.path = `/${yearArr[j]}`
-        objYear.name = yearArr[j]
-        objYear.icon = cilChart
-
-        objYear.exact = true
-        objYear.subRoutes = []
-        console.log(objYear)
-
-        if (yearArr[j] === '2022') {
-          objYear.subRoutes.push(
-            {
-              path: `/currentMonth`,
-              name: 'November',
-            },
-            {
-              path: `/october-2022`,
-              name: 'October',
-            },
-          )
+        for (let i = lastIndex - 1; i >= 0; i--) {
+          objYear.subRoutes.push({
+            path: `/${months[i].toLowerCase()}-${allYears[j]}`,
+            name: `${months[i]}`,
+          })
         }
-        for (let i = 0; i < datas.length; i++) {
-          if (datas[i].year === yearArr[j]) {
-            objYear.subRoutes.push({
-              path: `/${datas[i].name.toLowerCase()}-${datas[i].year}`,
-              name: `${datas[i].name}`,
-            })
-          }
+      } else {
+        for (let i = 11; i >= 0; i--) {
+          objYear.subRoutes.push({
+            path: `/${months[i].toLowerCase()}-${allYears[j]}`,
+            name: `${months[i]}`,
+          })
         }
-        console.log('hello')
-        objYear.subRoutes.sort(sorter)
-        objYear.subRoutes.reverse()
-        console.log({ objYear })
-        routes.push(objYear)
       }
 
-      console.log({ routes })
+      console.log({ objYear })
+      routes.push(objYear)
+    }
+    console.log({ routes })
 
-      const _nav = completeList
-      setData(_nav)
-      setRouteDashboard(routes1)
-      setRoutesPastYears(routes)
+    const _nav = completeList
+    setData(_nav)
+    setRouteDashboard(routes1)
+    setRoutesPastYears(routes)
 
-      if (!res.status === 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    } catch (err) {}
+    if (!response.status === 200) {
+      const error = new Error(response.error)
+      throw error
+    }
   }
 
   useEffect(() => {
-    allData()
+    fetchPastMonthData()
+
     if (param['*'] === 'autoCharts' || param['*'] === '') {
       console.log('hello')
       setClick1Function(false)
@@ -284,9 +305,9 @@ const AppSidebar = () => {
         </Link>
       </CSidebarBrand>
       <CSidebarNav className="scrollbarDesign z-20">
-        <SimpleBar>
+        {/* <SimpleBar>
           <AppSidebarNav items={data} d={data} />
-        </SimpleBar>
+        </SimpleBar> */}
         <motion.div>
           <section className="flex flex-col gap-[6px]">
             {routeDashboard === undefined

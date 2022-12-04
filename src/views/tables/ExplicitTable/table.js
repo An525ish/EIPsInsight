@@ -47,17 +47,32 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '35%',
+                width: '20%',
                 color: '#1c7ed6',
               },
             },
             {
               key: 'Author',
               _style: {
-                width: '15%',
+                width: '10%',
                 color: '#1c7ed6',
                 backgroundColor: '#e7f5ff',
-                display: 'block',
+              },
+            },
+            {
+              key: 'Start Date',
+              _style: {
+                width: '10%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
               },
             },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
@@ -89,7 +104,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '35%',
+                width: '25%',
                 color: '#1c7ed6',
               },
             },
@@ -101,17 +116,33 @@ function table() {
                 backgroundColor: '#e7f5ff',
               },
             },
+            {
+              key: 'Start Date',
+              _style: {
+                width: '10%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: '#1c7ed6',
+                backgroundColor: '#e7f5ff',
+              },
+            },
             { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
             {
               key: 'Category',
               _style: {
-                width: '10%',
+                width: '5%',
                 color: '#1c7ed6',
               },
             },
             {
               key: 'status',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
             },
             {
               key: 'PR No.',
@@ -585,8 +616,21 @@ function table() {
     console.log('eipDataStatusExtra')
     status = status === 'Last_Call' ? 'Last Call' : status
     let arr = []
+
     if (eips[0] !== undefined) {
       let inc = 1
+      if (month === '10') {
+        arr.push({
+          id: inc++,
+          Number: 2535,
+          Title: 'Diamonds, Multi-Facet Proxy',
+          Type: 'Standards Track',
+          Category: 'ERC',
+          status: 'Final',
+          Author: 'Nick Mudge (@mudgen)',
+          'PR No.': 5802,
+        })
+      }
       for (let i = 0; i < eips[0]['Final'].length; i++) {
         if (
           eips[0]['Final'][i].status === status &&
@@ -1052,7 +1096,7 @@ function table() {
     for (let i = 0; i < data.length; i++) {
       arr.push({
         id: id++,
-        Number: data[i].eip.substring(4, 8),
+        Number: data[i].eip.split('-')[1].split('.')[0],
         Title: data[i].title,
         Type: data[i].type,
         Category: data[i].category,
@@ -1205,8 +1249,30 @@ function table() {
             itemsPerPage={15}
             pagination
             scopedColumns={{
+              id: (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                  }}
+                  className="hover:text-blue-500 hover:bg-red-100"
+                >
+                  <a
+                    href={`https://github.com/ethereum/EIPs/pull/${
+                      item['PR No.'] === 0 ? item.Number : item['PR No.']
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <div>{item.id}</div>
+                  </a>
+                </td>
+              ),
               status: (item) => (
-                <td>
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                  }}
+                >
                   <CBadge
                     style={{
                       color: `${getBadgeColor(item.status)}`,
@@ -1218,9 +1284,15 @@ function table() {
                 </td>
               ),
               'PR No.': (item) => (
-                <td>
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                  }}
+                >
                   <a
-                    href={`https://github.com/ethereum/EIPs/pull/${item.Number}`}
+                    href={`https://github.com/ethereum/EIPs/pull/${
+                      item['PR No.'] === 0 ? item.Number : item['PR No.']
+                    }`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -1230,92 +1302,119 @@ function table() {
                         backgroundColor: `${getBadge('Random')}`,
                       }}
                     >
-                      #{item.Number}
+                      #{item['PR No.'] === 0 ? item.Number : item['PR No.']}
                     </CBadge>
                   </a>
                 </td>
               ),
 
               Author: (it) => (
-                <td>
-                  <div className="flex">
-                    {factorAuthor(it.Author).map((item, index) => {
-                      let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
+                <td
+                  style={{
+                    backgroundColor: it.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                  }}
+                >
+                  <a
+                    href={`https://github.com/ethereum/EIPs/pull/${
+                      it['PR No.'] === 0 ? it.Number : it['PR No.']
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <div>
+                      {factorAuthor(it.Author).map((item, index) => {
+                        let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
 
-                      return (
-                        <CBadge
-                          key={index}
-                          className="mr-1"
-                          style={{
-                            color: `${getBadgeColor(it.status)}`,
-                            backgroundColor: `${getBadge(it.status)}`,
-                          }}
-                        >
-                          <a
+                        return (
+                          <CBadge
                             key={index}
-                            href={`${
-                              item[item.length - 1].substring(item[item.length - 1].length - 1) ===
-                              '>'
-                                ? 'mailto:' + t
-                                : 'https://github.com/' + t.substring(1)
-                            }`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="hoverAuthor text-[10px]"
-                            style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                            className="mr-1"
+                            style={{
+                              color: `${getBadgeColor(it.status)}`,
+                              backgroundColor: `${getBadge(it.status)}`,
+                            }}
                           >
-                            {getString(item)}
-                          </a>
-                        </CBadge>
-                      )
-                    })}
-                  </div>
+                            <a
+                              key={index}
+                              href={`${
+                                item[item.length - 1].substring(
+                                  item[item.length - 1].length - 1,
+                                ) === '>'
+                                  ? 'mailto:' + t
+                                  : 'https://github.com/' + t.substring(1)
+                              }`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="hoverAuthor text-[10px]"
+                              style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                            >
+                              {getString(item)}
+                            </a>
+                          </CBadge>
+                        )
+                      })}
+                    </div>
+                  </a>
                 </td>
               ),
               Number: (item) => (
-                <td>
-                  <label className="relative cursor-pointer">
-                    <div
-                      className={`h-7
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                  }}
+                >
+                  <a
+                    href={`https://github.com/ethereum/EIPs/pull/${
+                      item['PR No.'] === 0 ? item.Number : item['PR No.']
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <div>
+                      <label className="relative cursor-pointer">
+                        <div
+                          className={`h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
               item.status,
             )}] text-[${getBadgeColor(
-                        item.status,
-                      )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                      style={{
-                        color: `${getBadgeColor(item.status)}`,
-                        backgroundColor: `${getBadge(item.status)}`,
-                      }}
-                    >
-                      <Link
-                        to={`/EIP-${item.Number}`}
-                        className={`githubIcon h-7
+                            item.status,
+                          )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                          style={{
+                            color: `${getBadgeColor(item.status)}`,
+                            backgroundColor: `${getBadge(item.status)}`,
+                          }}
+                        >
+                          <Link
+                            to={`/EIP-${item.Number}`}
+                            className={`githubIcon h-7
             shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                        style={{
-                          color: `${getBadgeColor(item.status)}`,
-                          backgroundColor: `${getBadge(item.status)}`,
-                        }}
-                      >
-                        {item.Number}*
-                      </Link>
+                            style={{
+                              color: `${getBadgeColor(item.status)}`,
+                              backgroundColor: `${getBadge(item.status)}`,
+                            }}
+                          >
+                            {item.Number}*
+                          </Link>
+                        </div>
+                        <div
+                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                            item.status,
+                          )}] animate-ping`}
+                          style={{
+                            backgroundColor: `${getBadgeColor(item.status)}`,
+                          }}
+                        ></div>
+                        <div
+                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                            item.status,
+                          )}]`}
+                          style={{
+                            backgroundColor: `${getBadgeColor(item.status)}`,
+                          }}
+                        ></div>
+                      </label>
                     </div>
-                    <div
-                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                        item.status,
-                      )}] animate-ping`}
-                      style={{
-                        backgroundColor: `${getBadgeColor(item.status)}`,
-                      }}
-                    ></div>
-                    <div
-                      className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                        item.status,
-                      )}]`}
-                      style={{
-                        backgroundColor: `${getBadgeColor(item.status)}`,
-                      }}
-                    ></div>
-                  </label>
+                  </a>
                 </td>
               ),
             }}
@@ -1323,7 +1422,7 @@ function table() {
             sorterValue={{ column: 'name', state: 'asc' }}
             tableHeadProps={{}}
             tableProps={{
-              striped: true,
+              // striped: true,
               hover: true,
               responsive: true,
             }}
