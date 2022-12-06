@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -71,7 +72,7 @@ const routes = [
   },
 ]
 
-const AppSidebar = () => {
+const AppSidebar = (props) => {
   const param = useParams()
   const matches = useMediaQuery('(max-width: 767px)')
   const dispatch = useDispatch()
@@ -196,8 +197,8 @@ const AppSidebar = () => {
       if (pastYears[j] === 2022) {
         objYear.subRoutes.push(
           {
-            path: `/currentMonth`,
-            name: `${months[date.getMonth()]}`,
+            path: `/${props.Month.toLowerCase()}-${props.Year}`,
+            name: `${props.Month}`,
           },
           {
             path: `/october-2022`,

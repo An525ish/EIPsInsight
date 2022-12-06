@@ -547,19 +547,19 @@ const CurrentMonth = () => {
       data: [
         {
           type: 'Open PR',
-          value: 38,
+          value: 7,
         },
         {
           type: 'Merged PR',
-          value: 67,
+          value: 18,
         },
         {
           type: 'New Issues',
-          value: 2,
+          value: 4,
         },
         {
           type: 'closed Issues',
-          value: 9,
+          value: 2,
         },
       ],
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
@@ -1321,22 +1321,22 @@ const CurrentMonth = () => {
                       <CTableBody>
                         <CTableRow>
                           <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                          <CTableDataCell>3940</CTableDataCell>
+                          <CTableDataCell>4100</CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                          <CTableDataCell>925</CTableDataCell>
+                          <CTableDataCell>932</CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                          <CTableDataCell>38</CTableDataCell>
+                          <CTableDataCell>10</CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                          <CTableDataCell>95</CTableDataCell>
+                          <CTableDataCell>11</CTableDataCell>
                         </CTableRow>
                       </CTableBody>
                     </CTable>

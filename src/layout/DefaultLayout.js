@@ -7,6 +7,8 @@ import back from 'src/assets/back.png'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
+const date = new Date()
+
 const DefaultLayout = () => {
   const {
     user,
@@ -20,23 +22,30 @@ const DefaultLayout = () => {
     setAllEIPsFunction,
   } = useUserAuth()
 
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
   const matches = useMediaQuery('(max-width: 767px)')
   const param = useParams()
   const navigate = useNavigate()
   const [par, isPar] = useState()
-  const [post, getPost] = useState()
-  const API = 'https://eipsinsight.com/api/statusPage'
-  const fetchPost = () => {
-    fetch(API)
-      .then((res) => res.json())
-      .then((res) => {
-        getPost(res)
-      })
-  }
+  const [currentMonthData, setCurrentMonthData] = useState([])
 
   useEffect(() => {
     isPar(param['*'])
-    fetchPost()
+
     if (param['*'] === 'typeAll') {
       setClick1Function(true)
       setClick2Function(false)
@@ -52,7 +61,7 @@ const DefaultLayout = () => {
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
-    } else if (param['*'] === 'currentMonth') {
+    } else if (param['*'] === 'december-2022') {
       setClick3Function(true)
       setClick1Function(false)
       setClick2Function(false)
@@ -70,9 +79,9 @@ const DefaultLayout = () => {
 
   return (
     <div>
-      <AppSidebar />
+      <AppSidebar Year={date.getFullYear()} Month={months[date.getMonth()]} />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
+        <AppHeader Year={date.getFullYear()} Month={months[date.getMonth()]} />
         <div className="body flex flex-grow-1 px-3">
           {par?.length === 0 || matches ? (
             ''

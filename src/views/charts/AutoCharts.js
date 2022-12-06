@@ -70,7 +70,7 @@ const autoCharts = (props) => {
       const response = await fetch(allDataAPI)
       const data = await response.json()
       const dataValue = Object.values(data[0])
-      dataValue.shift()
+      dataValue.splice(0, 3)
       const list = param.id.split('-')
       const att = list[0]
       const y = list[1]

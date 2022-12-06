@@ -119,6 +119,23 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 // mainForm
 const MForm = React.lazy(() => import('./views/pages/ManualForm/mForm'))
 
+const date = new Date()
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
 const routes = [
   { path: '/', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
@@ -145,8 +162,13 @@ const routes = [
   { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
 
   // { path: '/Insight', name: 'Charts', element: autoCharts },
-  { path: '/currentMonth', name: 'Current Month', element: CurrentMonth },
+  // { path: '/currentMonth', name: 'Current Month', element: CurrentMonth },
   { path: '/:id', name: 'Month', element: autoCharts },
+  {
+    path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
+    name: `${months[date.getMonth()]} ${date.getFullYear()}`,
+    element: CurrentMonth,
+  },
 
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },

@@ -34,7 +34,7 @@ import { ip } from 'src/constants'
 import { ResponsiveStream } from 'nivo/lib/components/charts/stream'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
-const AppHeader = () => {
+const AppHeader = (props) => {
   const [changeIcon, setChangeIcon] = useState(0)
   const {
     imageOpen,
@@ -265,7 +265,7 @@ const AppHeader = () => {
             }`}
           >
             <Link
-              to="/currentMonth"
+              to="/december-2022"
               state={{
                 from: `/october`,
                 year: 2022,
@@ -280,7 +280,7 @@ const AppHeader = () => {
                     className=" h-7
             shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
                   >
-                    November <label className="text-[10px] cursor-pointer">2022</label>
+                    {props.Month} <label className="text-[10px] cursor-pointer">{props.Year}</label>
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>
