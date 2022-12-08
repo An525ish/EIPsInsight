@@ -2,7 +2,7 @@
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
 
@@ -17,6 +17,7 @@ function table() {
   const [date, setDate] = useState()
   const [name, setName] = useState()
   const [data, setData] = useState()
+  const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/allinfo'
 
   const fetchAllEIPs = () => {
@@ -33,13 +34,17 @@ function table() {
         ? [
             {
               key: 'id',
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Number',
-              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
@@ -48,106 +53,127 @@ function table() {
               key: 'Title',
               _style: {
                 width: '20%',
-                color: '#1c7ed6',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Author',
               _style: {
                 width: '10%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
               key: 'Start Date',
               _style: {
                 width: '10%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Final Date',
               _style: {
                 width: '10%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
-            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-            { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
-            { key: 'Last-Call Deadline', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            {
+              key: 'Category',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
+            },
+            {
+              key: 'Last-Call Deadline',
+              _style: { width: '10%', color: `${getBadgeColor(status)}` },
+            },
             {
               key: 'status',
-              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
             },
             {
               key: 'PR No.',
 
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
           ]
         : [
             {
               key: 'id',
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Number',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Title',
               _style: {
-                width: '25%',
-                color: '#1c7ed6',
+                width: '30%',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Author',
               _style: {
                 width: '15%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
               key: 'Start Date',
               _style: {
                 width: '10%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Final Date',
               _style: {
                 width: '10%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
-            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
               _style: {
                 width: '5%',
-                color: '#1c7ed6',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
               key: 'status',
-              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
             {
               key: 'PR No.',
 
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
             },
           ]
 
@@ -197,6 +223,28 @@ function table() {
         return '#0c8599'
       default:
         return '#1c7ed6'
+    }
+  }
+  const getBadgeShadowColor = (status) => {
+    switch (status) {
+      case 'Final':
+        return 'shadow-[#0ca678]'
+      case 'Last_Call':
+        return 'shadow-[#37b24d]'
+      case 'Last Call':
+        return 'shadow-[#37b24d]'
+      case 'Draft':
+        return 'shadow-[#f08c00]'
+      case 'Stagnant':
+        return 'shadow-[#e8590c]'
+      case 'Withdrawn':
+        return 'shadow-[#e03131]'
+      case 'Review':
+        return 'shadow-[#1971c2]'
+      case 'Living':
+        return 'shadow-[#0c8599]'
+      default:
+        return 'shadow-[#1c7ed6]'
     }
   }
   const eipData = (eips, status, type) => {
@@ -1146,6 +1194,9 @@ function table() {
           )
         : null
 
+    for (let i = 0; i < getData.length; i++) {
+      getData[i].id = i + 1
+    }
     return getData
   }
   const csvLink = {
@@ -1178,7 +1229,7 @@ function table() {
   }
 
   // headers
-  const header = (text) => {
+  const header = (text, status) => {
     return (
       <CCardHeader
         className="cardHeader flex justify-between items-center"
@@ -1186,15 +1237,20 @@ function table() {
           fontFamily: 'Roboto',
           fontWeight: '800',
           fontSize: '14px',
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
+          color: `${getBadgeColor(status)}`,
+          background: `${getBadge(status)}`,
+          borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
         <div>{text}</div>
 
-        <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
-          <motion.img src={downloadIcon} alt="Download Icon" whileTap={{ scale: 0.8 }} />
+        <CSVLink {...csvLink}>
+          <motion.img
+            src={downloadIcon}
+            alt="Download Icon"
+            whileTap={{ scale: 0.8 }}
+            style={{ fill: `${getBadgeColor(status)}` }}
+          />
         </CSVLink>
       </CCardHeader>
     )
@@ -1219,7 +1275,7 @@ function table() {
 
   return (
     <>
-      <CCard style={{ border: '2px solid #a5d8ff' }}>
+      <CCard>
         {header(
           `${name
             ?.split('_')
@@ -1228,6 +1284,7 @@ function table() {
             .replace(',', ' - ')
             .replace(',', ' - ')
             .replace(/^./, name[0].toUpperCase())}`, // regex for making upper case
+          status,
         )}
         <CCardBody
           style={{
@@ -1252,25 +1309,170 @@ function table() {
               id: (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
+                    borderTopLeftRadius: '10px',
+                    borderBottomLeftRadius: '10px',
                   }}
-                  className="hover:text-blue-500 hover:bg-red-100"
+                  className="flex justify-center items-center"
                 >
-                  <a
-                    href={`https://github.com/ethereum/EIPs/pull/${
-                      item['PR No.'] === 0 ? item.Number : item['PR No.']
-                    }`}
-                    target="_blank"
-                    rel="noreferrer"
+                  <div
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
                   >
-                    <div>{item.id}</div>
-                  </a>
+                    {item.id}
+                  </div>
+                </td>
+              ),
+              Number: (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
+                  }}
+                >
+                  <div className="flex justify-center items-center">
+                    <label className="relative cursor-pointer">
+                      <div
+                        className={`h-7
+            font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
+                          item.status,
+                        )}] text-[12px] inline-block p-[4px] drop-shadow-sm ${getBadgeShadowColor(
+                          item.status,
+                        )} shadow-md cursor-pointer px-[8px]`}
+                        style={{
+                          color: `${getBadgeColor(item.status)}`,
+                          backgroundColor: `${getBadge(item.status)}`,
+                        }}
+                      >
+                        {item.Number}
+                      </div>
+                      <div
+                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                          item.status,
+                        )}] animate-ping`}
+                        style={{
+                          backgroundColor: `${getBadgeColor(item.status)}`,
+                        }}
+                      ></div>
+                      <div
+                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                          item.status,
+                        )}]`}
+                        style={{
+                          backgroundColor: `${getBadgeColor(item.status)}`,
+                        }}
+                      ></div>
+                    </label>
+                  </div>
+                </td>
+              ),
+              Title: (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
+                    // borderBottomWidth: item.id % 2 !== 0 ? '1px' : '',
+                    // borderColor: item.id % 2 !== 0 ? `${getBadgeColor(item.status)}` : '',
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                    height: '100%',
+                  }}
+                  className="flex justify-center items-center "
+                >
+                  {item.Title}
+                </td>
+              ),
+
+              Author: (it) => (
+                <td
+                  style={{
+                    backgroundColor: it.id % 2 !== 0 ? `${getBadge(it.status)}` : '',
+                  }}
+                >
+                  <div>
+                    {factorAuthor(it.Author).map((item, index) => {
+                      let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
+
+                      return (
+                        <CBadge
+                          key={index}
+                          className={`mr-1 drop-shadow-sm ${getBadgeShadowColor(
+                            it.status,
+                          )} shadow-sm`}
+                          style={{
+                            color: `${getBadgeColor(it.status)}`,
+                            backgroundColor: `${getBadge(it.status)}`,
+                          }}
+                        >
+                          <a
+                            key={index}
+                            href={`${
+                              item[item.length - 1].substring(item[item.length - 1].length - 1) ===
+                              '>'
+                                ? 'mailto:' + t
+                                : 'https://github.com/' + t.substring(1)
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hoverAuthor text-[10px]"
+                            style={{ '--author-color': `${getBadgeColor(it.status)}` }}
+                          >
+                            {getString(item)}
+                          </a>
+                        </CBadge>
+                      )
+                    })}
+                  </div>
+                </td>
+              ),
+              'Start Date': (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
+                  }}
+                >
+                  <div className="flex justify-center items-center">{item['Start Date']}</div>
+                </td>
+              ),
+
+              'Final Date': (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
+                  }}
+                >
+                  <div className="flex justify-center items-center">{item['Final Date']}</div>
+                </td>
+              ),
+              Type: (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                  }}
+                  className="flex justify-center items-center text-[12px]"
+                >
+                  {item.Type}
+                </td>
+              ),
+              Category: (item) => (
+                <td
+                  style={{
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <div className="flex justify-center items-center text-[12px]">
+                    {item.Category}
+                  </div>
                 </td>
               ),
               status: (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
                   }}
                 >
                   <CBadge
@@ -1278,6 +1480,7 @@ function table() {
                       color: `${getBadgeColor(item.status)}`,
                       backgroundColor: `${getBadge(item.status)}`,
                     }}
+                    className={`drop-shadow-sm ${getBadgeShadowColor(item.status)} shadow-md`}
                   >
                     {item.status}
                   </CBadge>
@@ -1286,7 +1489,9 @@ function table() {
               'PR No.': (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
+                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
+                    borderTopRightRadius: '10px',
+                    borderBottomRightRadius: '10px',
                   }}
                 >
                   <a
@@ -1298,130 +1503,28 @@ function table() {
                   >
                     <CBadge
                       style={{
-                        color: `${getBadgeColor('Random')}`,
-                        backgroundColor: `${getBadge('Random')}`,
+                        color: `${getBadgeColor(item.status)}`,
+                        backgroundColor: `${getBadge(item.status)}`,
                       }}
+                      className={`drop-shadow-sm ${getBadgeShadowColor(
+                        item.status,
+                      )} shadow-md flex justify-center items-center`}
                     >
-                      #{item['PR No.'] === 0 ? item.Number : item['PR No.']}
+                      <div className="flex justify-center items-center">
+                        #{item['PR No.'] === 0 ? item.Number : item['PR No.']}
+                      </div>
                     </CBadge>
                   </a>
                 </td>
               ),
-
-              Author: (it) => (
-                <td
-                  style={{
-                    backgroundColor: it.id % 2 !== 0 ? `${getBadge('Random')}` : '',
-                  }}
-                >
-                  <a
-                    href={`https://github.com/ethereum/EIPs/pull/${
-                      it['PR No.'] === 0 ? it.Number : it['PR No.']
-                    }`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div>
-                      {factorAuthor(it.Author).map((item, index) => {
-                        let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
-
-                        return (
-                          <CBadge
-                            key={index}
-                            className="mr-1"
-                            style={{
-                              color: `${getBadgeColor(it.status)}`,
-                              backgroundColor: `${getBadge(it.status)}`,
-                            }}
-                          >
-                            <a
-                              key={index}
-                              href={`${
-                                item[item.length - 1].substring(
-                                  item[item.length - 1].length - 1,
-                                ) === '>'
-                                  ? 'mailto:' + t
-                                  : 'https://github.com/' + t.substring(1)
-                              }`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="hoverAuthor text-[10px]"
-                              style={{ '--author-color': `${getBadgeColor(it.status)}` }}
-                            >
-                              {getString(item)}
-                            </a>
-                          </CBadge>
-                        )
-                      })}
-                    </div>
-                  </a>
-                </td>
-              ),
-              Number: (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge('Random')}` : '',
-                  }}
-                >
-                  <a
-                    href={`https://github.com/ethereum/EIPs/pull/${
-                      item['PR No.'] === 0 ? item.Number : item['PR No.']
-                    }`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div>
-                      <label className="relative cursor-pointer">
-                        <div
-                          className={`h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-              item.status,
-            )}] text-[${getBadgeColor(
-                            item.status,
-                          )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                          style={{
-                            color: `${getBadgeColor(item.status)}`,
-                            backgroundColor: `${getBadge(item.status)}`,
-                          }}
-                        >
-                          <Link
-                            to={`/EIP-${item.Number}`}
-                            className={`githubIcon h-7
-            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                            style={{
-                              color: `${getBadgeColor(item.status)}`,
-                              backgroundColor: `${getBadge(item.status)}`,
-                            }}
-                          >
-                            {item.Number}*
-                          </Link>
-                        </div>
-                        <div
-                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                            item.status,
-                          )}] animate-ping`}
-                          style={{
-                            backgroundColor: `${getBadgeColor(item.status)}`,
-                          }}
-                        ></div>
-                        <div
-                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                            item.status,
-                          )}]`}
-                          style={{
-                            backgroundColor: `${getBadgeColor(item.status)}`,
-                          }}
-                        ></div>
-                      </label>
-                    </div>
-                  </a>
-                </td>
-              ),
             }}
-            onRowClick={(item) => {}}
+            onRowClick={(item) => {
+              navigate('/EIP-' + item.Number)
+            }}
             sorterValue={{ column: 'name', state: 'asc' }}
             tableHeadProps={{}}
             tableProps={{
+              borderless: true,
               // striped: true,
               hover: true,
               responsive: true,
@@ -1429,13 +1532,20 @@ function table() {
           />
         </CCardBody>
         <CCardFooter
-          className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-          style={{ display: 'flex', justifyContent: 'space-between' }}
+          className="cardFooter"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            color: `${getBadgeColor(status)}`,
+            backgroundColor: `${getBadge(status)}`,
+          }}
         >
-          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-            *Click to see more
+          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
+          <label
+            style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
+          >
+            {date}
           </label>
-          <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
         </CCardFooter>
       </CCard>
     </>

@@ -880,21 +880,23 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][0] === 0
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Living')[1][0] === 0
                         ? ''
-                        : statusRows('Draft')}
-
+                        : statusRows('Living')}
                       {fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][0] === 0
                         ? ''
                         : statusRows('Final')}
-
-                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Review')[1][0] === 0
-                        ? ''
-                        : statusRows('Review')}
                       {fetchStatusData(AllData === undefined ? [] : AllData, 'Last Call')[1][0] ===
                       0
                         ? ''
                         : statusRows('Last Call')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Review')[1][0] === 0
+                        ? ''
+                        : statusRows('Review')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][0] === 0
+                        ? ''
+                        : statusRows('Draft')}
+
                       {fetchStatusData(AllData === undefined ? [] : AllData, 'Stagnant')[1][0] === 0
                         ? ''
                         : statusRows('Stagnant')}
@@ -902,9 +904,6 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                       0
                         ? ''
                         : statusRows('Withdrawn')}
-                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Living')[1][0] === 0
-                        ? ''
-                        : statusRows('Living')}
                     </CTableBody>
                   </CTable>
                 </CCardBody>
@@ -1034,19 +1033,22 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 </CCardBody>
               </CCard>
             </CCol>
-
             <CCol xs={matches ? 12 : 6}>
-              {statusChartsTemplate('Draft', Column, configColumnCharts)}
+              {statusChartsTemplate('Living', Column, configColumnCharts)}
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>{statusChartsTemplate('Final', Pie, configPieCharts)}</CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Last Call', Area, configAreaCharts)}
+            </CCol>
 
             <CCol xs={matches ? 12 : 6}>
               {statusChartsTemplate('Review', Pie, configDougnutChart)}
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-              {statusChartsTemplate('Last Call', Area, configAreaCharts)}
+              {statusChartsTemplate('Draft', Column, configColumnCharts)}
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
@@ -1055,9 +1057,6 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
 
             <CCol xs={matches ? 12 : 6}>
               {statusChartsTemplate('Withdrawn', Column, configColumnCharts)}
-            </CCol>
-            <CCol xs={matches ? 12 : 6}>
-              {statusChartsTemplate('Living', Column, configColumnCharts)}
             </CCol>
 
             {/* Final vs Draft */}
