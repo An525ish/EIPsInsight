@@ -41,13 +41,17 @@ function tableCurrent() {
         ? [
             {
               key: 'id',
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Number',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
@@ -55,68 +59,128 @@ function tableCurrent() {
             {
               key: 'Title',
               _style: {
-                width: '30%',
-                color: '#1c7ed6',
+                width: '20%',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Author',
               _style: {
-                width: '20%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
-            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-
-            { key: 'Last-Call Deadline', _style: { width: '10%', color: '#1c7ed6' } },
-            { key: 'Category', _style: { width: '5%', color: '#1c7ed6' } },
+            {
+              key: 'Start Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
+            },
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            {
+              key: 'Category',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
+            },
+            {
+              key: 'Last-Call Deadline',
+              _style: { width: '10%', color: `${getBadgeColor(status)}` },
+            },
             {
               key: 'status',
-              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
             },
             {
               key: 'PR No.',
-              _style: { width: '5%', color: '#1c7ed6' },
+
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
           ]
         : [
             {
               key: 'id',
-              _style: { width: '5%', color: '#1c7ed6' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Number',
-              _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
               _props: { className: 'fw-semibold' },
               sorter: true,
             },
             {
               key: 'Title',
               _style: {
-                width: '35%',
-                color: '#1c7ed6',
+                width: '30%',
+                color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'Author',
               _style: {
-                width: '25%',
-                color: '#1c7ed6',
-                backgroundColor: '#e7f5ff',
+                width: '15%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
               },
             },
-            { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-            { key: 'Category', _style: { width: '5%', color: '#1c7ed6' } },
+            {
+              key: 'Start Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
+            },
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            {
+              key: 'Category',
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
+            },
             {
               key: 'status',
-              _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
             {
               key: 'PR No.',
-              _style: { width: '5%', color: '#1c7ed6' },
+
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+                backgroundColor: `${getBadge(status)}`,
+              },
             },
           ]
 
@@ -165,6 +229,29 @@ function tableCurrent() {
         return '#0c8599'
       default:
         return '#1c7ed6'
+    }
+  }
+
+  const getBadgeShadowColor = (status) => {
+    switch (status) {
+      case 'Final':
+        return 'shadow-[#0ca678]'
+      case 'Last_Call':
+        return 'shadow-[#37b24d]'
+      case 'Last Call':
+        return 'shadow-[#37b24d]'
+      case 'Draft':
+        return 'shadow-[#f08c00]'
+      case 'Stagnant':
+        return 'shadow-[#e8590c]'
+      case 'Withdrawn':
+        return 'shadow-[#e03131]'
+      case 'Review':
+        return 'shadow-[#1971c2]'
+      case 'Living':
+        return 'shadow-[#0c8599]'
+      default:
+        return 'shadow-[#1c7ed6]'
     }
   }
 
@@ -294,7 +381,7 @@ function tableCurrent() {
   }
 
   // headers
-  const header = (text) => {
+  const header = (text, status) => {
     return (
       <CCardHeader
         className="cardHeader flex justify-between items-center"
@@ -302,15 +389,20 @@ function tableCurrent() {
           fontFamily: 'Roboto',
           fontWeight: '800',
           fontSize: '14px',
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
+          color: `${getBadgeColor(status)}`,
+          background: `${getBadge(status)}`,
+          borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
         <div>{text}</div>
 
-        <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
-          <motion.img src={downloadIcon} alt="Download Icon" whileTap={{ scale: 0.8 }} />
+        <CSVLink {...csvLink}>
+          <motion.img
+            src={downloadIcon}
+            alt="Download Icon"
+            whileTap={{ scale: 0.8 }}
+            style={{ fill: `${getBadgeColor(status)}` }}
+          />
         </CSVLink>
       </CCardHeader>
     )
@@ -328,7 +420,7 @@ function tableCurrent() {
 
   return (
     <>
-      <CCard style={{ border: '2px solid #a5d8ff' }}>
+      <CCard>
         {header(
           `${name
             ?.split('_')
@@ -337,6 +429,7 @@ function tableCurrent() {
             .replace(',', ' - ')
             .replace(',', ' - ')
             .replace(/^./, name[0].toUpperCase())}`,
+          status,
         )}
         <CCardBody
           style={{
@@ -363,36 +456,76 @@ function tableCurrent() {
               itemsPerPage={15}
               pagination
               scopedColumns={{
-                status: (item) => (
+                id: (item) => (
                   <td>
-                    <CBadge
+                    <div
                       style={{
                         color: `${getBadgeColor(item.status)}`,
-                        backgroundColor: `${getBadge(item.status)}`,
+                        fontWeight: 'bold',
                       }}
                     >
-                      {item.status}
-                    </CBadge>
+                      {item.id}.
+                    </div>
                   </td>
                 ),
-                'PR No.': (item) => (
+                Number: (item) => (
                   <td>
-                    <a
-                      href={`https://github.com/ethereum/EIPs/pull/${item.Number}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <CBadge
-                        style={{
-                          color: `${getBadgeColor('Random')}`,
-                          backgroundColor: `${getBadge('Random')}`,
-                        }}
-                      >
-                        #{item.Number}
-                      </CBadge>
-                    </a>
+                    <Link to={`/EIP-${item.Number}`}>
+                      <div>
+                        <label className="relative cursor-pointer">
+                          <div
+                            className={`h-7
+            font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
+                              item.status,
+                            )}] text-[12px] inline-block p-[4px] drop-shadow-sm ${getBadgeShadowColor(
+                              item.status,
+                            )} shadow-md cursor-pointer px-[8px]`}
+                            style={{
+                              color: `${getBadgeColor(item.status)}`,
+                              backgroundColor: `${getBadge(item.status)}`,
+                            }}
+                          >
+                            {item.Number}
+                          </div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              item.status,
+                            )}] animate-ping`}
+                            style={{
+                              backgroundColor: `${getBadgeColor(item.status)}`,
+                            }}
+                          ></div>
+                          <div
+                            className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                              item.status,
+                            )}]`}
+                            style={{
+                              backgroundColor: `${getBadgeColor(item.status)}`,
+                            }}
+                          ></div>
+                        </label>
+                      </div>
+                    </Link>
                   </td>
                 ),
+                Title: (item) => (
+                  <td
+                    style={{
+                      // borderBottomWidth: item.id % 2 !== 0 ? '1px' : '',
+                      // borderColor: item.id % 2 !== 0 ? `${getBadgeColor(item.status)}` : '',
+                      color: `${getBadgeColor(item.status)}`,
+
+                      fontWeight: 'bold',
+                      height: '100%',
+                    }}
+                    className="hover:text-[#1c7ed6]"
+                  >
+                    <Link to={`/EIP-${item.Number}`} className="hover:text-[#1c7ed6] text-[13px]">
+                      {item.Title}
+                    </Link>
+                  </td>
+                ),
+
                 Author: (it) => (
                   <td>
                     <div>
@@ -402,7 +535,9 @@ function tableCurrent() {
                         return (
                           <CBadge
                             key={index}
-                            className="mr-1"
+                            className={`mr-1 drop-shadow-sm ${getBadgeShadowColor(
+                              it.status,
+                            )} shadow-sm`}
                             style={{
                               color: `${getBadgeColor(it.status)}`,
                               backgroundColor: `${getBadge(it.status)}`,
@@ -430,57 +565,83 @@ function tableCurrent() {
                     </div>
                   </td>
                 ),
-                Number: (item) => (
+                'Start Date': (item) => (
                   <td>
-                    <label className="relative cursor-pointer">
-                      <div
-                        className={`h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-              item.status,
-            )}] text-[${getBadgeColor(
-                          item.status,
-                        )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                    <div>{item['Start Date']}</div>
+                  </td>
+                ),
+
+                'Final Date': (item) => (
+                  <td>
+                    <div>{item['Final Date']}</div>
+                  </td>
+                ),
+                Type: (item) => (
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
+                    {item.Type}
+                  </td>
+                ),
+                Category: (item) => (
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    <div className=" text-[12px]">{item.Category}</div>
+                  </td>
+                ),
+                status: (item) => (
+                  <td style={{}}>
+                    <CBadge
+                      style={{
+                        color: `${getBadgeColor(item.status)}`,
+                        backgroundColor: `${getBadge(item.status)}`,
+                      }}
+                      className={`drop-shadow-sm ${getBadgeShadowColor(item.status)} shadow-md`}
+                    >
+                      {item.status}
+                    </CBadge>
+                  </td>
+                ),
+                'PR No.': (item) => (
+                  <td>
+                    <a
+                      href={`https://github.com/ethereum/EIPs/pull/${
+                        item['PR No.'] === 0 ? item.Number : item['PR No.']
+                      }`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <CBadge
                         style={{
-                          color: `${getBadgeColor(item.status)}`,
-                          backgroundColor: `${getBadge(item.status)}`,
+                          color: `${getBadgeColor('Random')}`,
+                          backgroundColor: `${getBadge('Random')}`,
                         }}
+                        className={`drop-shadow-sm ${getBadgeShadowColor(
+                          'Random',
+                        )} shadow-md  z-auto`}
                       >
-                        <Link
-                          to={`/EIP-${item.Number}`}
-                          className={`githubIcon h-7
-            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                          style={{
-                            color: `${getBadgeColor(item.status)}`,
-                            backgroundColor: `${getBadge(item.status)}`,
-                          }}
-                        >
-                          {item.Number}*
-                        </Link>
-                      </div>
-                      <div
-                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                          item.status,
-                        )}] animate-ping`}
-                        style={{
-                          backgroundColor: `${getBadgeColor(item.status)}`,
-                        }}
-                      ></div>
-                      <div
-                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                          item.status,
-                        )}]`}
-                        style={{
-                          backgroundColor: `${getBadgeColor(item.status)}`,
-                        }}
-                      ></div>
-                    </label>
+                        <div>{item['PR No.'] === 0 ? item.Number : item['PR No.']}</div>
+                      </CBadge>
+                    </a>
                   </td>
                 ),
               }}
-              onRowClick={(item) => {}}
+              // onRowClick={(item) => {
+              //   console.log(item)
+              //   navigate('/EIP-' + item.Number)
+              // }}
               sorterValue={{ column: 'name', state: 'asc' }}
               tableHeadProps={{}}
               tableProps={{
+                // borderless: true,
                 striped: true,
                 hover: true,
                 responsive: true,
@@ -491,13 +652,20 @@ function tableCurrent() {
           )}
         </CCardBody>
         <CCardFooter
-          className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-          style={{ display: 'flex', justifyContent: 'space-between' }}
+          className="cardFooter"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            color: `${getBadgeColor(status)}`,
+            backgroundColor: `${getBadge(status)}`,
+          }}
         >
-          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-            *Click to see more
+          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
+          <label
+            style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
+          >
+            {date}
           </label>
-          <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
         </CCardFooter>
       </CCard>
     </>

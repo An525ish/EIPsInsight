@@ -1307,88 +1307,77 @@ function table() {
             pagination
             scopedColumns={{
               id: (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
-                    borderTopLeftRadius: '10px',
-                    borderBottomLeftRadius: '10px',
-                  }}
-                  className="flex justify-center items-center"
-                >
+                <td>
                   <div
                     style={{
                       color: `${getBadgeColor(item.status)}`,
                       fontWeight: 'bold',
                     }}
                   >
-                    {item.id}
+                    {item.id}.
                   </div>
                 </td>
               ),
               Number: (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
-                  }}
-                >
-                  <div className="flex justify-center items-center">
-                    <label className="relative cursor-pointer">
-                      <div
-                        className={`h-7
+                <td>
+                  <Link to={`/EIP-${item.Number}`}>
+                    <div>
+                      <label className="relative cursor-pointer">
+                        <div
+                          className={`h-7
             font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
-                          item.status,
-                        )}] text-[12px] inline-block p-[4px] drop-shadow-sm ${getBadgeShadowColor(
-                          item.status,
-                        )} shadow-md cursor-pointer px-[8px]`}
-                        style={{
-                          color: `${getBadgeColor(item.status)}`,
-                          backgroundColor: `${getBadge(item.status)}`,
-                        }}
-                      >
-                        {item.Number}
-                      </div>
-                      <div
-                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                          item.status,
-                        )}] animate-ping`}
-                        style={{
-                          backgroundColor: `${getBadgeColor(item.status)}`,
-                        }}
-                      ></div>
-                      <div
-                        className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                          item.status,
-                        )}]`}
-                        style={{
-                          backgroundColor: `${getBadgeColor(item.status)}`,
-                        }}
-                      ></div>
-                    </label>
-                  </div>
+                            item.status,
+                          )}] text-[12px] inline-block p-[4px] drop-shadow-sm ${getBadgeShadowColor(
+                            item.status,
+                          )} shadow-md cursor-pointer px-[8px]`}
+                          style={{
+                            color: `${getBadgeColor(item.status)}`,
+                            backgroundColor: `${getBadge(item.status)}`,
+                          }}
+                        >
+                          {item.Number}
+                        </div>
+                        <div
+                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                            item.status,
+                          )}] animate-ping`}
+                          style={{
+                            backgroundColor: `${getBadgeColor(item.status)}`,
+                          }}
+                        ></div>
+                        <div
+                          className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                            item.status,
+                          )}]`}
+                          style={{
+                            backgroundColor: `${getBadgeColor(item.status)}`,
+                          }}
+                        ></div>
+                      </label>
+                    </div>
+                  </Link>
                 </td>
               ),
               Title: (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
                     // borderBottomWidth: item.id % 2 !== 0 ? '1px' : '',
                     // borderColor: item.id % 2 !== 0 ? `${getBadgeColor(item.status)}` : '',
                     color: `${getBadgeColor(item.status)}`,
+
                     fontWeight: 'bold',
                     height: '100%',
                   }}
-                  className="flex justify-center items-center "
+                  className="hover:text-[#1c7ed6]"
                 >
-                  {item.Title}
+                  <Link to={`/EIP-${item.Number}`} className="hover:text-[#1c7ed6] text-[13px]">
+                    {item.Title}
+                  </Link>
                 </td>
               ),
 
               Author: (it) => (
-                <td
-                  style={{
-                    backgroundColor: it.id % 2 !== 0 ? `${getBadge(it.status)}` : '',
-                  }}
-                >
+                <td>
                   <div>
                     {factorAuthor(it.Author).map((item, index) => {
                       let t = item[item.length - 1].substring(1, item[item.length - 1].length - 1)
@@ -1426,32 +1415,23 @@ function table() {
                 </td>
               ),
               'Start Date': (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
-                  }}
-                >
-                  <div className="flex justify-center items-center">{item['Start Date']}</div>
+                <td>
+                  <div>{item['Start Date']}</div>
                 </td>
               ),
 
               'Final Date': (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
-                  }}
-                >
-                  <div className="flex justify-center items-center">{item['Final Date']}</div>
+                <td>
+                  <div>{item['Final Date']}</div>
                 </td>
               ),
               Type: (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
                     color: `${getBadgeColor(item.status)}`,
                     fontWeight: 'bold',
                   }}
-                  className="flex justify-center items-center text-[12px]"
+                  className="text-[12px]"
                 >
                   {item.Type}
                 </td>
@@ -1459,22 +1439,15 @@ function table() {
               Category: (item) => (
                 <td
                   style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
                     color: `${getBadgeColor(item.status)}`,
                     fontWeight: 'bold',
                   }}
                 >
-                  <div className="flex justify-center items-center text-[12px]">
-                    {item.Category}
-                  </div>
+                  <div className=" text-[12px]">{item.Category}</div>
                 </td>
               ),
               status: (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 === 0 ? `${getBadge(item.status)}` : '',
-                  }}
-                >
+                <td style={{}}>
                   <CBadge
                     style={{
                       color: `${getBadgeColor(item.status)}`,
@@ -1487,13 +1460,7 @@ function table() {
                 </td>
               ),
               'PR No.': (item) => (
-                <td
-                  style={{
-                    backgroundColor: item.id % 2 !== 0 ? `${getBadge(item.status)}` : '',
-                    borderTopRightRadius: '10px',
-                    borderBottomRightRadius: '10px',
-                  }}
-                >
+                <td>
                   <a
                     href={`https://github.com/ethereum/EIPs/pull/${
                       item['PR No.'] === 0 ? item.Number : item['PR No.']
@@ -1503,29 +1470,28 @@ function table() {
                   >
                     <CBadge
                       style={{
-                        color: `${getBadgeColor(item.status)}`,
-                        backgroundColor: `${getBadge(item.status)}`,
+                        color: `${getBadgeColor('Random')}`,
+                        backgroundColor: `${getBadge('Random')}`,
                       }}
                       className={`drop-shadow-sm ${getBadgeShadowColor(
-                        item.status,
-                      )} shadow-md flex justify-center items-center`}
+                        'Random',
+                      )} shadow-md  z-auto`}
                     >
-                      <div className="flex justify-center items-center">
-                        #{item['PR No.'] === 0 ? item.Number : item['PR No.']}
-                      </div>
+                      <div>{item['PR No.'] === 0 ? item.Number : item['PR No.']}</div>
                     </CBadge>
                   </a>
                 </td>
               ),
             }}
-            onRowClick={(item) => {
-              navigate('/EIP-' + item.Number)
-            }}
+            // onRowClick={(item) => {
+            //   console.log(item)
+            //   navigate('/EIP-' + item.Number)
+            // }}
             sorterValue={{ column: 'name', state: 'asc' }}
             tableHeadProps={{}}
             tableProps={{
-              borderless: true,
-              // striped: true,
+              // borderless: true,
+              striped: true,
               hover: true,
               responsive: true,
             }}

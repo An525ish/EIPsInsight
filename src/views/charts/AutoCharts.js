@@ -54,6 +54,20 @@ const autoCharts = (props) => {
   const navigate = useNavigate()
   const param = useParams()
   const [loading, setLoading] = useState(false)
+  const monthNum = {
+    january: 1,
+    february: 2,
+    march: 3,
+    april: 4,
+    may: 5,
+    june: 6,
+    july: 7,
+    august: 8,
+    september: 9,
+    october: 10,
+    november: 11,
+    december: 12,
+  }
 
   const G = G2.getEngine('canvas')
   let location = useLocation()
@@ -70,17 +84,45 @@ const autoCharts = (props) => {
       const response = await fetch(allDataAPI)
       const data = await response.json()
       const dataValue = Object.values(data[0])
-      dataValue.splice(0, 3)
+
+      dataValue.splice(0, 2)
+      console.log(dataValue)
+
       const list = param.id.split('-')
       const att = list[0]
       const y = list[1]
 
       const filterData = dataValue.filter((element) => {
-        return (
-          element.date.split(' ')[1] ===
-            (att.charAt(0).toUpperCase() + att.slice(1)).substring(0, 3) &&
-          element.date.split(' ')[3] === y
-        )
+        let elementCreatedDate = element.created.split(',')
+        console.log(elementCreatedDate)
+        if (elementCreatedDate.length === 1) {
+          elementCreatedDate = elementCreatedDate[0].split('-')
+        }
+        console.log(elementCreatedDate)
+        console.log(y)
+        if (element.date !== undefined) {
+          if (
+            elementCreatedDate[0] === '2022' ||
+            elementCreatedDate[0] === '2021' ||
+            elementCreatedDate[0] === '2020' ||
+            elementCreatedDate[0] === '2019'
+          ) {
+            console.log(element.date)
+            let elementMergedDate = element.date.split(' ')
+            console.log(elementMergedDate)
+            return (
+              elementMergedDate[1] ===
+                (att.charAt(0).toUpperCase() + att.slice(1)).substring(0, 3) &&
+              elementMergedDate[3] === y
+            )
+          } else {
+            console.log('hello')
+            return (
+              parseInt(elementCreatedDate[1].trim()) === monthNum[att] &&
+              elementCreatedDate[0] === y
+            )
+          }
+        }
       })
 
       console.log(filterData)
@@ -92,20 +134,6 @@ const autoCharts = (props) => {
     }
   }
 
-  const monthNum = {
-    january: 1,
-    february: 2,
-    march: 3,
-    april: 4,
-    may: 5,
-    june: 6,
-    july: 7,
-    august: 8,
-    september: 9,
-    october: 10,
-    november: 11,
-    december: 12,
-  }
   const allData = async () => {
     try {
       const res = await fetch(`${ip}/register`, {
