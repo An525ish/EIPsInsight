@@ -45,22 +45,15 @@ import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 
-const CurrentMonth = () => {
+const oldCharts = (props) => {
+  // const [info, setInfo] = useState()
+  const [monthName, setMonthName] = useState()
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
-  const param = useParams()
   const navigate = useNavigate()
+  const param = useParams()
   const [loading, setLoading] = useState(false)
-
-  const G = G2.getEngine('canvas')
-  let location = useLocation()
-  const matches = useMediaQuery('(max-width: 767px)')
-  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
-    useUserAuth()
-  let [data, setData] = useState() // i set the data here
-  let [currentMonthData, setCurrentMonthData] = useState()
-
   const monthNum = {
     january: 1,
     february: 2,
@@ -76,55 +69,241 @@ const CurrentMonth = () => {
     december: 12,
   }
 
-  const fetchCurrentMonthData = async () => {
-    const response = await fetch(`${ip}/currentMonth/2022/December`)
-    const data = await response.json()
-    console.log(data)
-    setCurrentMonthData(data)
-    setLoading(true)
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
+  const G = G2.getEngine('canvas')
+  let location = useLocation()
+  const matches = useMediaQuery('(max-width: 767px)')
+  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
+    useUserAuth()
+  let [data, setData] = useState() // i set the data here
+  const [AllData, setAllData] = useState() // all data
+
+  const allDataAPI = `${ip}/getAll`
+
+  const factorOutDuplicate = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
   }
 
-  const dataCapture = (name, data) => {
-    let a = 0
-    let b = 0
-    let c = 0
-    let d = 0
-    let e = 0
-    let f = 0
-    let arr = []
+  const allDataFetcher = async () => {
+    try {
+      const response = await fetch(allDataAPI)
+      const data = await response.json()
+      const dataValue = Object.values(data[0])
 
-    console.log(data)
-    a = parseInt(fetchStatusCategorySum(data, name, 'Core'))
-    b = parseInt(fetchStatusCategorySum(data, name, 'ERC'))
-    c = parseInt(fetchStatusCategorySum(data, name, 'Networking'))
-    d = parseInt(fetchStatusCategorySum(data, name, 'Interface'))
-    e = parseInt(fetchStatusCategorySum(data, name, 'Meta'))
-    f = parseInt(fetchStatusCategorySum(data, name, 'Informational'))
+      dataValue.splice(0, 2)
+      console.log(dataValue)
+
+      const list = param.id.split('-')
+      const att = list[0]
+      const y = list[1]
+
+      let filterData = dataValue.filter((element) => {
+        if (element.created !== undefined) {
+          //   console.log(element)
+          let elementCreatedDate = element.created.split(',')
+
+          if (elementCreatedDate.length === 1) {
+            elementCreatedDate = elementCreatedDate[0].split('-')
+          }
+          if (elementCreatedDate.length === 1) {
+            elementCreatedDate = elementCreatedDate[0].split('/')
+          }
+
+          if (element.date !== undefined) {
+            if (
+              elementCreatedDate[0] === '2022' ||
+              elementCreatedDate[0] === '2021' ||
+              elementCreatedDate[0] === '2020' ||
+              elementCreatedDate[0] === '2019'
+            ) {
+              let elementMergedDate = element.date.split(' ')
+              //   console.log(elementMergedDate)
+              return (
+                elementMergedDate[1] ===
+                  (att.charAt(0).toUpperCase() + att.slice(1)).substring(0, 3) &&
+                elementMergedDate[3] === y
+              )
+            } else {
+              console.log('hello')
+              return (
+                parseInt(elementCreatedDate[1].trim()) === monthNum[att] &&
+                elementCreatedDate[0] === y
+              )
+            }
+          }
+        }
+      })
+
+      console.log(filterData)
+      filterData = factorOutDuplicate(filterData)
+      console.log(filterData)
+      // console.log(dataValue)
+      setAllData(filterData)
+      setLoading(true)
+    } catch (e) {
+      console.log("Can't access " + allDataAPI + ' response. ' + e)
+    }
+  }
+
+  const allData = async () => {
+    try {
+      const res = await fetch(`${ip}/register`, {
+        // method: 'GET',
+        // headers: {
+        //   Accept: 'application/json',
+        //   'Content-Type': 'application',
+        // },
+        // credentials: 'include',
+      })
+      let datas = await res.json()
+      const list = param.id.split('-')
+      const att = list[0]
+      const y = list[1]
+
+      console.log({ att, y })
+      setMonthName(list[0])
+      setMonth(monthNum[list[0]])
+      setYear(y)
+
+      let filterData =
+        att.toLowerCase() === 'october' && y === '2022'
+          ? [
+              {
+                _id: { $oid: '6309ef70756fa134910777ed' },
+                name: 'October',
+                year: '2022',
+                summary: {
+                  Draft: '9',
+                  Final: '1',
+                  LastCall: '6',
+                  Review: '8',
+                  Stagnant: '0',
+                  Withdrawn: '0',
+                  Living: '0',
+                  potentialProposal: '0',
+                  SummaryInfo:
+                    'In October, we have added 9 new EIPs as Draft. 8 EIPs are available in Review status. 6 EIPs are available in Last Call status. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.',
+                  HighlightText:
+                    'This repo has 3958 Forks and 925 users have put it on the watchlist. Open Pull Request-84 & Issues-26.',
+                },
+                Draft: { Core: '1', ERC: '8', Networking: '0', Interface: '0' },
+                Final: { Core: '0', ERC: '1', Networking: '0', Interface: '0' },
+                Review: { Core: '2', ERC: '6', Networking: '0', Interface: '0' },
+                LastCall: { Core: '0', ERC: '6', Networking: '0', Interface: '0' },
+                Stagnant: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                Withdrawn: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                Living: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
+                GeneralStats: { OpenPR: '27', MergedPR: '87', ClosedIssues: '8', NewIssues: '1' },
+                OtherStats: { Forks: '3958', Users: '925', Authors: '47', Files: '102' },
+                __v: { $numberInt: '0' },
+              },
+            ]
+          : datas.filter((e) => {
+              return e.name.toLowerCase() === att.toLowerCase() && e.year === y
+            }) // we filter from here
+
+      console.log({ filterData })
+      setData(filterData)
+      //   setLoading(true)
+
+      if (!res.status === 200) {
+        const error = new Error(res.error)
+        throw error
+      }
+    } catch (err) {}
+  }
+  //   const dataCapture = (name, data) => {
+  //     let a = 0
+  //     let b = 0
+  //     let c = 0
+  //     let d = 0
+  //     let arr = []
+  //     for (let i = 0; i < data.length; i++) {
+  //       a += parseInt(data[i][name].Core)
+  //       b += parseInt(data[i][name].ERC)
+  //       c += parseInt(data[i][name].Networking)
+  //       d += parseInt(data[i][name].Interface)
+  //     }
+  //     arr.push(
+  //       {
+  //         type: 'Core',
+  //         value: a,
+  //       },
+  //       {
+  //         type: 'ERC',
+  //         value: b,
+  //       },
+  //       {
+  //         type: 'Networking',
+  //         value: c,
+  //       },
+  //       {
+  //         type: 'Interface',
+  //         value: d,
+  //       },
+  //     )
+  //     return arr
+  //   }
+  const dataCapture = (name, data) => {
+    let arr = []
+    const statusList = fetchStatusData(data, name)[1]
 
     arr.push(
       {
         type: 'Core',
-        value: a,
+        value: statusList[1],
       },
       {
         type: 'ERC',
-        value: b,
+        value: statusList[2],
       },
       {
         type: 'Networking',
-        value: c,
+        value: statusList[3],
       },
       {
         type: 'Interface',
-        value: d,
+        value: statusList[4],
       },
       {
         type: 'Meta',
-        value: e,
+        value: statusList[5],
       },
       {
         type: 'Informational',
-        value: f,
+        value: statusList[6],
       },
     )
 
@@ -319,111 +498,80 @@ const CurrentMonth = () => {
     return config
   }
 
-  const configDraftvsPotentialCharts = (data) => {
-    const config = {
-      data: [
-        {
-          type: 'Draft',
-          value: parseInt(fetchStatusSum(data, 'Draft')),
-        },
-        {
-          type: 'Potential Proposal',
-          value: 12,
-        },
-      ],
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
-      isStack: true,
-      xField: 'type',
-      yField: 'value',
-      seriesField: 'type',
-      label: {
-        position: 'middle',
+  //status Data
+  const fetchStatusData = (data, statusName) => {
+    let statusData = factorOutDuplicate(data.filter((item) => item.status === statusName))
+    let coreData = statusData.filter((item) => item.category === 'Core')
+    let ERCData = statusData.filter((item) => item.category === 'ERC')
+    let NetworkingData = statusData.filter((item) => item.category === 'Networking')
 
-        style: {
-          fill: '#FFFFFF',
-          opacity: 0.8,
-          fontSize: 14,
-          fontWeight: 800,
-        },
-      },
-      legend: {
-        position: 'top-right',
-      },
-    }
+    let InterfaceData = statusData.filter((item) => item.category === 'Interface')
+    let metaData = statusData.filter((item) => item.type === 'Meta')
+    let informationalData = statusData.filter((item) => item.type === 'Informational')
 
-    return config
+    console.log({ statusData })
+
+    let findArr = [
+      statusData.length,
+      coreData.length,
+      ERCData.length,
+      NetworkingData.length,
+      InterfaceData.length,
+      metaData.length,
+      informationalData.length,
+    ]
+    let res = []
+    res.push(statusData)
+    res.push(findArr)
+    console.log(statusName + ' ' + findArr)
+    return res
   }
 
-  // draft vs Final Charts
   const annotations = []
 
   const d1 = [
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Core[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][1],
       type: 'Core',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.ERC[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][2],
       type: 'ERC',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Networking[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][3],
       type: 'Networking',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Interface[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][4],
       type: 'Interface',
     },
     {
-      year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Meta[0]),
-      type: 'Meta',
-    },
-    {
-      year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Informational[0]),
-      type: 'Informational',
-    },
-    {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Core[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][1],
       type: 'Core',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.ERC[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][2],
       type: 'ERC',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Networking[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][3],
       type: 'Networking',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
+      value: fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][4],
       type: 'Interface',
-    },
-    {
-      year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
-      type: 'Meta',
-    },
-    {
-      year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Meta[0]),
-      type: 'Meta',
-    },
-    {
-      year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Informational[0]),
-      type: 'Informational',
     },
   ]
+
   each(groupBy(d1, 'year'), (values, k) => {
     const value = values.reduce((a, b) => a + b.value, 0)
 
@@ -439,6 +587,7 @@ const CurrentMonth = () => {
       offsetY: -10,
     })
   })
+
   const configDraftvsFinalCharts = (data) => {
     const config = {
       data: d1,
@@ -513,7 +662,7 @@ const CurrentMonth = () => {
     }
   }
 
-  // header
+  //   header
   const header = (text) => {
     return (
       <CCardHeader
@@ -531,10 +680,9 @@ const CurrentMonth = () => {
           <label style={{ fontWeight: '700' }}>
             {'('}
             {parseInt(
-              fetchStatusSum(
-                currentMonthData === undefined ? [] : currentMonthData,
-                text === 'Last Call' ? 'Last_Call' : text,
-              ),
+              data === undefined
+                ? 0
+                : findTotalValueZero(AllData === undefined ? [] : AllData, text),
             )}
             {')'}
           </label>
@@ -542,24 +690,25 @@ const CurrentMonth = () => {
       </CCardHeader>
     )
   }
+
   const configgeneralStatsCharts = (data) => {
     const config = {
       data: [
         {
           type: 'Open PR',
-          value: 7,
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.OpenPR),
         },
         {
           type: 'Merged PR',
-          value: 18,
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.MergedPR),
         },
         {
           type: 'New Issues',
-          value: 4,
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.NewIssues),
         },
         {
           type: 'closed Issues',
-          value: 2,
+          value: data.length === 0 ? 0 : parseInt(data[0]?.GeneralStats.ClosedIssues),
         },
       ],
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
@@ -586,55 +735,31 @@ const CurrentMonth = () => {
   }
 
   const findTotalValueZero = (data, name) => {
-    if (data.length !== 0) {
-      return (
-        parseInt(data === undefined ? 0 : data[0][name].Core) +
-        parseInt(data === undefined ? 0 : data[0][name].ERC) +
-        parseInt(data === undefined ? 0 : data[0][name].Networking) +
-        parseInt(data === undefined ? 0 : data[0][name].Interface)
-      )
-    }
-    return 0
+    const statusList = fetchStatusData(data, name)[1]
+    return statusList[0]
   }
+
+  //   const findTotalValueZero = (data, name) => {
+  //     console.log({ data })
+  //     if (data.length !== 0) {
+  //       return (
+  //         parseInt(data === undefined ? 0 : data[0][name].Core) +
+  //         parseInt(data === undefined ? 0 : data[0][name].ERC) +
+  //         parseInt(data === undefined ? 0 : data[0][name].Networking) +
+  //         parseInt(data === undefined ? 0 : data[0][name].Interface)
+  //       )
+  //     }
+  //     return 0
+  //   }
   // for date fetching
   const fetchDate = () => {
     let date = new Date().toDateString()
     setDate(date)
   }
 
-  // current Month fetching
-  const fetchStatusSum = (monthData, status) => {
-    let sum = 0
+  // new set of Data fetching
 
-    for (let i = 0; i < monthData?.length; i++) {
-      if (monthData[i].Status === status) {
-        sum += parseInt(monthData[i].Core[0]) === -1 ? 0 : parseInt(monthData[i].Core[0])
-        sum += parseInt(monthData[i].ERC[0]) === -1 ? 0 : parseInt(monthData[i].ERC[0])
-        sum +=
-          parseInt(monthData[i].Networking[0]) === -1 ? 0 : parseInt(monthData[i].Networking[0])
-        sum += parseInt(monthData[i].Interface[0]) === -1 ? 0 : parseInt(monthData[i].Interface[0])
-        // sum += parseInt(monthData[i].Meta[0]) === -1 ? 0 : parseInt(monthData[i].Meta[0])
-        // sum +=
-        //   parseInt(monthData[i].Informational[0]) === -1
-        //     ? 0
-        //     : parseInt(monthData[i].Informational[0])
-      }
-    }
-
-    return sum
-  }
-
-  const fetchStatusCategorySum = (monthData, status, category) => {
-    let sum = 0
-    for (let i = 0; i < monthData?.length; i++) {
-      if (monthData[i].Status === status) {
-        sum = parseInt(monthData[i][category][0]) === -1 ? 0 : parseInt(monthData[i][category][0])
-      }
-    }
-
-    return sum
-  }
-
+  // tablerowsStatus
   const statusRows = (name) => {
     return (
       <CTableRow>
@@ -662,23 +787,26 @@ shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeC
               }}
             >
               <Link
-                to="/currentMonthTable"
+                to="/chartTable"
                 style={{
                   textDecoration: 'none',
+
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
                 }}
                 className={`githubIcon h-7
 shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
                 state={{
+                  type: '',
                   status: name,
-                  name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Draft`,
+                  category: '',
+                  month: `${month}`,
+                  year: `${year}`,
+                  name: `${monthName}_${year}_${name}`,
+                  data: fetchStatusData(AllData === undefined ? [] : AllData, name)[0],
                 }}
               >
-                {parseInt(
-                  fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, name),
-                )}
-                *
+                {fetchStatusData(AllData === undefined ? [] : AllData, name)[1][0]}*
               </Link>
             </div>
             <div
@@ -703,27 +831,27 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
     )
   }
 
-  const statusChartTemplate = (name) => {
+  // status charts
+  const statusChartsTemplate = (status, ChartType, configChartType) => {
     return (
       <CCard className="mb-4 cardBorder">
         <Link
-          to="/currentMonthTable"
+          to="/chartTable"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
             type: '',
-            status: name,
+            status: status,
             category: '',
             month: `${month}`,
             year: `${year}`,
-            name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_${name}`,
+            name: `${monthName}_${year}_${status}`,
+            data: fetchStatusData(AllData === undefined ? [] : AllData, status)[0],
           }}
         >
-          {header(name)}
+          {header(status)}
         </Link>
         <CCardBody className="childChartContainer">
-          {parseInt(
-            fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, name),
-          ) === 0 ? (
+          {findTotalValueZero(AllData === undefined ? [] : AllData, status) === 0 ? (
             <div
               style={{
                 textAlign: 'center',
@@ -745,22 +873,23 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
           ) : (
             ''
           )}
-          <Column
+          <ChartType
             style={{
               visibility: `${
-                parseInt(
-                  fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, name),
-                ) === 0
+                findTotalValueZero(AllData === undefined ? [] : AllData, status) === 0
                   ? 'hidden'
                   : 'visible'
               }`,
             }}
-            {...configColumnCharts(name, currentMonthData === undefined ? [] : currentMonthData)}
+            {...configChartType(status, AllData === undefined ? [] : AllData)}
           />
         </CCardBody>
       </CCard>
     )
   }
+
+  // for duplicate fetching...
+
   useEffect(() => {
     fetchDate()
     if (param['*'] === 'autoCharts') {
@@ -768,7 +897,8 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
       setClick2Function(false)
       setClick3Function(false)
     }
-    fetchCurrentMonthData()
+    allData()
+    allDataFetcher()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
 
@@ -784,6 +914,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+
               // textTransform: 'uppercase',
             }}
           >
@@ -792,21 +923,29 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 display: 'inline-block',
                 padding: '2rem',
 
+                // borderBottom: '4px solid #339af0',
+                // borderLeft: '2px solid #339af0',
+                // borderRight: '2px solid #339af0',
+                // borderBottomLeftRadius: '2rem',
+                // borderBottomRightRadius: '2rem',
+                // fontFamily: 'Quicksand',
+
                 borderRadius: '2rem',
                 border: '2px solid #1c7ed6',
+                // background: '#e7f5ff',
+                // borderTop: '4px solid #339af0',
+                // borderTop: '4px solid #339af0',
               }}
             >
               <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                {currentMonthData === undefined ? '' : currentMonthData[0].Year}
+                {year}
                 {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
             <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
               </label>
               {/* <label className="text-[5rem]">O</label> */}
-              <label className="text-[#1c7ed6]">
-                {currentMonthData === undefined ? '' : currentMonthData[0].Month}{' '}
-              </label>{' '}
+              <label className="text-[#1c7ed6]">{months[month - 1]} </label>{' '}
               <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                Insights
+                Insight
               </label>
             </CCard>
           </div>
@@ -836,65 +975,30 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Final',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Final')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Last_Call',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Last_Call')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Review',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Review')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Draft',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Draft')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Stagnant',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Stagnant')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Withdrawn',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Withdrawn')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Living',
-                        ),
-                      ) === 0
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Living')[1][0] === 0
                         ? ''
                         : statusRows('Living')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][0] === 0
+                        ? ''
+                        : statusRows('Final')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Last Call')[1][0] ===
+                      0
+                        ? ''
+                        : statusRows('Last Call')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Review')[1][0] === 0
+                        ? ''
+                        : statusRows('Review')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][0] === 0
+                        ? ''
+                        : statusRows('Draft')}
+
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Stagnant')[1][0] === 0
+                        ? ''
+                        : statusRows('Stagnant')}
+                      {fetchStatusData(AllData === undefined ? [] : AllData, 'Withdrawn')[1][0] ===
+                      0
+                        ? ''
+                        : statusRows('Withdrawn')}
                     </CTableBody>
                   </CTable>
                 </CCardBody>
@@ -909,6 +1013,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 </CCardFooter>
               </CCard>
             </div>
+
             <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
               <CCol xs={12} className="mb-4">
                 <CCard>
@@ -936,34 +1041,58 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                       <CTableBody>
                         <CTableRow>
                           <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                          <CTableDataCell>4100</CTableDataCell>
+                          <CTableDataCell>
+                            {parseInt(
+                              data === undefined || data.length === 0
+                                ? 0
+                                : data[0]?.OtherStats.Forks,
+                            )}
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                          <CTableDataCell>932</CTableDataCell>
+                          <CTableDataCell>
+                            {parseInt(
+                              data === undefined || data.length === 0
+                                ? 0
+                                : data[0]?.OtherStats.Users,
+                            )}
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                          <CTableDataCell>10</CTableDataCell>
+                          <CTableDataCell>
+                            {parseInt(
+                              data === undefined || data.length === 0
+                                ? 0
+                                : data[0]?.OtherStats.Authors,
+                            )}
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                          <CTableDataCell>11</CTableDataCell>
+                          <CTableDataCell>
+                            {parseInt(
+                              data === undefined || data.length === 0
+                                ? 0
+                                : data[0]?.OtherStats.Files,
+                            )}
+                          </CTableDataCell>
                         </CTableRow>
                       </CTableBody>
                     </CTable>
                   </CCardBody>
+                  <CCardFooter
+                    className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <label></label>
+                    <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                  </CCardFooter>
                 </CCard>
-                <CCardFooter
-                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-                  style={{ display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <label></label>
-                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-                </CCardFooter>
               </CCol>
             </div>
           </div>
@@ -974,21 +1103,85 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 {header('GeneralStats')}
 
                 <CCardBody className="childChartContainer">
-                  <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
+                  {parseInt(
+                    data === undefined || data.length === 0 ? 0 : data[0]?.GeneralStats.OpenPR,
+                  ) === 0 &&
+                  parseInt(
+                    data === undefined || data.length === 0 ? 0 : data[0]?.GeneralStats.MergePR,
+                  ) === 0 &&
+                  parseInt(
+                    data === undefined || data.length === 0 ? 0 : data[0]?.GeneralStats.NewIssues,
+                  ) === 0 &&
+                  parseInt(
+                    data === undefined || data.length === 0
+                      ? 0
+                      : data[0]?.GeneralStats.ClosedIssues,
+                  ) === 0 ? (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        left: '0',
+                        top: '83px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'rgba(220, 52, 85, 0.5)',
+                        zIndex: '1',
+                        fontSize: '26px',
+                      }}
+                    >
+                      <b>In Progress...</b>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(data === undefined ? 0 : data[0]?.GeneralStats.OpenPR) === 0 &&
+                        parseInt(data === undefined ? 0 : data[0]?.GeneralStats.MergePR) === 0 &&
+                        parseInt(data === undefined ? 0 : data[0]?.GeneralStats.NewIssues) === 0 &&
+                        parseInt(data === undefined ? 0 : data[0]?.GeneralStats.ClosedIssues) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configgeneralStatsCharts(data === undefined ? [] : data)}
+                  />
                 </CCardBody>
               </CCard>
             </CCol>
 
-            {/* status Information */}
+            <CCol xs={matches ? 12 : 6}>{statusChartsTemplate('Final', Pie, configPieCharts)}</CCol>
 
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Final')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Last_Call')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Review')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Draft')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Stagnant')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Withdrawn')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Living')}</CCol>
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Last Call', Area, configAreaCharts)}
+            </CCol>
 
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Review', Pie, configDougnutChart)}
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Draft', Column, configColumnCharts)}
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Stagnant', Pie, configPieCharts)}
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Living', Column, configColumnCharts)}
+            </CCol>
+
+            <CCol xs={matches ? 12 : 6}>
+              {statusChartsTemplate('Withdrawn', Column, configColumnCharts)}
+            </CCol>
+
+            {/* Final vs Draft */}
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <CCardHeader
@@ -1002,12 +1195,8 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   Final vs Draft
                 </CCardHeader>
                 <CCardBody className="childChartContainer">
-                  {parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
-                  ) === 0 &&
-                  parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
-                  ) === 0 ? (
+                  {parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+                  parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0 ? (
                     <div
                       style={{
                         textAlign: 'center',
@@ -1029,28 +1218,29 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   ) : (
                     ''
                   )}
-                  <Column
+
+                  {/* <Column
                     style={{
                       visibility: `${
-                        parseInt(
-                          fetchStatusSum(
-                            currentMonthData === undefined ? [] : currentMonthData,
-                            'Draft',
-                          ),
-                        ) === 0 &&
-                        parseInt(
-                          fetchStatusSum(
-                            currentMonthData === undefined ? [] : currentMonthData,
-                            'Final',
-                          ),
-                        ) === 0
+                        fetchStatusData(AllData === undefined ? [] : AllData, 'Draft')[1][0] ===
+                          0 &&
+                        fetchStatusData(AllData === undefined ? [] : AllData, 'Final')[1][0] === 0
                           ? 'hidden'
                           : 'visible'
                       }`,
                     }}
-                    {...configDraftvsFinalCharts(
-                      currentMonthData === undefined ? [] : currentMonthData,
-                    )}
+                    {...configDraftvsFinalCharts(data === undefined ? [] : data)}
+                  /> */}
+                  <Column
+                    style={{
+                      visibility: `${
+                        parseInt(data === undefined ? 0 : data[0]?.summary.Draft) === 0 &&
+                        parseInt(data === undefined ? 0 : data[0]?.summary.Final) === 0
+                          ? 'hidden'
+                          : 'visible'
+                      }`,
+                    }}
+                    {...configDraftvsFinalCharts(data === undefined ? [] : data)}
                   />
                 </CCardBody>
               </CCard>
@@ -1064,4 +1254,4 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
   )
 }
 
-export default CurrentMonth
+export default oldCharts

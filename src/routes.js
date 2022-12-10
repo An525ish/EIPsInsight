@@ -41,6 +41,7 @@ const Select = React.lazy(() => import('./views/forms/select/Select'))
 const Validation = React.lazy(() => import('./views/forms/validation/Validation'))
 
 const autoCharts = React.lazy(() => import('./views/charts/AutoCharts'))
+const oldCharts = React.lazy(() => import('./views/charts/oldTempCharts'))
 
 const draftStatusChart = React.lazy(() => import('./views/charts/draftStatus'))
 const finalStatusChart = React.lazy(() => import('./views/charts/finalStatus'))
@@ -164,6 +165,7 @@ const routes = [
   // { path: '/Insight', name: 'Charts', element: autoCharts },
   // { path: '/currentMonth', name: 'Current Month', element: CurrentMonth },
   { path: '/:id', name: 'Month', element: autoCharts },
+  { path: '/old-:id', name: 'Month', element: oldCharts },
   {
     path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
     name: `${months[date.getMonth()]} ${date.getFullYear()}`,

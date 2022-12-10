@@ -582,7 +582,7 @@ const Dashboard = () => {
   const columns = [
     {
       key: 'Number',
-      _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+      _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
       _props: { className: 'fw-semibold' },
       sorter: true,
     },
@@ -657,6 +657,29 @@ const Dashboard = () => {
         return '#0c8599'
       default:
         return '#1c7ed6'
+    }
+  }
+
+  const getBadgeShadowColor = (status) => {
+    switch (status) {
+      case 'Final':
+        return 'shadow-[#0ca678]'
+      case 'Last_Call':
+        return 'shadow-[#37b24d]'
+      case 'Last Call':
+        return 'shadow-[#37b24d]'
+      case 'Draft':
+        return 'shadow-[#f08c00]'
+      case 'Stagnant':
+        return 'shadow-[#e8590c]'
+      case 'Withdrawn':
+        return 'shadow-[#e03131]'
+      case 'Review':
+        return 'shadow-[#1971c2]'
+      case 'Living':
+        return 'shadow-[#0c8599]'
+      default:
+        return 'shadow-[#1c7ed6]'
     }
   }
   const toggleDetails = (index) => {
@@ -1147,21 +1170,82 @@ const Dashboard = () => {
                     pagination
                     onRowClick={(t) => {}}
                     scopedColumns={{
-                      status: (item) => (
+                      id: (item) => (
                         <td>
-                          <CBadge
+                          <div
                             style={{
                               color: `${getBadgeColor(item.status)}`,
-                              backgroundColor: `${getBadge(item.status)}`,
+                              fontWeight: 'bold',
                             }}
                           >
-                            {item.status}
-                          </CBadge>
+                            {item.id}.
+                          </div>
                         </td>
                       ),
+                      Number: (item) => (
+                        <td>
+                          <Link to={`/EIP-${item.Number}`}>
+                            <div>
+                              <label className="relative cursor-pointer">
+                                <div
+                                  className={`h-7
+            font-extrabold rounded-[8px] bg-[${getBadge(item.status)}] text-[${getBadgeColor(
+                                    item.status,
+                                  )}] text-[12px] inline-block p-[4px] drop-shadow-sm ${getBadgeShadowColor(
+                                    item.status,
+                                  )} shadow-md cursor-pointer px-[8px]`}
+                                  style={{
+                                    color: `${getBadgeColor(item.status)}`,
+                                    backgroundColor: `${getBadge(item.status)}`,
+                                  }}
+                                >
+                                  {item.Number}
+                                </div>
+                                <div
+                                  className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                    item.status,
+                                  )}] animate-ping`}
+                                  style={{
+                                    backgroundColor: `${getBadgeColor(item.status)}`,
+                                  }}
+                                ></div>
+                                <div
+                                  className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
+                                    item.status,
+                                  )}]`}
+                                  style={{
+                                    backgroundColor: `${getBadgeColor(item.status)}`,
+                                  }}
+                                ></div>
+                              </label>
+                            </div>
+                          </Link>
+                        </td>
+                      ),
+                      Title: (item) => (
+                        <td
+                          style={{
+                            // borderBottomWidth: item.id % 2 !== 0 ? '1px' : '',
+                            // borderColor: item.id % 2 !== 0 ? `${getBadgeColor(item.status)}` : '',
+                            color: `${getBadgeColor(item.status)}`,
+
+                            fontWeight: 'bold',
+                            height: '100%',
+                          }}
+                          className="hover:text-[#1c7ed6]"
+                        >
+                          <Link
+                            to={`/EIP-${item.Number}`}
+                            className="hover:text-[#1c7ed6] text-[13px]"
+                          >
+                            {item.Title}
+                          </Link>
+                        </td>
+                      ),
+
                       Author: (it) => (
                         <td>
-                          <div className="flex">
+                          <div>
                             {factorAuthor(it.Author).map((item, index) => {
                               let t = item[item.length - 1].substring(
                                 1,
@@ -1171,7 +1255,9 @@ const Dashboard = () => {
                               return (
                                 <CBadge
                                   key={index}
-                                  className="mr-1"
+                                  className={`mr-1 drop-shadow-sm ${getBadgeShadowColor(
+                                    it.status,
+                                  )} shadow-sm`}
                                   style={{
                                     color: `${getBadgeColor(it.status)}`,
                                     backgroundColor: `${getBadge(it.status)}`,
@@ -1199,56 +1285,81 @@ const Dashboard = () => {
                           </div>
                         </td>
                       ),
-                      Number: (item) => (
+                      'Start Date': (item) => (
                         <td>
-                          <label className="relative cursor-pointer">
-                            <div
-                              className={`h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(
-              item.status,
-            )}] text-[${getBadgeColor(
-                                item.status,
-                              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+                          <div>{item['Start Date']}</div>
+                        </td>
+                      ),
+
+                      'Final Date': (item) => (
+                        <td>
+                          <div>{item['Final Date']}</div>
+                        </td>
+                      ),
+                      Type: (item) => (
+                        <td
+                          style={{
+                            color: `${getBadgeColor(item.status)}`,
+                            fontWeight: 'bold',
+                          }}
+                          className="text-[12px]"
+                        >
+                          {item.Type}
+                        </td>
+                      ),
+                      Category: (item) => (
+                        <td
+                          style={{
+                            color: `${getBadgeColor(item.status)}`,
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          <div className=" text-[12px]">{item.Category}</div>
+                        </td>
+                      ),
+                      status: (item) => (
+                        <td style={{}}>
+                          <CBadge
+                            style={{
+                              color: `${getBadgeColor(item.status)}`,
+                              backgroundColor: `${getBadge(item.status)}`,
+                            }}
+                            className={`drop-shadow-sm ${getBadgeShadowColor(
+                              item.status,
+                            )} shadow-md`}
+                          >
+                            {item.status}
+                          </CBadge>
+                        </td>
+                      ),
+                      'PR No.': (item) => (
+                        <td>
+                          <a
+                            href={`https://github.com/ethereum/EIPs/pull/${
+                              item['PR No.'] === 0 ? item.Number : item['PR No.']
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <CBadge
                               style={{
-                                color: `${getBadgeColor(item.status)}`,
-                                backgroundColor: `${getBadge(item.status)}`,
+                                color: `${getBadgeColor('Random')}`,
+                                backgroundColor: `${getBadge('Random')}`,
                               }}
+                              className={`drop-shadow-sm ${getBadgeShadowColor(
+                                'Random',
+                              )} shadow-md  z-auto`}
                             >
-                              <Link
-                                to={`/EIP-${item.Number}`}
-                                className={`githubIcon h-7
-            shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                                style={{
-                                  color: `${getBadgeColor(item.status)}`,
-                                  backgroundColor: `${getBadge(item.status)}`,
-                                }}
-                              >
-                                {item.Number}*
-                              </Link>
-                            </div>
-                            <div
-                              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                                item.status,
-                              )}] animate-ping`}
-                              style={{
-                                backgroundColor: `${getBadgeColor(item.status)}`,
-                              }}
-                            ></div>
-                            <div
-                              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                                item.status,
-                              )}]`}
-                              style={{
-                                backgroundColor: `${getBadgeColor(item.status)}`,
-                              }}
-                            ></div>
-                          </label>
+                              <div>{item['PR No.'] === 0 ? item.Number : item['PR No.']}</div>
+                            </CBadge>
+                          </a>
                         </td>
                       ),
                     }}
                     sorterValue={{ column: 'name', state: 'asc' }}
                     tableHeadProps={{}}
                     tableProps={{
+                      // borderless: true,
                       striped: true,
                       hover: true,
                       responsive: true,

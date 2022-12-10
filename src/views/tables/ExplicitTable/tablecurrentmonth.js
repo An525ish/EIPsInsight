@@ -50,7 +50,6 @@ function tableCurrent() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
               _props: { className: 'fw-semibold' },
               sorter: true,
@@ -68,7 +67,6 @@ function tableCurrent() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -83,7 +81,6 @@ function tableCurrent() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
@@ -92,7 +89,6 @@ function tableCurrent() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -104,7 +100,6 @@ function tableCurrent() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -125,7 +120,6 @@ function tableCurrent() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
               _props: { className: 'fw-semibold' },
               sorter: true,
@@ -142,7 +136,6 @@ function tableCurrent() {
               _style: {
                 width: '15%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -157,7 +150,6 @@ function tableCurrent() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
@@ -166,7 +158,6 @@ function tableCurrent() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -179,7 +170,6 @@ function tableCurrent() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
           ]
@@ -279,10 +269,10 @@ function tableCurrent() {
       ans.push(findEIPNum(filterData[0], 'ERC'))
       ans.push(findEIPNum(filterData[0], 'Networking'))
       ans.push(findEIPNum(filterData[0], 'Interface'))
-      ans.push(findEIPNum(filterData[0], 'Meta'))
+      // ans.push(findEIPNum(filterData[0], 'Meta'))
       // category
       // ans.push(findEIPNum(filterData[0], 'Category'))
-      ans.push(findEIPNum(filterData[0], 'Informational'))
+      // ans.push(findEIPNum(filterData[0], 'Informational'))
 
       ans = ans.flat(Infinity)
       console.log({ ans })
@@ -318,6 +308,10 @@ function tableCurrent() {
   // csv Download
   const headers = [
     {
+      label: 'id',
+      key: 'id',
+    },
+    {
       label: 'EIP No.',
       key: 'Number',
     },
@@ -328,6 +322,14 @@ function tableCurrent() {
     {
       label: 'Author',
       key: 'Author',
+    },
+    {
+      label: 'Start Date',
+      key: 'Start Date',
+    },
+    {
+      label: 'Final Date',
+      key: 'Final Date',
     },
     {
       label: 'Type',
@@ -344,7 +346,7 @@ function tableCurrent() {
     },
     {
       label: 'PR No.',
-      key: 'PR No.',
+      key: 'Number',
     },
   ]
   const csvLink = {

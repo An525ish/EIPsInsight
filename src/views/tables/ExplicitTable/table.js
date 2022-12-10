@@ -43,7 +43,6 @@ function table() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
               _props: { className: 'fw-semibold' },
               sorter: true,
@@ -61,7 +60,6 @@ function table() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -76,7 +74,6 @@ function table() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
@@ -85,7 +82,6 @@ function table() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -97,7 +93,6 @@ function table() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -118,7 +113,6 @@ function table() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
               _props: { className: 'fw-semibold' },
               sorter: true,
@@ -135,7 +129,6 @@ function table() {
               _style: {
                 width: '15%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -150,7 +143,6 @@ function table() {
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
@@ -159,7 +151,6 @@ function table() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
             {
@@ -172,7 +163,6 @@ function table() {
               _style: {
                 width: '5%',
                 color: `${getBadgeColor(status)}`,
-                backgroundColor: `${getBadge(status)}`,
               },
             },
           ]
@@ -1108,6 +1098,10 @@ function table() {
   // csv Download
   const headers = [
     {
+      label: 'id',
+      key: 'id',
+    },
+    {
       label: 'EIP No.',
       key: 'Number',
     },
@@ -1118,6 +1112,14 @@ function table() {
     {
       label: 'Author',
       key: 'Author',
+    },
+    {
+      label: 'Start Date',
+      key: 'Start Date',
+    },
+    {
+      label: 'Final Date',
+      key: 'Final Date',
     },
     {
       label: 'Type',
@@ -1134,7 +1136,7 @@ function table() {
     },
     {
       label: 'PR No.',
-      key: 'PR No.',
+      key: 'Number',
     },
   ]
 
@@ -1477,7 +1479,7 @@ function table() {
                         'Random',
                       )} shadow-md  z-auto`}
                     >
-                      <div>{item['PR No.'] === 0 ? item.Number : item['PR No.']}</div>
+                      <div>{item['PR No.'] === 0 ? `#` + item.Number : item['PR No.']}</div>
                     </CBadge>
                   </a>
                 </td>
