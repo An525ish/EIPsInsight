@@ -324,6 +324,57 @@ function typeAll() {
     <>
       {loading ? (
         <div>
+          <div className="flex justify-center items-center">
+            <div
+              style={{
+                fontSize: '3rem',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+
+                padding: '20px',
+                borderRadius: '5px',
+
+                borderTop: '4px solid #339af0',
+                // textTransform: 'uppercase',
+              }}
+              className="flex justify-center items-center shadow-md"
+            >
+              Type - Category{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                }}
+              >
+                <Link
+                  to="/EIPs"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: 'Standards Track',
+                    status: '',
+                    category: '',
+                    name: 'Standard_Track',
+                  }}
+                >
+                  <div
+                    className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[2.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out ml-3 tracking-wider'
+                    style={{
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                  >
+                    {getStandardAttribute(post === undefined ? [] : post, 'Core') +
+                      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+                      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+                      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+                      getMetaAndInformational('Meta') +
+                      getMetaAndInformational('Informational')}
+                  </div>
+                </Link>
+              </label>
+            </div>
+          </div>
           <div
             style={{
               fontSize: '30px',
@@ -337,6 +388,7 @@ function typeAll() {
               borderLeft: '4px solid #339af0',
               borderBottom: '2px solid #339af0',
             }}
+            className="shadow-md"
           >
             Standard Track{' '}
             <label
@@ -357,7 +409,8 @@ function typeAll() {
               >
                 <div
                   className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                  style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {post === undefined
                     ? 0
@@ -382,7 +435,7 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className="shadow-sm">
                 <CCardBody
                   style={{
                     height: '300px',
@@ -457,7 +510,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Core')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Core') /
                                 totalEIPs()) *
@@ -491,7 +547,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
                                 totalEIPs()) *
@@ -525,7 +584,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
                                 totalEIPs()) *
@@ -559,7 +621,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
                                 totalEIPs()) *
@@ -591,7 +656,10 @@ function typeAll() {
                         </CTableDataCell>
                         <CTableDataCell>{getMetaAndInformational('Meta')}</CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {((getMetaAndInformational('Meta') / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
@@ -618,12 +686,66 @@ function typeAll() {
                         </CTableDataCell>
                         <CTableDataCell>{getMetaAndInformational('Informational')}</CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getMetaAndInformational('Informational') / totalEIPs()) *
                               100
                             ).toFixed(2)}
                             %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/EIPs"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Interface',
+                              name: 'Standard_Track_Interface',
+                            }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Total
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link to="/EIPs">
+                            <label
+                              style={{
+                                color: `${'#1c7ed6'}`,
+                                background: `${'#e7f5ff'}`,
+                                fontWeight: '800',
+                                fontSize: '15px',
+                                borderRadius: '12px',
+                                fontFamily: 'Big Shoulders Display',
+                              }}
+                              className="p-1.5 shadow-md tracking-wider cursor-pointer"
+                            >
+                              {getMetaAndInformational('Informational') +
+                                getMetaAndInformational('Meta') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+                                getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Core')}
+                            </label>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[1rem]"
+                          >
+                            100%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -660,6 +782,7 @@ function typeAll() {
                 borderBottom: '2px solid #339af0',
                 marginTop: '2rem',
               }}
+              className="shadow-md"
             >
               Meta{' '}
               <label
@@ -675,7 +798,8 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                    style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {getMetaAndInformational('Meta')}
                   </div>
@@ -697,6 +821,7 @@ function typeAll() {
                 borderBottom: '2px solid #339af0',
                 marginTop: '2rem',
               }}
+              className="shadow-md"
             >
               Informational{' '}
               <label
@@ -712,7 +837,8 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                    style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {getMetaAndInformational('Informational')}
                   </div>
@@ -722,7 +848,7 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className="shadow-sm">
                 <CCardBody
                   style={{
                     height: '300px',
@@ -751,7 +877,7 @@ function typeAll() {
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className="shadow-sm">
                 <CCardBody
                   style={{
                     height: '300px',

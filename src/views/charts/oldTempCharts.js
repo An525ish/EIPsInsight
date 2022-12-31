@@ -128,6 +128,8 @@ const oldCharts = (props) => {
       const list = param.id.split('-')
       const att = list[0]
       const y = list[1]
+      setMonth(monthNum[att])
+      setYear(y)
 
       let filterData = dataValue.filter((element) => {
         if (element.created !== undefined) {
@@ -897,7 +899,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
       setClick2Function(false)
       setClick3Function(false)
     }
-    allData()
+    // allData()
     allDataFetcher()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
@@ -906,48 +908,21 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
     <>
       {loading ? (
         <div>
-          <div
-            style={{
-              fontSize: '40px',
-              fontWeight: '800',
-              marginBottom: '60px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-
-              // textTransform: 'uppercase',
-            }}
-          >
-            <CCard
-              style={{
-                display: 'inline-block',
-                padding: '2rem',
-
-                // borderBottom: '4px solid #339af0',
-                // borderLeft: '2px solid #339af0',
-                // borderRight: '2px solid #339af0',
-                // borderBottomLeftRadius: '2rem',
-                // borderBottomRightRadius: '2rem',
-                // fontFamily: 'Quicksand',
-
-                borderRadius: '2rem',
-                border: '2px solid #1c7ed6',
-                // background: '#e7f5ff',
-                // borderTop: '4px solid #339af0',
-                // borderTop: '4px solid #339af0',
-              }}
-            >
-              <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+          <div className="flex justify-center items-center mb-[4rem]">
+            <div className="flex justify-center items-center">
+              <div
+                className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
                 {year}
-                {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
-            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
-              </label>
-              {/* <label className="text-[5rem]">O</label> */}
-              <label className="text-[#1c7ed6]">{months[month - 1]} </label>{' '}
-              <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                Insight
-              </label>
-            </CCard>
+              </div>
+              <div
+                className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
+                {months[month - 1]}{' '}
+              </div>
+            </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>

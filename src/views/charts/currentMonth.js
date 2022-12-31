@@ -354,73 +354,145 @@ const CurrentMonth = () => {
     return config
   }
 
+  const fetchStatusCategorySum = (monthData, status, category) => {
+    let arr = []
+    console.log(status, category)
+    let statusArr = monthData.filter((elem) => {
+      return elem.Status === status
+    })
+    console.log(statusArr)
+    if (statusArr.length === 0) return 0
+    for (let i = 0; i < statusArr[0][category][0]; i++) {
+      arr.push(statusArr[0][category][i + 1])
+    }
+
+    if (status !== 'Final') {
+      for (let i = 0; i < statusArr[0]['Undefined'][0]; i++) {
+        for (let j = 0; j < arr.length; j++) {
+          if (arr[j] === statusArr[0]['Undefined'][i + 1]) {
+            arr.splice(j, 1)
+          }
+        }
+      }
+    }
+
+    console.log(arr)
+    console.log(arr.length)
+
+    return arr.length
+  }
+
   // draft vs Final Charts
   const annotations = []
 
   const d1 = [
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Core[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'Core',
+      ),
       type: 'Core',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.ERC[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'ERC',
+      ),
       type: 'ERC',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Networking[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'Networking',
+      ),
       type: 'Networking',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Interface[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'Interface',
+      ),
       type: 'Interface',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Meta[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'Meta',
+      ),
       type: 'Meta',
     },
     {
       year: 'Draft',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[1]?.Informational[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Draft',
+        'Informational',
+      ),
       type: 'Informational',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Core[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'Core',
+      ),
       type: 'Core',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.ERC[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'ERC',
+      ),
       type: 'ERC',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Networking[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'Networking',
+      ),
       type: 'Networking',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'Interface',
+      ),
       type: 'Interface',
     },
+
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Interface[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'Meta',
+      ),
       type: 'Meta',
     },
     {
       year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Meta[0]),
-      type: 'Meta',
-    },
-    {
-      year: 'Final',
-      value: currentMonthData === undefined ? 0 : parseInt(currentMonthData[0]?.Informational[0]),
+      value: fetchStatusCategorySum(
+        currentMonthData === undefined ? [] : currentMonthData,
+        'Final',
+        'Informational',
+      ),
       type: 'Informational',
     },
   ]
@@ -608,27 +680,13 @@ const CurrentMonth = () => {
 
     for (let i = 0; i < monthData?.length; i++) {
       if (monthData[i].Status === status) {
-        sum += parseInt(monthData[i].Core[0]) === -1 ? 0 : parseInt(monthData[i].Core[0])
-        sum += parseInt(monthData[i].ERC[0]) === -1 ? 0 : parseInt(monthData[i].ERC[0])
-        sum +=
-          parseInt(monthData[i].Networking[0]) === -1 ? 0 : parseInt(monthData[i].Networking[0])
-        sum += parseInt(monthData[i].Interface[0]) === -1 ? 0 : parseInt(monthData[i].Interface[0])
-        // sum += parseInt(monthData[i].Meta[0]) === -1 ? 0 : parseInt(monthData[i].Meta[0])
-        // sum +=
-        //   parseInt(monthData[i].Informational[0]) === -1
-        //     ? 0
-        //     : parseInt(monthData[i].Informational[0])
-      }
-    }
-
-    return sum
-  }
-
-  const fetchStatusCategorySum = (monthData, status, category) => {
-    let sum = 0
-    for (let i = 0; i < monthData?.length; i++) {
-      if (monthData[i].Status === status) {
-        sum = parseInt(monthData[i][category][0]) === -1 ? 0 : parseInt(monthData[i][category][0])
+        sum += parseInt(monthData[i].Core[0])
+        sum += parseInt(monthData[i].ERC[0])
+        sum += parseInt(monthData[i].Networking[0])
+        sum += parseInt(monthData[i].Interface[0])
+        sum += parseInt(monthData[i].Meta[0])
+        sum += parseInt(monthData[i].Informational[0])
+        if (status !== 'Final') sum -= parseInt(monthData[i].Undefined[0])
       }
     }
 
@@ -776,41 +834,22 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
     <>
       {loading ? (
         <div>
-          <div
-            style={{
-              fontSize: '40px',
-              fontWeight: '800',
-              marginBottom: '60px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              // textTransform: 'uppercase',
-            }}
-          >
-            <CCard
-              style={{
-                display: 'inline-block',
-                padding: '2rem',
-
-                borderRadius: '2rem',
-                border: '2px solid #1c7ed6',
-              }}
-            >
-              <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+          <div className="flex justify-center items-center mb-[4rem]">
+            <div className="flex justify-center items-center">
+              <div
+                className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
                 {currentMonthData === undefined ? '' : currentMonthData[0].Year}
-                {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
-            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
-              </label>
-              {/* <label className="text-[5rem]">O</label> */}
-              <label className="text-[#1c7ed6]">
+              </div>
+              <div
+                className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
                 {currentMonthData === undefined ? '' : currentMonthData[0].Month}{' '}
-              </label>{' '}
-              <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                Insights
-              </label>
-            </CCard>
+              </div>
+            </div>
           </div>
-
           <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
             <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
               <CCard>

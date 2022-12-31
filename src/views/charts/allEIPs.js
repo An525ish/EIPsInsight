@@ -269,8 +269,11 @@ const AllEIPs = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        <div>
-          {text} ({allEIPs})
+        <div className="flex">
+          {text}{' '}
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
+            {allEIPs}
+          </div>
         </div>
 
         <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">

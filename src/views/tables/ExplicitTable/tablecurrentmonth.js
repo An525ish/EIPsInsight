@@ -269,12 +269,23 @@ function tableCurrent() {
       ans.push(findEIPNum(filterData[0], 'ERC'))
       ans.push(findEIPNum(filterData[0], 'Networking'))
       ans.push(findEIPNum(filterData[0], 'Interface'))
-      // ans.push(findEIPNum(filterData[0], 'Meta'))
-      // category
-      // ans.push(findEIPNum(filterData[0], 'Category'))
-      // ans.push(findEIPNum(filterData[0], 'Informational'))
+      ans.push(findEIPNum(filterData[0], 'Meta'))
+
+      ans.push(findEIPNum(filterData[0], 'Informational'))
+
+      let undefinedEIPs = findEIPNum(filterData[0], 'Undefined')
+      console.log({ undefinedEIPs })
 
       ans = ans.flat(Infinity)
+
+      // here we remove undefined EIPs from the list ... if the status is not final
+      if (status !== 'Final') {
+        for (let i = 0; i < undefinedEIPs.length; i++) {
+          if (ans.includes(undefinedEIPs[i])) {
+            ans.splice(ans.indexOf(undefinedEIPs[i]), 1)
+          }
+        }
+      }
       console.log({ ans })
 
       for (let i = 0; i < ans.length; i++) {

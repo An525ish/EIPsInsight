@@ -19,7 +19,7 @@ import { each, groupBy } from '@antv/util'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
-import { faLessThan } from '@fortawesome/free-solid-svg-icons'
+import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
 
 function statusAll(props) {
@@ -39,7 +39,7 @@ function statusAll(props) {
         setLoading(true)
       })
   }
-  const fetchAnnotations = (d) => {
+  const fetchAnnotations = (d, data) => {
     const annotations = []
     each(groupBy(d, 'type'), (values, k) => {
       const value = values.reduce((a, b) => a + b.value, 0)
@@ -47,7 +47,7 @@ function statusAll(props) {
       annotations.push({
         type: 'text',
         position: [k, value],
-        content: `${value}`,
+        content: `${((value / data) * 100).toFixed(2) + '%'}`,
         style: {
           textAlign: 'center',
           fontSize: 12,
@@ -101,7 +101,7 @@ function statusAll(props) {
 
     return arr
   }
-  const fetchChartData = (name) => {
+  const fetchChartData = (name, data) => {
     const config = {
       data: fetchData(post === undefined ? [] : post, name),
       color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
@@ -109,7 +109,7 @@ function statusAll(props) {
       xField: 'type',
       yField: 'value',
       seriesField: 'name',
-      label: false,
+      // isPercent: true,
       xAxis: {
         label: {
           style: {
@@ -117,8 +117,13 @@ function statusAll(props) {
           },
         },
       },
+      axis: {
+        min: 0,
+        max: data + 10,
+        position: 'top',
+      },
 
-      annotations: fetchAnnotations(fetchData(post === undefined ? [] : post, name)),
+      annotations: fetchAnnotations(fetchData(post === undefined ? [] : post, name), data),
     }
     return config
   }
@@ -205,6 +210,7 @@ function statusAll(props) {
             display: 'inline-block',
             color: `${getBadgeColor(name)}`,
           }}
+          className="shadow-lg"
         >
           {title}{' '}
           <label
@@ -220,11 +226,12 @@ function statusAll(props) {
             >
               <div
                 className={`className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
+            shadow-md font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
                   name,
-                )}] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out`}
+                )}] text-[1.5rem] flex justify-center items-center p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2`}
                 style={{
                   backgroundColor: `${getBadge(name)}`,
+                  fontFamily: 'Big Shoulders Display',
                 }}
               >
                 {totalData(name)}
@@ -234,14 +241,14 @@ function statusAll(props) {
         </div>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
-            <CCard>
+            <CCard className="shadow-sm">
               <CCardBody
                 style={{
                   height: '300px',
                   borderLeft: `2px solid ${getBadgeColor(name)}`,
                 }}
               >
-                <Column {...fetchChartData(name)} />
+                <Column {...fetchChartData(name, totalData(name))} />
               </CCardBody>
               <CCardFooter
                 className="cardFooter"
@@ -258,7 +265,7 @@ function statusAll(props) {
             </CCard>
           </CCol>
           <CCol xs={matches ? 12 : 6}>
-            <CCard>
+            <CCard className="shadow-sm">
               <CCardBody
                 style={{
                   overflowX: 'auto',
@@ -320,7 +327,10 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>{getStandardTrackData(name, 'Core')}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {((getStandardTrackData(name, 'Core') / totalData(name)) * 100).toFixed(2)}%
                       </CTableDataCell>
                     </CTableRow>
@@ -345,7 +355,10 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>{getStandardTrackData(name, 'ERC')}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {((getStandardTrackData(name, 'ERC') / totalData(name)) * 100).toFixed(2)}%
                       </CTableDataCell>
                     </CTableRow>
@@ -370,7 +383,10 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>{getStandardTrackData(name, 'Networking')}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {(
                           (getStandardTrackData(name, 'Networking') / totalData(name)) *
                           100
@@ -399,7 +415,10 @@ function statusAll(props) {
                         </NavLink>
                       </CTableDataCell>
                       <CTableDataCell>{getStandardTrackData(name, 'Interface')}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {(
                           (getStandardTrackData(name, 'Interface') / totalData(name)) *
                           100
@@ -428,7 +447,10 @@ function statusAll(props) {
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>{getMetaAndInformational(name, 'Meta')}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {((getMetaAndInformational(name, 'Meta') / totalData(name)) * 100).toFixed(
                           2,
                         )}
@@ -458,7 +480,10 @@ function statusAll(props) {
                       <CTableDataCell>
                         {getMetaAndInformational(name, 'Informational')}
                       </CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[0.8rem]"
+                      >
                         {(
                           (getMetaAndInformational(name, 'Informational') / totalData(name)) *
                           100
@@ -474,18 +499,31 @@ function statusAll(props) {
                         Total
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
+                      <CTableDataCell>
+                        <Link
+                          to="/chartTable"
+                          state={{ type: '', status: title, category: '', name: `${title}` }}
+                        >
+                          <label
+                            style={{
+                              color: `${getBadgeColor(name)}`,
+                              background: `${getBadge(name)}`,
+                              fontWeight: '800',
+                              fontSize: '15px',
+                              borderRadius: '12px',
+                              fontFamily: 'Big Shoulders Display',
+                            }}
+                            className="p-1.5 shadow-md tracking-wider cursor-pointer"
+                          >
+                            {totalData(name)}
+                          </label>
+                        </Link>
+                      </CTableDataCell>
                       <CTableDataCell
-                        style={{
-                          fontWeight: '800',
-                          fontSize: '15px',
-                          display: 'inline-block  ',
-                          borderRadius: '12px',
-                          color: `${getBadgeColor(name)}`,
-                          background: `${getBadge(name)}`,
-                        }}
-                        className=""
+                        style={{ fontFamily: 'Big Shoulders Display' }}
+                        className="tracking-wider text-[1rem]"
                       >
-                        {totalData(name)}
+                        100%
                       </CTableDataCell>
                     </CTableRow>
                   </CTableBody>
@@ -519,6 +557,57 @@ function statusAll(props) {
     <>
       {loading ? (
         <div>
+          <div className="flex justify-center items-center">
+            <div
+              style={{
+                fontSize: '3rem',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+
+                padding: '20px',
+                borderRadius: '5px',
+
+                borderTop: '4px solid #339af0',
+              }}
+              className="flex justify-center items-center shadow-md"
+            >
+              Status{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                }}
+              >
+                <Link
+                  to="/EIPs"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: 'Standards Track',
+                    status: '',
+                    category: '',
+                    name: 'Standard_Track',
+                  }}
+                >
+                  <div
+                    className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[2.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out ml-3 tracking-wider'
+                    style={{
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                  >
+                    {totalData('Living') +
+                      totalData('Final') +
+                      totalData('Last_Call') +
+                      totalData('Review') +
+                      totalData('Draft') +
+                      totalData('Stagnant') +
+                      totalData('Withdrawn')}
+                  </div>
+                </Link>
+              </label>
+            </div>
+          </div>
           {customTableChart('Living', 'Living')}
           {customTableChart('Final', 'Final')}
           {customTableChart('Last_Call', 'Last Call')}

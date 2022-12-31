@@ -293,7 +293,7 @@ const Dashboard = () => {
   }
   const config = {
     data: d1,
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: ['#eebefa', '#da77f2', '#ae3ec9', '#862e9c', '#c2255c', '#f06595'],
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -907,7 +907,7 @@ const Dashboard = () => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex"
         style={{
           fontFamily: 'Roboto',
           fontWeight: '800',
@@ -918,6 +918,18 @@ const Dashboard = () => {
         }}
       >
         {text}
+        {(text === 'EIPs Type & Categories' || text === 'EIPs Status') && (
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
+            {post === undefined
+              ? ''
+              : post['Core'] +
+                post['ERC'] +
+                post['Networking'] +
+                post['Interface'] +
+                post['Meta'] +
+                post['Informational']}
+          </div>
+        )}
       </CCardHeader>
     )
   }
@@ -951,7 +963,7 @@ const Dashboard = () => {
           position: 'right',
         }
       : false,
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+    color: ['#3bc9db', '#20c997', '#69db7c', '#339af0', '#fcc419', '#ffc078', '#ff6b6b'],
     label: matches1
       ? {
           type: 'inner',
