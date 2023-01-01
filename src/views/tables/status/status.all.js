@@ -21,6 +21,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 import '../type/type.css'
 import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
+import { TypeColors } from 'src/constants'
 
 function statusAll(props) {
   const [post, getPost] = useState()
@@ -104,7 +105,7 @@ function statusAll(props) {
   const fetchChartData = (name, data) => {
     const config = {
       data: fetchData(post === undefined ? [] : post, name),
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      color: TypeColors,
       isStack: true,
       xField: 'type',
       yField: 'value',

@@ -20,6 +20,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from 'src/views/theme/loading/loading'
+import { StatusColors, TypeColors } from 'src/constants'
 
 function typeAll() {
   const [post, getPost] = useState()
@@ -118,11 +119,11 @@ function typeAll() {
     const arr = []
     arr.push(
       {
-        type: 'Draft',
+        type: 'Living',
         value:
           name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Draft')
-            : fetchTableDataExtra(post, name, 'Draft'),
+            ? fetchTableData(post, name, 'Living')
+            : fetchTableDataExtra(post, name, 'Living'),
       },
       {
         type: 'Final',
@@ -132,6 +133,13 @@ function typeAll() {
             : fetchTableDataExtra(post, name, 'Final'),
       },
       {
+        type: 'Last_Call',
+        value:
+          name === 'Standard_Track'
+            ? fetchTableData(post, name, 'Last_Call')
+            : fetchTableDataExtra(post, name, 'Last_Call'),
+      },
+      {
         type: 'Review',
         value:
           name === 'Standard_Track'
@@ -139,12 +147,13 @@ function typeAll() {
             : fetchTableDataExtra(post, name, 'Review'),
       },
       {
-        type: 'Last_Call',
+        type: 'Draft',
         value:
           name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Last_Call')
-            : fetchTableDataExtra(post, name, 'Last_Call'),
+            ? fetchTableData(post, name, 'Draft')
+            : fetchTableDataExtra(post, name, 'Draft'),
       },
+
       {
         type: 'Stagnant',
         value:
@@ -158,13 +167,6 @@ function typeAll() {
           name === 'Standard_Track'
             ? fetchTableData(post, name, 'Withdrawn')
             : fetchTableDataExtra(post, name, 'Withdrawn'),
-      },
-      {
-        type: 'Living',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Living')
-            : fetchTableDataExtra(post, name, 'Living'),
       },
     )
 
@@ -225,7 +227,7 @@ function typeAll() {
         name === 'Standard_Track'
           ? fetchChartDataStandardTrack(post.length === 0 ? [] : post)
           : fetchChartData(post === undefined ? [] : post, name),
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      color: name === 'Standard_Track' ? TypeColors : StatusColors,
       angleField: 'value',
       colorField: 'type',
       radius: 1,

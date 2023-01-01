@@ -88,6 +88,9 @@ const MForm = React.lazy(() => import('./views/pages/ManualForm/mForm'))
 
 const date = new Date()
 
+// errors
+const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
+
 const months = [
   'January',
   'February',
@@ -185,6 +188,9 @@ const routes = [
   { path: '/EIPS', name: 'EIPs', element: AllEIPs },
   { path: '/insertForm', name: 'EIPs', element: mForm },
   { path: '/updateForm', name: 'EIPs', element: mForm2 },
+
+  // errors
+  { path: '/404', name: 'Page 404 - PAGE NOT FOUND', element: Page404 },
 ]
 
 export default routes

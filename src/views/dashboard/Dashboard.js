@@ -2,12 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import { CSmartTable, CMultiSelect } from '@coreui/react-pro'
-import { CSVLink } from 'react-csv'
-import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
-import PropTypes from 'prop-types'
-import github from '../../assets/grey_logo.png'
+import { CSmartTable } from '@coreui/react-pro'
 import { motion } from 'framer-motion'
 import {
   CAvatar,
@@ -32,7 +27,7 @@ import {
 } from '@coreui/react'
 
 import { Link, useParams } from 'react-router-dom'
-import { ip } from 'src/constants'
+import { ip, TypeColors } from 'src/constants'
 
 import useMediaQuery from 'src/scss/useMediaQuery'
 
@@ -43,6 +38,7 @@ import './Dashboard.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 import { MotionConfig } from 'framer-motion'
+
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
@@ -293,7 +289,7 @@ const Dashboard = () => {
   }
   const config = {
     data: d1,
-    color: ['#eebefa', '#da77f2', '#ae3ec9', '#862e9c', '#c2255c', '#f06595'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',

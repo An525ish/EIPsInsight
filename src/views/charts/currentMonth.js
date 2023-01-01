@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react'
 import github from '../../assets/grey_logo.png'
-import { ip } from './../../constants'
+import { GeneralStatsColor, ip, TypeColors } from './../../constants'
 import {
   CCard,
   CCardBody,
@@ -134,7 +134,7 @@ const CurrentMonth = () => {
   const configColumnCharts = (name, data) => {
     const config = {
       data: dataCapture(name, data),
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      color: TypeColors,
       isStack: true,
       xField: 'type',
       yField: 'value',
@@ -514,7 +514,7 @@ const CurrentMonth = () => {
   const configDraftvsFinalCharts = (data) => {
     const config = {
       data: d1,
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      color: TypeColors,
       isStack: true,
       xField: 'year',
       yField: 'value',
@@ -589,27 +589,30 @@ const CurrentMonth = () => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontFamily: 'Big Shoulders Display',
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
-        {text === 'GeneralStats' ? (
-          ''
-        ) : (
-          <label style={{ fontWeight: '700' }}>
-            {'('}
-            {parseInt(
-              fetchStatusSum(
-                currentMonthData === undefined ? [] : currentMonthData,
-                text === 'Last Call' ? 'Last_Call' : text,
-              ),
+        {text !== 'GeneralStats' && (
+          <div className="ml-2 bg-white rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
+            {text === 'GeneralStats' ? (
+              ''
+            ) : (
+              <label className="font-bold text-[0.9rem]">
+                {parseInt(
+                  fetchStatusSum(
+                    currentMonthData === undefined ? [] : currentMonthData,
+                    text === 'Last Call' ? 'Last_Call' : text,
+                  ),
+                )}
+              </label>
             )}
-            {')'}
-          </label>
+          </div>
         )}
       </CCardHeader>
     )
@@ -634,7 +637,7 @@ const CurrentMonth = () => {
           value: 2,
         },
       ],
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+      color: GeneralStatsColor,
       isStack: true,
       xField: 'type',
       yField: 'value',
@@ -697,37 +700,32 @@ const CurrentMonth = () => {
     return (
       <CTableRow>
         <CTableHeaderCell scope="row">
-          <CBadge
-            style={{
-              color: `${getBadgeColor(name)}`,
-              backgroundColor: `${getBadge(name)}`,
-              fontSize: '13px',
-            }}
-          >
-            {name}
-          </CBadge>
-        </CTableHeaderCell>
-        <CTableDataCell>
-          <label className="relative cursor-pointer">
-            <div
-              className={`h-7
-shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                name,
-              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+          <div className="flex items-center">
+            <label
               style={{
                 color: `${getBadgeColor(name)}`,
                 backgroundColor: `${getBadge(name)}`,
+                fontSize: '13px',
               }}
+              className="px-2 py-1 rounded-[0.3rem] shadow-md"
             >
+              {name}
+            </label>
+          </div>
+        </CTableHeaderCell>
+        <CTableDataCell>
+          <label className="relative cursor-pointer">
+            <div>
               <Link
                 to="/currentMonthTable"
                 style={{
                   textDecoration: 'none',
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
+                  fontFamily: 'Big Shoulders Display',
                 }}
                 className={`githubIcon h-7
-shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+            shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
                 state={{
                   status: name,
                   name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_Draft`,
@@ -866,10 +864,18 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                        <CTableHeaderCell
+                          scope="col"
+                          style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
+                          className="tracking-wider text-[1.3rem]"
+                        >
                           Status
                         </CTableHeaderCell>
-                        <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                        <CTableHeaderCell
+                          scope="col"
+                          style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
+                          className="tracking-wider text-[1.3rem]"
+                        >
                           Number
                         </CTableHeaderCell>
                       </CTableRow>
@@ -944,7 +950,16 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
                     *Click to see more
                   </label>
-                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                  <label
+                    style={{
+                      color: '#1c7ed6',
+                      fontSize: '10px',
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                    className="tracking-widest text-[0.8rem]"
+                  >
+                    {date}
+                  </label>
                 </CCardFooter>
               </CCard>
             </div>
@@ -964,10 +979,18 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                     <CTable align="middle" responsive>
                       <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                         <CTableRow>
-                          <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                          <CTableHeaderCell
+                            scope="col"
+                            style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[1.3rem]"
+                          >
                             Other Stats
                           </CTableHeaderCell>
-                          <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                          <CTableHeaderCell
+                            scope="col"
+                            style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[1.3rem]"
+                          >
                             Number
                           </CTableHeaderCell>
                         </CTableRow>
@@ -975,22 +998,50 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                       <CTableBody>
                         <CTableRow>
                           <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                          <CTableDataCell>4100</CTableDataCell>
+                          <CTableDataCell
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="text-[1rem] tracking-wider"
+                          >
+                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2  shadow-md rounded-[0.2rem]">
+                              4100
+                            </label>
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                          <CTableDataCell>932</CTableDataCell>
+                          <CTableDataCell
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="text-[1rem] tracking-wider"
+                          >
+                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                              932
+                            </label>
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                          <CTableDataCell>10</CTableDataCell>
+                          <CTableDataCell
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="text-[1rem] tracking-wider"
+                          >
+                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                              10
+                            </label>
+                          </CTableDataCell>
                         </CTableRow>
 
                         <CTableRow>
                           <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                          <CTableDataCell>11</CTableDataCell>
+                          <CTableDataCell
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="text-[1rem] tracking-wider"
+                          >
+                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                              11
+                            </label>
+                          </CTableDataCell>
                         </CTableRow>
                       </CTableBody>
                     </CTable>
@@ -1001,7 +1052,16 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   <label></label>
-                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                  <label
+                    style={{
+                      color: '#1c7ed6',
+                      fontSize: '10px',
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                    className="tracking-widest text-[0.8rem]"
+                  >
+                    {date}
+                  </label>
                 </CCardFooter>
               </CCol>
             </div>
@@ -1031,11 +1091,12 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <CCardHeader
-                  className="cardHeader"
+                  className="cardHeader tracking-widest font-bold text-[1.3rem]"
                   style={{
                     color: `${coloring('text')}`,
                     background: `${coloring('back')}`,
                     borderBottom: '2px solid #74c0fc',
+                    fontFamily: 'Big Shoulders Display',
                   }}
                 >
                   Final vs Draft

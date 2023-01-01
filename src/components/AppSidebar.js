@@ -183,6 +183,34 @@ const AppSidebar = (props) => {
       )
     }
 
+    // currentMonth Data
+    const currentMonthsObjects = {}
+    currentMonthsObjects.path = `/${props.Year}`
+    currentMonthsObjects.name = props.Year
+    currentMonthsObjects.icon = cilChart
+    currentMonthsObjects.exact = true
+    currentMonthsObjects.subRoutes = []
+
+    currentMonthsObjects.subRoutes.push({
+      path: `/${props.Month.toLowerCase()}-${props.Year}`,
+      name: `${props.Month}`,
+    })
+
+    let lastCurrentIndex = date.getMonth()
+
+    for (let i = lastCurrentIndex - 1; i >= 0; i--) {
+      currentMonthsObjects.subRoutes.push({
+        path: `/${months[i].toLowerCase()}-${props.Year}`,
+        name: `${months[i]}`,
+      })
+    }
+
+    routes.push(currentMonthsObjects)
+
+    allYears = allYears.filter((ele) => {
+      return ele !== props.Year
+    })
+    console.log(allYears)
     // past years
     for (let j = 0; j < allYears.length; j++) {
       const objYear = {}
@@ -194,15 +222,8 @@ const AppSidebar = (props) => {
       objYear.exact = true
       objYear.subRoutes = []
 
-      if (allYears[j] === 2022) {
-        objYear.subRoutes.push({
-          path: `/${props.Month.toLowerCase()}-${props.Year}`,
-          name: `${props.Month}`,
-        })
-
-        let lastIndex = date.getMonth()
-
-        for (let i = lastIndex - 1; i >= 0; i--) {
+      if (allYears[j] >= 2021) {
+        for (let i = 11; i >= 0; i--) {
           objYear.subRoutes.push({
             path: `/${months[i].toLowerCase()}-${allYears[j]}`,
             name: `${months[i]}`,

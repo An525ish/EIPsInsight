@@ -668,7 +668,7 @@ const oldCharts = (props) => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex"
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
@@ -676,18 +676,16 @@ const oldCharts = (props) => {
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
-        {text === 'GeneralStats' ? (
-          ''
-        ) : (
-          <label style={{ fontWeight: '700' }}>
-            {'('}
-            {parseInt(
-              data === undefined
-                ? 0
-                : findTotalValueZero(AllData === undefined ? [] : AllData, text),
+        {text !== 'GeneralStats' && (
+          <div className="ml-2 bg-white rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
+            {text === 'GeneralStats' ? (
+              ''
+            ) : (
+              <label style={{ fontWeight: '700' }}>
+                {fetchStatusData(AllData === undefined ? [] : AllData, text)[1][0]}
+              </label>
             )}
-            {')'}
-          </label>
+          </div>
         )}
       </CCardHeader>
     )
@@ -766,28 +764,22 @@ const oldCharts = (props) => {
     return (
       <CTableRow>
         <CTableHeaderCell scope="row">
-          <CBadge
-            style={{
-              color: `${getBadgeColor(name)}`,
-              backgroundColor: `${getBadge(name)}`,
-              fontSize: '13px',
-            }}
-          >
-            {name}
-          </CBadge>
-        </CTableHeaderCell>
-        <CTableDataCell>
-          <label className="relative cursor-pointer">
-            <div
-              className={`h-7
-shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                name,
-              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+          <div className="flex items-center">
+            <label
               style={{
                 color: `${getBadgeColor(name)}`,
                 backgroundColor: `${getBadge(name)}`,
+                fontSize: '13px',
               }}
+              className="px-2 py-1 rounded-[0.3rem] shadow-md"
             >
+              {name}
+            </label>
+          </div>
+        </CTableHeaderCell>
+        <CTableDataCell>
+          <label className="relative cursor-pointer">
+            <div>
               <Link
                 to="/chartTable"
                 style={{
@@ -797,7 +789,7 @@ shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeC
                   backgroundColor: `${getBadge(name)}`,
                 }}
                 className={`githubIcon h-7
-shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+            shadow-md font-extrabold rounded-[8px]  text-[12px] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer`}
                 state={{
                   type: '',
                   status: name,
@@ -989,7 +981,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
               </CCard>
             </div>
 
-            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+            {/* <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
               <CCol xs={12} className="mb-4">
                 <CCard>
                   <CCardBody
@@ -1069,11 +1061,11 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   </CCardFooter>
                 </CCard>
               </CCol>
-            </div>
+            </div> */}
           </div>
 
           <CRow>
-            <CCol xs={12}>
+            {/* <CCol xs={12}>
               <CCard className="mb-4 cardBorder">
                 {header('GeneralStats')}
 
@@ -1128,7 +1120,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
+            </CCol> */}
 
             <CCol xs={matches ? 12 : 6}>{statusChartsTemplate('Final', Pie, configPieCharts)}</CCol>
 
