@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react'
 import github from '../../assets/grey_logo.png'
-import { GeneralStatsColor, ip, TypeColors } from './../../constants'
+import { GeneralStatsColor, ip, TypeColors, months } from './../../constants'
 import {
   CCard,
   CCardBody,
@@ -44,6 +44,7 @@ import { cilBold } from '@coreui/icons'
 import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
+import Page404 from '../pages/page404/Page404'
 
 const CurrentMonth = () => {
   const [month, setMonth] = useState()
@@ -60,6 +61,7 @@ const CurrentMonth = () => {
     useUserAuth()
   let [data, setData] = useState() // i set the data here
   let [currentMonthData, setCurrentMonthData] = useState()
+  console.log(param)
 
   const monthNum = {
     january: 1,
@@ -77,7 +79,10 @@ const CurrentMonth = () => {
   }
 
   const fetchCurrentMonthData = async () => {
-    const response = await fetch(`${ip}/currentMonth/2022/December`)
+    const response = await fetch(
+      `${ip}/currentMonth/${param['*'].split('-')[1]}/${param['*'].split('-')[0]}`,
+    )
+
     const data = await response.json()
     console.log(data)
     setCurrentMonthData(data)
@@ -831,140 +836,29 @@ const CurrentMonth = () => {
   return (
     <>
       {loading ? (
-        <div>
-          <div className="flex justify-center items-center mb-[4rem]">
-            <div className="flex justify-center items-center">
-              <div
-                className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
-                style={{ fontFamily: 'Big Shoulders Display' }}
-              >
-                {currentMonthData === undefined ? '' : currentMonthData[0].Year}
-              </div>
-              <div
-                className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
-                style={{ fontFamily: 'Big Shoulders Display' }}
-              >
-                {currentMonthData === undefined ? '' : currentMonthData[0].Month}{' '}
+        currentMonthData === undefined || currentMonthData.length === 0 ? (
+          <Page404 />
+        ) : (
+          <div>
+            <div className="flex justify-center items-center mb-[4rem]">
+              <div className="flex justify-center items-center">
+                <div
+                  className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
+                  style={{ fontFamily: 'Big Shoulders Display' }}
+                >
+                  {param['*'].split('-')[1]}
+                </div>
+                <div
+                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                  style={{ fontFamily: 'Big Shoulders Display' }}
+                >
+                  {param['*'].split('-')[0][0].toUpperCase() +
+                    param['*'].split('-')[0].substring(1)}{' '}
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
-            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-              <CCard>
-                <CCardBody
-                  style={{
-                    overflowX: 'auto',
-                    overflowY: 'auto',
-                    width: '100%',
-                    fontFamily: 'Roboto',
-                    fontSize: '15px',
-                    borderBottom: '2px solid #74c0fc',
-                  }}
-                >
-                  <CTable align="middle" responsive>
-                    <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                      <CTableRow>
-                        <CTableHeaderCell
-                          scope="col"
-                          style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
-                          className="tracking-wider text-[1.3rem]"
-                        >
-                          Status
-                        </CTableHeaderCell>
-                        <CTableHeaderCell
-                          scope="col"
-                          style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
-                          className="tracking-wider text-[1.3rem]"
-                        >
-                          Number
-                        </CTableHeaderCell>
-                      </CTableRow>
-                    </CTableHead>
-                    <CTableBody>
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Final',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Final')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Last_Call',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Last_Call')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Review',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Review')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Draft',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Draft')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Stagnant',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Stagnant')}
-
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Withdrawn',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Withdrawn')}
-                      {parseInt(
-                        fetchStatusSum(
-                          currentMonthData === undefined ? [] : currentMonthData,
-                          'Living',
-                        ),
-                      ) === 0
-                        ? ''
-                        : statusRows('Living')}
-                    </CTableBody>
-                  </CTable>
-                </CCardBody>
-                <CCardFooter
-                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-                  style={{ display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                    *Click to see more
-                  </label>
-                  <label
-                    style={{
-                      color: '#1c7ed6',
-                      fontSize: '10px',
-                      fontFamily: 'Big Shoulders Display',
-                    }}
-                    className="tracking-widest text-[0.8rem]"
-                  >
-                    {date}
-                  </label>
-                </CCardFooter>
-              </CCard>
-            </div>
-            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-              <CCol xs={12} className="mb-4">
+            <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
+              <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
                 <CCard>
                   <CCardBody
                     style={{
@@ -984,7 +878,7 @@ const CurrentMonth = () => {
                             style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[1.3rem]"
                           >
-                            Other Stats
+                            Status
                           </CTableHeaderCell>
                           <CTableHeaderCell
                             scope="col"
@@ -996,167 +890,289 @@ const CurrentMonth = () => {
                         </CTableRow>
                       </CTableHead>
                       <CTableBody>
-                        <CTableRow>
-                          <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                          <CTableDataCell
-                            style={{ fontFamily: 'Big Shoulders Display' }}
-                            className="text-[1rem] tracking-wider"
-                          >
-                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2  shadow-md rounded-[0.2rem]">
-                              4100
-                            </label>
-                          </CTableDataCell>
-                        </CTableRow>
-
-                        <CTableRow>
-                          <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                          <CTableDataCell
-                            style={{ fontFamily: 'Big Shoulders Display' }}
-                            className="text-[1rem] tracking-wider"
-                          >
-                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                              932
-                            </label>
-                          </CTableDataCell>
-                        </CTableRow>
-
-                        <CTableRow>
-                          <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                          <CTableDataCell
-                            style={{ fontFamily: 'Big Shoulders Display' }}
-                            className="text-[1rem] tracking-wider"
-                          >
-                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                              10
-                            </label>
-                          </CTableDataCell>
-                        </CTableRow>
-
-                        <CTableRow>
-                          <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                          <CTableDataCell
-                            style={{ fontFamily: 'Big Shoulders Display' }}
-                            className="text-[1rem] tracking-wider"
-                          >
-                            <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                              11
-                            </label>
-                          </CTableDataCell>
-                        </CTableRow>
-                      </CTableBody>
-                    </CTable>
-                  </CCardBody>
-                </CCard>
-                <CCardFooter
-                  className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-                  style={{ display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <label></label>
-                  <label
-                    style={{
-                      color: '#1c7ed6',
-                      fontSize: '10px',
-                      fontFamily: 'Big Shoulders Display',
-                    }}
-                    className="tracking-widest text-[0.8rem]"
-                  >
-                    {date}
-                  </label>
-                </CCardFooter>
-              </CCol>
-            </div>
-          </div>
-
-          <CRow>
-            <CCol xs={12}>
-              <CCard className="mb-4 cardBorder">
-                {header('GeneralStats')}
-
-                <CCardBody className="childChartContainer">
-                  <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
-                </CCardBody>
-              </CCard>
-            </CCol>
-
-            {/* status Information */}
-
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Final')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Last_Call')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Review')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Draft')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Stagnant')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Withdrawn')}</CCol>
-            <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Living')}</CCol>
-
-            <CCol xs={matches ? 12 : 6}>
-              <CCard className="mb-4 cardBorder">
-                <CCardHeader
-                  className="cardHeader tracking-widest font-bold text-[1.3rem]"
-                  style={{
-                    color: `${coloring('text')}`,
-                    background: `${coloring('back')}`,
-                    borderBottom: '2px solid #74c0fc',
-                    fontFamily: 'Big Shoulders Display',
-                  }}
-                >
-                  Final vs Draft
-                </CCardHeader>
-                <CCardBody className="childChartContainer">
-                  {parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Draft'),
-                  ) === 0 &&
-                  parseInt(
-                    fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, 'Final'),
-                  ) === 0 ? (
-                    <div
-                      style={{
-                        textAlign: 'center',
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        left: '0',
-                        top: '83px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        color: 'rgba(220, 52, 85, 0.5)',
-                        zIndex: '1',
-                        fontSize: '26px',
-                      }}
-                    >
-                      <b>No data for you today!</b>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                  <Column
-                    style={{
-                      visibility: `${
-                        parseInt(
-                          fetchStatusSum(
-                            currentMonthData === undefined ? [] : currentMonthData,
-                            'Draft',
-                          ),
-                        ) === 0 &&
-                        parseInt(
+                        {parseInt(
                           fetchStatusSum(
                             currentMonthData === undefined ? [] : currentMonthData,
                             'Final',
                           ),
                         ) === 0
-                          ? 'hidden'
-                          : 'visible'
-                      }`,
+                          ? ''
+                          : statusRows('Final')}
+
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Last_Call',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Last_Call')}
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Review',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Review')}
+
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Draft',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Draft')}
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Stagnant',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Stagnant')}
+
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Withdrawn',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Withdrawn')}
+                        {parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Living',
+                          ),
+                        ) === 0
+                          ? ''
+                          : statusRows('Living')}
+                      </CTableBody>
+                    </CTable>
+                  </CCardBody>
+                  <CCardFooter
+                    className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                      *Click to see more
+                    </label>
+                    <label
+                      style={{
+                        color: '#1c7ed6',
+                        fontSize: '10px',
+                        fontFamily: 'Big Shoulders Display',
+                      }}
+                      className="tracking-widest text-[0.8rem]"
+                    >
+                      {date}
+                    </label>
+                  </CCardFooter>
+                </CCard>
+              </div>
+              <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+                <CCol xs={12} className="mb-4">
+                  <CCard>
+                    <CCardBody
+                      style={{
+                        overflowX: 'auto',
+                        overflowY: 'auto',
+                        width: '100%',
+                        fontFamily: 'Roboto',
+                        fontSize: '15px',
+                        borderBottom: '2px solid #74c0fc',
+                      }}
+                    >
+                      <CTable align="middle" responsive>
+                        <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
+                          <CTableRow>
+                            <CTableHeaderCell
+                              scope="col"
+                              style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
+                              className="tracking-wider text-[1.3rem]"
+                            >
+                              Other Stats
+                            </CTableHeaderCell>
+                            <CTableHeaderCell
+                              scope="col"
+                              style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
+                              className="tracking-wider text-[1.3rem]"
+                            >
+                              Number
+                            </CTableHeaderCell>
+                          </CTableRow>
+                        </CTableHead>
+                        <CTableBody>
+                          <CTableRow>
+                            <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
+                            <CTableDataCell
+                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              className="text-[1rem] tracking-wider"
+                            >
+                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2  shadow-md rounded-[0.2rem]">
+                                4100
+                              </label>
+                            </CTableDataCell>
+                          </CTableRow>
+
+                          <CTableRow>
+                            <CTableHeaderCell scope="row">Users</CTableHeaderCell>
+                            <CTableDataCell
+                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              className="text-[1rem] tracking-wider"
+                            >
+                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                                932
+                              </label>
+                            </CTableDataCell>
+                          </CTableRow>
+
+                          <CTableRow>
+                            <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
+                            <CTableDataCell
+                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              className="text-[1rem] tracking-wider"
+                            >
+                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                                10
+                              </label>
+                            </CTableDataCell>
+                          </CTableRow>
+
+                          <CTableRow>
+                            <CTableHeaderCell scope="row">Files</CTableHeaderCell>
+                            <CTableDataCell
+                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              className="text-[1rem] tracking-wider"
+                            >
+                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
+                                11
+                              </label>
+                            </CTableDataCell>
+                          </CTableRow>
+                        </CTableBody>
+                      </CTable>
+                    </CCardBody>
+                  </CCard>
+                  <CCardFooter
+                    className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <label></label>
+                    <label
+                      style={{
+                        color: '#1c7ed6',
+                        fontSize: '10px',
+                        fontFamily: 'Big Shoulders Display',
+                      }}
+                      className="tracking-widest text-[0.8rem]"
+                    >
+                      {date}
+                    </label>
+                  </CCardFooter>
+                </CCol>
+              </div>
+            </div>
+
+            <CRow>
+              <CCol xs={12}>
+                <CCard className="mb-4 cardBorder">
+                  {header('GeneralStats')}
+
+                  <CCardBody className="childChartContainer">
+                    <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
+                  </CCardBody>
+                </CCard>
+              </CCol>
+
+              {/* status Information */}
+
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Final')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Last_Call')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Review')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Draft')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Stagnant')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Withdrawn')}</CCol>
+              <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Living')}</CCol>
+
+              <CCol xs={matches ? 12 : 6}>
+                <CCard className="mb-4 cardBorder">
+                  <CCardHeader
+                    className="cardHeader tracking-widest font-bold text-[1.3rem]"
+                    style={{
+                      color: `${coloring('text')}`,
+                      background: `${coloring('back')}`,
+                      borderBottom: '2px solid #74c0fc',
+                      fontFamily: 'Big Shoulders Display',
                     }}
-                    {...configDraftvsFinalCharts(
-                      currentMonthData === undefined ? [] : currentMonthData,
+                  >
+                    Final vs Draft
+                  </CCardHeader>
+                  <CCardBody className="childChartContainer">
+                    {parseInt(
+                      fetchStatusSum(
+                        currentMonthData === undefined ? [] : currentMonthData,
+                        'Draft',
+                      ),
+                    ) === 0 &&
+                    parseInt(
+                      fetchStatusSum(
+                        currentMonthData === undefined ? [] : currentMonthData,
+                        'Final',
+                      ),
+                    ) === 0 ? (
+                      <div
+                        style={{
+                          textAlign: 'center',
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          left: '0',
+                          top: '83px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          color: 'rgba(220, 52, 85, 0.5)',
+                          zIndex: '1',
+                          fontSize: '26px',
+                        }}
+                      >
+                        <b>No data for you today!</b>
+                      </div>
+                    ) : (
+                      ''
                     )}
-                  />
-                </CCardBody>
-              </CCard>
-            </CCol>
-          </CRow>
-        </div>
+                    <Column
+                      style={{
+                        visibility: `${
+                          parseInt(
+                            fetchStatusSum(
+                              currentMonthData === undefined ? [] : currentMonthData,
+                              'Draft',
+                            ),
+                          ) === 0 &&
+                          parseInt(
+                            fetchStatusSum(
+                              currentMonthData === undefined ? [] : currentMonthData,
+                              'Final',
+                            ),
+                          ) === 0
+                            ? 'hidden'
+                            : 'visible'
+                        }`,
+                      }}
+                      {...configDraftvsFinalCharts(
+                        currentMonthData === undefined ? [] : currentMonthData,
+                      )}
+                    />
+                  </CCardBody>
+                </CCard>
+              </CCol>
+            </CRow>
+          </div>
+        )
       ) : (
         <Loading />
       )}

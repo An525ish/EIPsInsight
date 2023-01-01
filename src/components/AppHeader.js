@@ -265,7 +265,7 @@ const AppHeader = (props) => {
             }`}
           >
             <Link
-              to="/december-2022"
+              to={`/${props.Month.toLowerCase()}-${props.Year}`}
               state={{
                 from: `/october`,
                 year: 2022,

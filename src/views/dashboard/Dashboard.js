@@ -360,7 +360,7 @@ const Dashboard = () => {
       xField: 'year',
       yField: 'gdp',
       seriesField: 'name',
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+      color: TypeColors,
       // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
       yAxis: {
         label: {
@@ -487,7 +487,7 @@ const Dashboard = () => {
 
   const yearlyDraftConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -498,7 +498,7 @@ const Dashboard = () => {
   }
   const yearlyFinalConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -509,7 +509,7 @@ const Dashboard = () => {
   }
   const yearlyReviewConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -522,7 +522,7 @@ const Dashboard = () => {
 
   const yearlyLastCallConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -534,7 +534,7 @@ const Dashboard = () => {
 
   const yearlyStagnantConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -545,7 +545,7 @@ const Dashboard = () => {
   }
   const yearlyWithdrawnConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -558,7 +558,7 @@ const Dashboard = () => {
   }
   const yearlyLivingConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -901,21 +901,22 @@ const Dashboard = () => {
 
   // header
   const header = (text) => {
+    text = text === 'Last Call' ? 'Last_Call' : text
     return (
       <CCardHeader
-        className="cardHeader flex"
+        className="cardHeader flex tracking-wider text-[1.3rem] font-bold "
         style={{
-          fontFamily: 'Roboto',
           fontWeight: '800',
           fontSize: '14px',
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontFamily: 'Big Shoulders Display',
         }}
       >
-        {text}
-        {(text === 'EIPs Type & Categories' || text === 'EIPs Status') && (
-          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
+        {text === 'Last_Call' ? 'Last Call' : text}
+        {text === 'EIPs Type & Categories' || text === 'EIPs Status' || text === 'Search an EIP' ? (
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
             {post === undefined
               ? ''
               : post['Core'] +
@@ -924,6 +925,19 @@ const Dashboard = () => {
                 post['Interface'] +
                 post['Meta'] +
                 post['Informational']}
+          </div>
+        ) : (
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
+            {pieChartData === undefined
+              ? 0
+              : pieChartData[text] === undefined
+              ? 0
+              : pieChartData[text]['Standard_Track']['Core'] +
+                pieChartData[text]['Standard_Track']['ERC'] +
+                pieChartData[text]['Standard_Track']['Networking'] +
+                pieChartData[text]['Standard_Track']['Interface'] +
+                pieChartData[text]['Meta'] +
+                pieChartData[text]['Informational']}
           </div>
         )}
       </CCardHeader>
@@ -943,7 +957,16 @@ const Dashboard = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        <label style={{ fontSize: '10px', color: `${getBadgeColor(text)}` }}>{date}</label>
+        <label
+          style={{
+            fontSize: '10px',
+            color: `${getBadgeColor(text)}`,
+            fontFamily: 'Big Shoulders Display',
+          }}
+          className="tracking-widest text-[0.7rem]"
+        >
+          {date}
+        </label>
       </CCardFooter>
     )
   }

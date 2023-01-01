@@ -70,7 +70,8 @@
     "redux": "4.2.0",
     "rehype-raw": "^6.1.1",
     "remark-gfm": "^3.0.1",
-    "simplebar-react": "^2.3.7"
+    "simplebar-react": "^2.3.7",
+    "swr": "^2.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

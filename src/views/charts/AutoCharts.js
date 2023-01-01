@@ -687,11 +687,12 @@ const autoCharts = (props) => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader flex"
+        className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontFamily: 'Big Shoulders Display',
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
@@ -1024,7 +1025,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 </div>
               </div>
             </div>
-            (
+
             <CRow>
               <CCol xs={matches ? 12 : 6}>
                 <div className="p-2">
@@ -1300,11 +1301,12 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
               <CCol xs={matches ? 12 : 6}>
                 <CCard className="mb-4 cardBorder">
                   <CCardHeader
-                    className="cardHeader"
+                    className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
                     style={{
                       color: `${coloring('text')}`,
                       background: `${coloring('back')}`,
                       borderBottom: '2px solid #74c0fc',
+                      fontFamily: 'Big Shoulders Display',
                     }}
                   >
                     Final vs Draft

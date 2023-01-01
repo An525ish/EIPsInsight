@@ -668,11 +668,12 @@ const oldCharts = (props) => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader flex"
+        className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontFamily: 'Big Shoulders Display',
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
@@ -681,7 +682,7 @@ const oldCharts = (props) => {
             {text === 'GeneralStats' ? (
               ''
             ) : (
-              <label style={{ fontWeight: '700' }}>
+              <label className="font-bold text-[1rem]">
                 {fetchStatusData(AllData === undefined ? [] : AllData, text)[1][0]}
               </label>
             )}
@@ -787,9 +788,10 @@ const oldCharts = (props) => {
 
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
+                  fontFamily: 'Big Shoulders Display',
                 }}
                 className={`githubIcon h-7
-            shadow-md font-extrabold rounded-[8px]  text-[12px] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer`}
+            shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
                 state={{
                   type: '',
                   status: name,
@@ -933,10 +935,10 @@ const oldCharts = (props) => {
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                        <CTableHeaderCell scope="col" style={{ width: '82%' }}>
                           Status
                         </CTableHeaderCell>
-                        <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                        <CTableHeaderCell scope="col" style={{ width: '18%' }}>
                           Number
                         </CTableHeaderCell>
                       </CTableRow>
@@ -974,9 +976,18 @@ const oldCharts = (props) => {
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                    *Click to see more
+                    * Click to see more
                   </label>
-                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                  <label
+                    style={{
+                      color: '#1c7ed6',
+                      fontSize: '10px',
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                    className="tracking-wider text-[0.8rem]"
+                  >
+                    {date}
+                  </label>
                 </CCardFooter>
               </CCard>
             </div>
@@ -1152,11 +1163,12 @@ const oldCharts = (props) => {
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <CCardHeader
-                  className="cardHeader"
+                  className="cardHeader flex tracking-widest font-bold text-[1.3rem]"
                   style={{
                     color: `${coloring('text')}`,
                     background: `${coloring('back')}`,
                     borderBottom: '2px solid #74c0fc',
+                    fontFamily: 'Big Shoulders Display',
                   }}
                 >
                   Final vs Draft
