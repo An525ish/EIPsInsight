@@ -868,7 +868,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
       <CCard className="mb-4 cardBorder shadow-md">
         <Link
           to="/chartTable"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
             type: '',
             status: status,

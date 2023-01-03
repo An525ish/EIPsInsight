@@ -79,11 +79,12 @@ const CurrentMonth = () => {
   }
 
   const fetchCurrentMonthData = async () => {
-    const response = await fetch(
-      `${ip}/currentMonth/${param['*'].split('-')[1]}/${param['*'].split('-')[0]}`,
-    )
+    console.log('api fetch')
+    const monthName = param['*'].split('-')[0][0].toUpperCase() + param['*'].split('-')[0].slice(1)
+    const response = await fetch(`${ip}/currentMonth/${param['*'].split('-')[1]}/${monthName}`)
 
-    const data = await response.json()
+    let data = await response.json()
+
     console.log(data)
     setCurrentMonthData(data)
     setLoading(true)
@@ -769,7 +770,7 @@ const CurrentMonth = () => {
       <CCard className="mb-4 cardBorder">
         <Link
           to="/currentMonthTable"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
             type: '',
             status: name,
@@ -829,7 +830,7 @@ const CurrentMonth = () => {
       setClick2Function(false)
       setClick3Function(false)
     }
-    fetchCurrentMonthData()
+    for (let i = 0; i < 2; i++) fetchCurrentMonthData()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
 
@@ -972,7 +973,7 @@ const CurrentMonth = () => {
                   </CCardFooter>
                 </CCard>
               </div>
-              <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+              {/* <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
                 <CCol xs={12} className="mb-4">
                   <CCard>
                     <CCardBody
@@ -1073,11 +1074,11 @@ const CurrentMonth = () => {
                     </label>
                   </CCardFooter>
                 </CCol>
-              </div>
+              </div> */}
             </div>
 
             <CRow>
-              <CCol xs={12}>
+              {/* <CCol xs={12}>
                 <CCard className="mb-4 cardBorder">
                   {header('GeneralStats')}
 
@@ -1085,7 +1086,7 @@ const CurrentMonth = () => {
                     <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
                   </CCardBody>
                 </CCard>
-              </CCol>
+              </CCol> */}
 
               {/* status Information */}
 

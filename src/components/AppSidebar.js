@@ -208,8 +208,9 @@ const AppSidebar = (props) => {
     routes.push(currentMonthsObjects)
 
     allYears = allYears.filter((ele) => {
-      return ele !== props.Year
+      return ele !== props.Year && !isNaN(ele)
     })
+
     console.log(allYears)
     // past years
     for (let j = 0; j < allYears.length; j++) {

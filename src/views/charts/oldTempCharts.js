@@ -525,6 +525,7 @@ const oldCharts = (props) => {
     let res = []
     res.push(statusData)
     res.push(findArr)
+    console.log(res)
     console.log(statusName + ' ' + findArr)
     return res
   }
@@ -833,7 +834,7 @@ const oldCharts = (props) => {
       <CCard className="mb-4 cardBorder">
         <Link
           to="/chartTable"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
             type: '',
             status: status,
