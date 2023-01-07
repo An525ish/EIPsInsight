@@ -437,7 +437,11 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
+<<<<<<< HEAD
               <CCard className='type-card-container'>
+=======
+              <CCard className="shadow-sm">
+>>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                 <CCardBody
                 >
                   <Pie
@@ -831,7 +835,13 @@ function typeAll() {
                   state={{ type: 'Informational', status: '', category: '', name: 'Informational' }}
                 >
                   <div
+<<<<<<< HEAD
                     className='type-heading-number'
+=======
+                    className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                    style={{ fontFamily: 'Big Shoulders Display' }}
+>>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                   >
                     {getMetaAndInformational('Informational')}
                   </div>
@@ -841,7 +851,11 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
+<<<<<<< HEAD
               <CCard className='type-card-container'>
+=======
+              <CCard className="shadow-sm">
+>>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                 <CCardBody
                   style={{
                     height: '300px',
@@ -867,7 +881,11 @@ function typeAll() {
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
+<<<<<<< HEAD
               <CCard className='type-card-container'>
+=======
+              <CCard className="shadow-sm">
+>>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                 <CCardBody
                   style={{
                     height: '300px',

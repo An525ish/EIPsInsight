@@ -20,7 +20,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
 import './status.css'
-import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
+import { faLeftLong, faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
 import { TypeColors } from 'src/constants'
 

@@ -3,6 +3,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
+import { CSmartTable } from '@coreui/react-pro'
 import { motion } from 'framer-motion'
 import {
   CAvatar,
@@ -896,14 +897,14 @@ const Dashboard = () => {
   const footer = (date, text) => {
     return (
       <CCardFooter
-        className="cardFooter"
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          color: `black`,
-          background: `white`,
-          borderBottom: `none`,
-        }}
+      className="cardFooter"
+      style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        color: `black`,
+        background: `white`,
+        borderBottom: `none`,
+      }}
       >
         <label style={{ fontSize: '10px', color: `${getBadgeColor(text)}` }}>{date}</label>
       </CCardFooter>
@@ -1074,6 +1075,7 @@ const Dashboard = () => {
   }, [])
 
   // temparary
+  console.log({ AllData })
 
   const [insight,setInsight]=useState(1);
 
