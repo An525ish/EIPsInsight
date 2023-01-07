@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
-import { CSmartTable } from '@coreui/react-pro'
+
 import { motion } from 'framer-motion'
 import {
   CAvatar,
@@ -897,14 +897,14 @@ const Dashboard = () => {
   const footer = (date, text) => {
     return (
       <CCardFooter
-      className="cardFooter"
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        color: `black`,
-        background: `white`,
-        borderBottom: `none`,
-      }}
+        className="cardFooter"
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          color: `black`,
+          background: `white`,
+          borderBottom: `none`,
+        }}
       >
         <label style={{ fontSize: '10px', color: `${getBadgeColor(text)}` }}>{date}</label>
       </CCardFooter>
@@ -1077,8 +1077,7 @@ const Dashboard = () => {
   // temparary
   console.log({ AllData })
 
-  const [insight,setInsight]=useState(1);
-
+  const [insight, setInsight] = useState(1)
 
   return (
     <div>
@@ -1123,7 +1122,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className='card-container'>
+              <CCard className="card-container">
                 <Link to="/EIPS">{header('Search an EIP')}</Link>
                 <CCardBody
                   style={{
@@ -1370,156 +1369,168 @@ const Dashboard = () => {
           </CRow>
 
           <div className="chart-heading-container">
-            <button className={insight==1?"chart-heading-active":"chart-heading"} onClick={() => setInsight(1)}>Insights</button>
-            <button className={insight==0?"chart-heading-active":"chart-heading"} onClick={() => setInsight(0)}>Yearly Insights</button>
+            <button
+              className={insight == 1 ? 'chart-heading-active' : 'chart-heading'}
+              onClick={() => setInsight(1)}
+            >
+              Insights
+            </button>
+            <button
+              className={insight == 0 ? 'chart-heading-active' : 'chart-heading'}
+              onClick={() => setInsight(0)}
+            >
+              Yearly Insights
+            </button>
           </div>
-          {insight===1? (<CRow>
-            <CCol xs={12} className="mb-4"></CCol>
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Living')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    border: 'none'
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Living', data)} />
-                </CCardBody>
-                {footer(date, 'Living')}
-              </CCard>
-            </CCol>
+          {insight === 1 ? (
+            <CRow>
+              <CCol xs={12} className="mb-4"></CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Living')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      border: 'none',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Living', data)} />
+                  </CCardBody>
+                  {footer(date, 'Living')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Final')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Final', data)} />
-                </CCardBody>
-                {footer(date, 'Final')}
-              </CCard>
-            </CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Final')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Final', data)} />
+                  </CCardBody>
+                  {footer(date, 'Final')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Last Call')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('LastCall', data)} />
-                </CCardBody>
-                {footer(date, 'Last_Call')}
-              </CCard>
-            </CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Last Call')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('LastCall', data)} />
+                  </CCardBody>
+                  {footer(date, 'Last_Call')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Review')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Review', data)} />
-                </CCardBody>
-                {footer(date, 'Review')}
-              </CCard>
-            </CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Review')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Review', data)} />
+                  </CCardBody>
+                  {footer(date, 'Review')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Draft')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Draft', data)} />
-                </CCardBody>
-                {footer(date, 'Draft')}
-              </CCard>
-            </CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Draft')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Draft', data)} />
+                  </CCardBody>
+                  {footer(date, 'Draft')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Stagnant')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Stagnant', data)} />
-                </CCardBody>
-                {footer(date, 'Stagnant')}
-              </CCard>
-            </CCol>
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Stagnant')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Stagnant', data)} />
+                  </CCardBody>
+                  {footer(date, 'Stagnant')}
+                </CCard>
+              </CCol>
 
-            <CCol xs={12}>
-              <CCard className="card-container">
-                {header('Withdrawn')}
-                <CCardBody
-                  style={{
-                    // backgroundColor: '#fff9db',
-                    height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
-                  }}
-                >
-                  <Line {...monthlyStatusConfig('Withdrawn', data)} />
-                </CCardBody>
-                {footer(date, 'Withdrawn')}
-              </CCard>
-            </CCol>
-          </CRow>):(
-          <CRow>
-            {/* Yearly Insights */}
-            {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
-            {yearlyInsights(4, 'Final', yearlyFinalConfig)}
-            {yearlyInsights(4, 'Review', yearlyReviewConfig)}
-            {yearlyInsights(6, 'Last Call', yearlyLastCallConfig)}
-            {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
-            {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
-            {yearlyInsights(6, 'Living', yearlyLivingConfig)}
-          </CRow>)
-      }
+              <CCol xs={12}>
+                <CCard className="card-container">
+                  {header('Withdrawn')}
+                  <CCardBody
+                    style={{
+                      // backgroundColor: '#fff9db',
+                      height: '300px',
+                      // backgroundImage: `url(${github})`,
+                      // backgroundSize: '33% 30%',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundPosition: 'right -12px bottom -40px',
+                    }}
+                  >
+                    <Line {...monthlyStatusConfig('Withdrawn', data)} />
+                  </CCardBody>
+                  {footer(date, 'Withdrawn')}
+                </CCard>
+              </CCol>
+            </CRow>
+          ) : (
+            <CRow>
+              {/* Yearly Insights */}
+              {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
+              {yearlyInsights(4, 'Final', yearlyFinalConfig)}
+              {yearlyInsights(4, 'Review', yearlyReviewConfig)}
+              {yearlyInsights(6, 'Last Call', yearlyLastCallConfig)}
+              {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
+              {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
+              {yearlyInsights(6, 'Living', yearlyLivingConfig)}
+            </CRow>
+          )}
         </div>
       ) : (
         <Loading />

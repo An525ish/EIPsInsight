@@ -20,7 +20,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
 import './status.css'
-import { faLeftLong, faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
+import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
 import { TypeColors } from 'src/constants'
 
@@ -196,7 +196,7 @@ function statusAll(props) {
   const customTableChart = (name, title) => {
     return (
       <>
-        <div className='status-heading'>
+        <div className="status-heading">
           {title}{' '}
           <label
             style={{
@@ -209,16 +209,14 @@ function statusAll(props) {
               style={{ textDecoration: 'none', color: 'inherit' }}
               state={{ type: '', status: title, category: '', name: `${title}` }}
             >
-              <div className='status-heading-number'>
-                {totalData(name)}
-              </div>
+              <div className="status-heading-number">{totalData(name)}</div>
             </Link>
           </label>
         </div>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
-            <CCard className='status-card-container'>
-              <CCardBody style={{height:"300px"}}>
+            <CCard className="status-card-container">
+              <CCardBody style={{ height: '300px' }}>
                 <Column {...fetchChartData(name)} />
               </CCardBody>
               <CCardFooter
@@ -226,7 +224,7 @@ function statusAll(props) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  backgroundColor: 'white'
+                  backgroundColor: 'white',
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>
@@ -234,7 +232,7 @@ function statusAll(props) {
             </CCard>
           </CCol>
           <CCol xs={matches ? 12 : 6}>
-            <CCard  className='status-card-container'>
+            <CCard className="status-card-container">
               <CCardBody
                 style={{
                   overflowX: 'auto',
@@ -502,7 +500,7 @@ function statusAll(props) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  backgroundColor: 'white'
+                  backgroundColor: 'white',
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>

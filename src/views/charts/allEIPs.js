@@ -307,7 +307,7 @@ const AllEIPs = () => {
   }, [])
   return (
     <>
-      <CCard className='alleip-card-container'>
+      <CCard className="alleip-card-container">
         {header('All EIPs')}
         <CCardBody
           style={{

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
-import { Link, NavLink, useParams, useNavigate} from 'react-router-dom'
+import { Link, NavLink, useParams, useNavigate } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
 import {

@@ -44,6 +44,7 @@ import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
 import { object } from 'prop-types'
 import SidebarMenuYear from './sideBarMenuYear'
+import { v4 as uuid } from 'uuid'
 
 // sidebar nav config
 // import navigation from '../_nav'
@@ -53,20 +54,26 @@ const routes = [
     path: '/resources',
     name: 'Resources',
     icon: cilSpeedometer,
-
+    id: uuid(),
     exact: true,
     subRoutes: [
       {
         path: 'https://youtu.be/AyidVR6X6J8',
         name: 'EIPs & Standardization Process',
+        focus: false,
+        id: uuid(),
       },
       {
         path: 'https://medium.com/ethereum-cat-herders/shedding-light-on-the-ethereum-network-upgrade-process-4c6186ed442c',
         name: 'Ethereum Network Upgrade Process',
+        focus: false,
+        id: uuid(),
       },
       {
         path: 'https://youtu.be/fwxkbUaa92w',
         name: 'EIP-20: Token Standard',
+        focus: false,
+        id: uuid(),
       },
     ],
   },
@@ -161,6 +168,7 @@ const AppSidebar = (props) => {
       path: '/',
       name: 'Dashboard',
       icon: cilSpeedometer,
+      id: uuid(),
     })
 
     // for app version
@@ -188,12 +196,15 @@ const AppSidebar = (props) => {
     currentMonthsObjects.path = `/${props.Year}`
     currentMonthsObjects.name = props.Year
     currentMonthsObjects.icon = cilChart
+    currentMonthsObjects.id = uuid()
     currentMonthsObjects.exact = true
     currentMonthsObjects.subRoutes = []
 
     currentMonthsObjects.subRoutes.push({
       path: `/${props.Month.toLowerCase()}-${props.Year}`,
       name: `${props.Month}`,
+      focus: false,
+      id: uuid(),
     })
 
     let lastCurrentIndex = date.getMonth()
@@ -202,6 +213,8 @@ const AppSidebar = (props) => {
       currentMonthsObjects.subRoutes.push({
         path: `/${months[i].toLowerCase()}-${props.Year}`,
         name: `${months[i]}`,
+        focus: false,
+        id: uuid(),
       })
     }
 
@@ -219,7 +232,7 @@ const AppSidebar = (props) => {
       objYear.path = `/${allYears[j]}`
       objYear.name = allYears[j]
       objYear.icon = cilChart
-
+      objYear.id = uuid()
       objYear.exact = true
       objYear.subRoutes = []
 
@@ -228,6 +241,8 @@ const AppSidebar = (props) => {
           objYear.subRoutes.push({
             path: `/${months[i].toLowerCase()}-${allYears[j]}`,
             name: `${months[i]}`,
+            focus: false,
+            id: uuid(),
           })
         }
       } else {
@@ -236,12 +251,16 @@ const AppSidebar = (props) => {
             objYear.subRoutes.push({
               path: `/${months[i].toLowerCase()}-${allYears[j]}`,
               name: `${months[i]}`,
+              focus: false,
+              id: uuid(),
             })
           }
           for (let i = 6; i >= 0; i--) {
             objYear.subRoutes.push({
               path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
               name: `${months[i]}`,
+              focus: false,
+              id: uuid(),
             })
           }
         } else {
@@ -249,6 +268,8 @@ const AppSidebar = (props) => {
             objYear.subRoutes.push({
               path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
               name: `${months[i]}`,
+              focus: false,
+              id: uuid(),
             })
           }
         }
@@ -328,10 +349,10 @@ const AppSidebar = (props) => {
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
-      style={{ backgroundColor: '#ffff', width: "16%" }}
+      style={{ backgroundColor: '#ffff', width: '16%' }}
       className="scrollbarDesign"
     >
-      <CSidebarBrand style={{ backgroundColor: "black" }} className="" to="/">
+      <CSidebarBrand style={{ backgroundColor: 'black' }} className="" to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <div className="logoDesign"></div>
         </Link>
@@ -345,48 +366,54 @@ const AppSidebar = (props) => {
             {routeDashboard === undefined
               ? ''
               : routeDashboard.map((route, index) => {
-                if (route.subRoutes) {
-                  return (
-                    <SidebarMenuYear
-                      setIsOpen={setIsOpen}
-                      route={route}
-                      showAnimation={showAnimation}
-                      isOpen={isOpen}
-                    />
-                  )
-                }
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenuYear
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                        allRoutes={routeDashboard}
+                      />
+                    )
+                  }
 
-                return (
-                  <motion.div
-                    key={index}
-                    className='flex p-2 pl-4 items-center w-full hover:text-[#00000] rounded-[13px] cursor-pointer'
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => setMainOpen(true)}
-                  >
-                    <CIcon
-                      icon={cilSpeedometer}
-                      style={{ color: 'black' }}
-                      customClassName="nav-icon"
-                    />
-                    <NavLink to={route.path} key={index} activeClassName="active">
-                      <AnimatePresence>
-                        (
-                        <motion.div
-                          variants={showAnimation}
-                          initial="hidden"
-                          animate="show"
-                          exit="hidden"
-                          className={`text-[17px] ${param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
+                  return (
+                    <motion.div
+                      key={index}
+                      className={`flex p-2 pl-4 items-center w-full 
+                      ${param['*'] === '' ? 'border-black border-b-2 ' : ''}
+                         ${
+                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
+                         } rounded-[13px] cursor-pointer `}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setMainOpen(true)}
+                    >
+                      <CIcon
+                        icon={cilSpeedometer}
+                        style={{ color: `${param['*'] === '' ? 'black' : '#adb5bd'}` }}
+                        customClassName="nav-icon"
+                      />
+                      <NavLink to={route.path} key={index} activeClassName="active">
+                        <AnimatePresence>
+                          (
+                          <motion.div
+                            variants={showAnimation}
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            className={`text-[17px] ${
+                              param['*'] === '' ? 'text-black ' : 'text-[#adb5bd]'
                             }  pr-16`}
-                        >
-                          {route.name}
-                        </motion.div>
-                        )
-                      </AnimatePresence>
-                    </NavLink>
-                  </motion.div>
-                )
-              })}
+                          >
+                            {route.name}
+                          </motion.div>
+                          )
+                        </AnimatePresence>
+                      </NavLink>
+                    </motion.div>
+                  )
+                })}
           </section>
         </motion.div>
 
@@ -395,47 +422,48 @@ const AppSidebar = (props) => {
             {routeDashboard === undefined
               ? ''
               : routes.map((route, index) => {
-                if (route.subRoutes) {
-                  return (
-                    <SidebarMenuYear
-                      setIsOpen={setIsOpen}
-                      route={route}
-                      showAnimation={showAnimation}
-                      isOpen={isOpen}
-                    />
-                  )
-                }
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenuYear
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                        allRoutes={routes}
+                      />
+                    )
+                  }
 
-                return (
-                  <motion.div
-                    key={index}
-                    className='flex p-2 pl-4 items-center w-full hover:text-[#00000] rounded-[13px] cursor-pointer'
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => setMainOpen(true)}
-                  >
-                    <CIcon
-                      icon={cilSpeedometer}
-                      style={{ color: 'black' }}
-                      customClassName="nav-icon"
-                    />
-                    <NavLink to={route.path} key={index} activeClassName="active">
-                      <AnimatePresence>
-                        (
-                        <motion.div
-                          variants={showAnimation}
-                          initial="hidden"
-                          animate="show"
-                          exit="hidden"
-                          className='text-[17px] text-[#000000] pr-16'
-                        >
-                          {route.name}
-                        </motion.div>
-                        )
-                      </AnimatePresence>
-                    </NavLink>
-                  </motion.div>
-                )
-              })}
+                  return (
+                    <motion.div
+                      key={index}
+                      className="flex p-2 pl-4 items-center w-full hover:text-[#00000] rounded-[13px] cursor-pointer"
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setMainOpen(true)}
+                    >
+                      <CIcon
+                        icon={cilSpeedometer}
+                        style={{ color: 'black' }}
+                        customClassName="nav-icon"
+                      />
+                      <NavLink to={route.path} key={index} activeClassName="active">
+                        <AnimatePresence>
+                          (
+                          <motion.div
+                            variants={showAnimation}
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            className="text-[17px] text-[#000000] pr-16"
+                          >
+                            {route.name}
+                          </motion.div>
+                          )
+                        </AnimatePresence>
+                      </NavLink>
+                    </motion.div>
+                  )
+                })}
           </section>
         </motion.div>
 
@@ -444,48 +472,52 @@ const AppSidebar = (props) => {
             {routesPastYears === undefined
               ? ''
               : routesPastYears.map((route, index) => {
-                if (route.subRoutes) {
-                  return (
-                    <SidebarMenuYear
-                      setIsOpen={setIsOpen}
-                      route={route}
-                      showAnimation={showAnimation}
-                      isOpen={isOpen}
-                    />
-                  )
-                }
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenuYear
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                        allRoutes={routesPastYears}
+                      />
+                    )
+                  }
 
-                return (
-                  <motion.div
-                    key={index}
-                    className={`flex p-2 pl-4 items-center w-full ${param['*'] !== '' ? ' hover:text-[black]' : ' '} rounded-[13px] cursor-pointer `}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => setMainOpen(true)}
-                  >
-                    <CIcon
-                      icon={cilSpeedometer}
-                      style={{ color: `${param['*'] === '' ? '#000000' : '#adb5bd'}` }}
-                      customClassName="nav-icon"
-                    />
-                    <NavLink to={route.path} key={index} activeClassName="active">
-                      <AnimatePresence>
-                        (
-                        <motion.div
-                          variants={showAnimation}
-                          initial="hidden"
-                          animate="show"
-                          exit="hidden"
-                          className={`text-[17px] ${param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
+                  return (
+                    <motion.div
+                      key={index}
+                      className={`flex p-2 pl-4 items-center w-full ${
+                        param['*'] !== '' ? ' hover:text-[black]' : ' '
+                      } rounded-[13px] cursor-pointer `}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setMainOpen(true)}
+                    >
+                      <CIcon
+                        icon={cilSpeedometer}
+                        style={{ color: `${param['*'] === '' ? '#000000' : '#adb5bd'}` }}
+                        customClassName="nav-icon"
+                      />
+                      <NavLink to={route.path} key={index} activeClassName="active">
+                        <AnimatePresence>
+                          (
+                          <motion.div
+                            variants={showAnimation}
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            className={`text-[17px] ${
+                              param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
                             }  pr-16`}
-                        >
-                          {route.name}
-                        </motion.div>
-                        )
-                      </AnimatePresence>
-                    </NavLink>
-                  </motion.div>
-                )
-              })}
+                          >
+                            {route.name}
+                          </motion.div>
+                          )
+                        </AnimatePresence>
+                      </NavLink>
+                    </motion.div>
+                  )
+                })}
           </section>
         </motion.div>
       </CSidebarNav>

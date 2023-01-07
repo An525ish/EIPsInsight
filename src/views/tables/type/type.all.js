@@ -110,8 +110,9 @@ function typeAll() {
     }
 
     const textStyleStr = `width:${containerWidth}px;`
-    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'
-      };">${text}</div>`
+    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
+      scale < 1 ? 1 : 'inherit'
+    };">${text}</div>`
   }
 
   const fetchChartData = (post, name) => {
@@ -175,8 +176,8 @@ function typeAll() {
     return post.length === 0
       ? 0
       : post['Final']['Standard_Track'] === undefined
-        ? 0
-        : post['Final']['Standard_Track'][name] +
+      ? 0
+      : post['Final']['Standard_Track'][name] +
         post['Draft']['Standard_Track'][name] +
         post['Review']['Standard_Track'][name] +
         post['Last_Call']['Standard_Track'][name] +
@@ -190,12 +191,12 @@ function typeAll() {
     return post === undefined
       ? 0
       : fetchTableDataExtra(post === undefined ? [] : post, name, 'Living') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
-      fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
+          fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
   }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
@@ -417,33 +418,28 @@ function typeAll() {
                   {post === undefined
                     ? 0
                     : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
-                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
-                    fetchTableData(
-                      post === undefined ? [] : post,
-                      'Standard_Track',
-                      'Withdrawn',
-                    ) +
-                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
-                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
-                    fetchTableData(
-                      post === undefined ? [] : post,
-                      'Standard_Track',
-                      'Last_Call',
-                    ) +
-                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
+                      fetchTableData(
+                        post === undefined ? [] : post,
+                        'Standard_Track',
+                        'Withdrawn',
+                      ) +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
+                      fetchTableData(
+                        post === undefined ? [] : post,
+                        'Standard_Track',
+                        'Last_Call',
+                      ) +
+                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
                 </div>
               </Link>
             </label>
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-<<<<<<< HEAD
-              <CCard className='type-card-container'>
-=======
               <CCard className="shadow-sm">
->>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
-                <CCardBody
-                >
+                <CCardBody>
                   <Pie
                     {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
                     style={{ height: '280px' }}
@@ -462,7 +458,7 @@ function typeAll() {
               </CCard>
             </CCol>
             <CCol xs={matches ? 12 : 6}>
-              <CCard className='type-card-container'>
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     overflowX: 'auto',
@@ -479,9 +475,15 @@ function typeAll() {
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">Type-Category</CTableHeaderCell>
-                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">no. of EIPs</CTableHeaderCell>
-                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">%</CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          Type-Category
+                        </CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          no. of EIPs
+                        </CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          %
+                        </CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -781,7 +783,7 @@ function typeAll() {
               }}
               className="shadow-md"
             >
-            {/* <div className='type-heading'> */}
+              {/* <div className='type-heading'> */}
               Meta{' '}
               <label
                 style={{
@@ -835,13 +837,9 @@ function typeAll() {
                   state={{ type: 'Informational', status: '', category: '', name: 'Informational' }}
                 >
                   <div
-<<<<<<< HEAD
-                    className='type-heading-number'
-=======
                     className='className="h-7
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
->>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                   >
                     {getMetaAndInformational('Informational')}
                   </div>
@@ -851,11 +849,7 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-<<<<<<< HEAD
-              <CCard className='type-card-container'>
-=======
               <CCard className="shadow-sm">
->>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                 <CCardBody
                   style={{
                     height: '300px',
@@ -881,11 +875,7 @@ function typeAll() {
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-<<<<<<< HEAD
-              <CCard className='type-card-container'>
-=======
               <CCard className="shadow-sm">
->>>>>>> ffebc36911845f6183ee63c04c86c95d3155e009
                 <CCardBody
                   style={{
                     height: '300px',
