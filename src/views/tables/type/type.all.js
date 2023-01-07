@@ -109,9 +109,8 @@ function typeAll() {
     }
 
     const textStyleStr = `width:${containerWidth}px;`
-    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
-      scale < 1 ? 1 : 'inherit'
-    };">${text}</div>`
+    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'
+      };">${text}</div>`
   }
 
   const fetchChartData = (post, name) => {
@@ -174,8 +173,8 @@ function typeAll() {
     return post.length === 0
       ? 0
       : post['Final']['Standard_Track'] === undefined
-      ? 0
-      : post['Final']['Standard_Track'][name] +
+        ? 0
+        : post['Final']['Standard_Track'][name] +
         post['Draft']['Standard_Track'][name] +
         post['Review']['Standard_Track'][name] +
         post['Last_Call']['Standard_Track'][name] +
@@ -189,12 +188,12 @@ function typeAll() {
     return post === undefined
       ? 0
       : fetchTableDataExtra(post === undefined ? [] : post, name, 'Living') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
   }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
@@ -290,7 +289,7 @@ function typeAll() {
       case 'text':
         return '#1c7ed6'
       case 'back':
-        return '#e7f5ff'
+        return '#ffffff'
       default:
         return '#e7f5ff'
     }
@@ -324,20 +323,7 @@ function typeAll() {
     <>
       {loading ? (
         <div>
-          <div
-            style={{
-              fontSize: '30px',
-              fontWeight: '400',
-              marginBottom: '00px',
-              backgroundColor: 'white',
-              border: 'none',
-              width: '18rem',
-              padding: '10px',
-              borderRadius: '5px',
-              borderLeft: '4px solid #339af0',
-              borderBottom: '2px solid #339af0',
-            }}
-          >
+          <div className='type-heading'>
             Standard Track{' '}
             <label
               style={{
@@ -356,39 +342,33 @@ function typeAll() {
                 }}
               >
                 <div
-                  className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                  className='type-heading-number'
                 >
                   {post === undefined
                     ? 0
                     : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
-                      fetchTableData(
-                        post === undefined ? [] : post,
-                        'Standard_Track',
-                        'Withdrawn',
-                      ) +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
-                      fetchTableData(
-                        post === undefined ? [] : post,
-                        'Standard_Track',
-                        'Last_Call',
-                      ) +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
+                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
+                    fetchTableData(
+                      post === undefined ? [] : post,
+                      'Standard_Track',
+                      'Withdrawn',
+                    ) +
+                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
+                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
+                    fetchTableData(
+                      post === undefined ? [] : post,
+                      'Standard_Track',
+                      'Last_Call',
+                    ) +
+                    fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
                 </div>
               </Link>
             </label>
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className='type-card-container'>
                 <CCardBody
-                  style={{
-                    height: '300px',
-
-                    borderLeft: '2px solid #74c0fc',
-                  }}
                 >
                   <Pie
                     {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
@@ -400,17 +380,15 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderLeft: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className='type-card-container'>
                 <CCardBody
                   style={{
                     overflowX: 'auto',
@@ -427,9 +405,9 @@ function typeAll() {
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col">Type-Category</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">%</CTableHeaderCell>
+                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">Type-Category</CTableHeaderCell>
+                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">no. of EIPs</CTableHeaderCell>
+                        <CTableHeaderCell style={{fontSize:"16px"}} scope="col">%</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -447,7 +425,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Core
                             </div>
@@ -457,7 +435,7 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Core')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label className="font-[800] text[20px]">
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Core') /
                                 totalEIPs()) *
@@ -481,7 +459,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - ERC
                             </div>
@@ -515,7 +493,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Networking
                             </div>
@@ -549,7 +527,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Interface
                             </div>
@@ -583,7 +561,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Meta
                             </div>
@@ -610,7 +588,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Informational
                             </div>
@@ -635,32 +613,16 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderRight: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
           </CRow>
           <div className="flex justify-between">
-            <div
-              style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-                display: 'inline-block',
-                padding: '12px',
-                borderRadius: '5px',
-                borderLeft: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
-              }}
-            >
+            <div className='type-heading'>
               Meta{' '}
               <label
                 style={{
@@ -674,30 +636,14 @@ function typeAll() {
                   state={{ type: 'Meta', status: '', category: '', name: 'Meta' }}
                 >
                   <div
-                    className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                    className='type-heading-number'
                   >
                     {getMetaAndInformational('Meta')}
                   </div>
                 </Link>
               </label>
             </div>
-            <div
-              style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-
-                padding: '12px',
-                display: 'inline-block',
-                borderRadius: '5px',
-                borderRight: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
-              }}
-            >
+            <div className='type-heading'>
               Informational{' '}
               <label
                 style={{
@@ -711,8 +657,7 @@ function typeAll() {
                   state={{ type: 'Informational', status: '', category: '', name: 'Informational' }}
                 >
                   <div
-                    className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                    className='type-heading-number'
                   >
                     {getMetaAndInformational('Informational')}
                   </div>
@@ -722,11 +667,10 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className='type-card-container'>
                 <CCardBody
                   style={{
                     height: '300px',
-                    borderLeft: '2px solid #74c0fc',
                   }}
                 >
                   <Pie
@@ -740,22 +684,19 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderLeft: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className='type-card-container'>
                 <CCardBody
                   style={{
                     height: '300px',
-                    borderRight: '2px solid #74c0fc',
                   }}
                 >
                   <Pie
@@ -769,12 +710,10 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderRight: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>

@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
-import { Link, NavLink, useParams } from 'react-router-dom'
+import { Link, NavLink, useParams, useNavigate} from 'react-router-dom'
+
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -12,7 +13,6 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
-  CTooltip,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cibDiscord, cibGithub, cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
@@ -33,6 +33,8 @@ import { useUserAuth } from 'src/Context/AuthContext'
 import { ip } from 'src/constants'
 import { ResponsiveStream } from 'nivo/lib/components/charts/stream'
 import useMediaQuery from 'src/scss/useMediaQuery'
+
+import back from 'src/assets/back.png'
 
 const AppHeader = (props) => {
   const [changeIcon, setChangeIcon] = useState(0)
@@ -59,6 +61,7 @@ const AppHeader = (props) => {
 
   const [data, setData] = useState()
   const [years, setYears] = useState()
+  const [par, isPar] = useState()
 
   const months = [
     'January',
@@ -181,22 +184,31 @@ const AppHeader = (props) => {
     fetchPostI()
   }, [])
 
+  const navigate = useNavigate()
+
   return (
-    <CHeader position="sticky" className="mb-4">
+    <CHeader
+      position="sticky"
+      className={`navbar-container ${changeIcon ? 'margin-close' : 'margin-open'}`}
+    >
       <CContainer fluid>
         <CHeaderToggler
-          className="ps-1  flex items-center justify-center"
           onClick={() => {
             dispatch({ type: 'set', sidebarShow: !sidebarShow })
             changeIconSet()
           }}
         >
-          <img
-            src={changeIcon ? (matches ? midIcon : rightIcon) : matches ? midIcon : leftIcon}
-            alt=""
+          <svg
+            className="svg-file"
             onClick={() => changeIconSet()}
-            className={`${changeIcon && 'rotate-[360deg]'} `}
-          />
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {changeIcon ? (
+              <path d="M6 36v-3h26v3Zm33.9-2.6-9.45-9.45 9.4-9.4L42 16.7l-7.25 7.25 7.3 7.3ZM6 25.4v-3h20v3ZM6 15v-3h26v3Z" />
+            ) : (
+              <path d="M6 36v-3h36v3Zm0-10.5v-3h36v3ZM6 15v-3h36v3Z" />
+            )}
+          </svg>
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none">
           <img
@@ -208,59 +220,37 @@ const AppHeader = (props) => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem
-            className={`headerSection ${
+            className={`navbar-items ${
               click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <Link
-              to="/EIPS"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              className="hover:text-black"
-            >
-              <CNavLink to="/EIPS" component={NavLink}>
-                All{' '}
-                <label className="relative cursor-pointer">
-                  <div
-                    className=" h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
-                  >
-                    EIPs
-                  </div>
-                  <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2 h-2"></div>
-                  <div className="absolute top-0 right-0 -mr-0 -mt-1   w-2 h-2 text-[10px] text-[#1c7ed6] font-[900]">
-                    {totalEIPs()}
-                  </div>
-                </label>
-              </CNavLink>
-            </Link>
+            <CNavLink style={{ padding: '0px' }} to="/EIPS" component={NavLink}>
+              All EIPs
+              {/* {totalEIPs()} */}
+            </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`headerSection ${
+            className={`navbar-items ${
               click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <Link
-              to="/typeAll"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              className="hover:text-black"
-            >
-              <CNavLink to="/typeAll" component={NavLink}>
-                Type
-              </CNavLink>
-            </Link>
+            <CNavLink style={{ padding: '0px' }} to="/typeAll" component={NavLink}>
+              Type
+              {/* {totalEIPs()} */}
+            </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`headerSection ${
+            className={`navbar-items ${
               click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <Link to="/statusAll" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <CNavLink href="/statusAll">Status</CNavLink>
-            </Link>
+            <CNavLink style={{ padding: '0px' }} to="/statusAll" component={NavLink}>
+              Status
+              {/* {totalEIPs()} */}
+            </CNavLink>
           </CNavItem>
-
           <CNavItem
-            className={`headerSection ${
+            className={`navbar-items ${
               click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
@@ -270,10 +260,8 @@ const AppHeader = (props) => {
                 from: `/october`,
                 year: 2022,
               }}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              className="z-1"
             >
-              <CNavLink href="/Insight">
+              <CNavLink style={{ padding: '0px' }} href="/Insight">
                 Insight{' '}
                 <label className="relative cursor-pointer">
                   <div
@@ -308,39 +296,33 @@ const AppHeader = (props) => {
           ) : null}
           <CNavItem>
             <CNavLink href="#">
-              <CTooltip content="Github source" placement="bottom">
-                <a
-                  href="https://github.com/Avarch-org/EIPsInsight/tree/main"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="githubIcon"
-                >
-                  <img src={githubIcon} alt="github Icon" />
-                </a>
-              </CTooltip>
+              <a
+                href="https://github.com/Avarch-org/EIPsInsight/tree/main"
+                target="_blank"
+                rel="noreferrer"
+                className="githubIcon"
+              >
+                <img className="nav-social" src={githubIcon} alt="github Icon" />
+              </a>
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">
-              <CTooltip content="Join our Discord server" placement="bottom">
-                <a
-                  href="https://discord.com/channels/916850601919393832/975355006322606130/986317048068051035"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="discordIcon"
-                >
-                  <img src={discordIcon} alt="Discord Icon" />
-                </a>
-              </CTooltip>
+              <a
+                href="https://discord.com/channels/916850601919393832/975355006322606130/986317048068051035"
+                target="_blank"
+                rel="noreferrer"
+                className="discordIcon"
+              >
+                <img className="nav-social" src={discordIcon} alt="Discord Icon" />
+              </a>
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">
-              <CTooltip content="Share your feedback with us" placement="bottom">
-                <Link to="/contactUs" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <img src={emailIcon} alt="Email Icon" />
-                </Link>
-              </CTooltip>
+              <Link to="/contactUs" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <img className="nav-social" src={emailIcon} alt="Email Icon" />
+              </Link>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
@@ -357,6 +339,16 @@ const AppHeader = (props) => {
       <CHeaderDivider />
       <CContainer fluid>
         <AppBreadcrumb />
+        {par?.length === 0 || matches ? (
+          ''
+        ) : (
+          <div
+            style={{ zIndex: '999', position: 'fixed', right: '0' }}
+            onClick={() => navigate(-1)}
+          >
+            <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
+          </div>
+        )}
         {/* <motion.div
           className="bg-[#e7f5ff] text-[#1c7ed6] font-[900] pl-10 pr-10"
           initial={{ opacity: 0, scale: 0.5 }}

@@ -1,5 +1,6 @@
 .logoDesign {
   background-image: url(../assets/logo2.gif);
+  background-color: black;
   background-size: cover;
   width: 10rem;
   height: 5rem;
@@ -18,24 +19,22 @@
 } */
 
 .clicked1:focus {
-  color: white;
+  color: black;
 }
 
 .active{
-  color: #339af0;
+  color: black;
 }
 .active1{
-  border: 2px solid #339af0;
+  border: 2px solid black;
 }
 
 .active2{
   color: white;
-  border-bottom: 2px solid #339af0;
+  border-bottom: 2px solid black;
 }
 
 /* width */
-
-
 
 .scrollbarDesign::-webkit-scrollbar {
   width: 8px;

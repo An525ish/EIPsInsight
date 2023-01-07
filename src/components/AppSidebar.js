@@ -306,10 +306,10 @@ const AppSidebar = (props) => {
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
-      style={{ backgroundColor: '#000000' }}
+      style={{ backgroundColor: '#ffff' }}
       className="scrollbarDesign"
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
+      <CSidebarBrand style={{backgroundColor:"black"}} className="" to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <div className="logoDesign"></div>
         </Link>
@@ -323,150 +323,147 @@ const AppSidebar = (props) => {
             {routeDashboard === undefined
               ? ''
               : routeDashboard.map((route, index) => {
-                  if (route.subRoutes) {
-                    return (
-                      <SidebarMenuYear
-                        setIsOpen={setIsOpen}
-                        route={route}
-                        showAnimation={showAnimation}
-                        isOpen={isOpen}
-                      />
-                    )
-                  }
-
+                if (route.subRoutes) {
                   return (
-                    <motion.div
-                      key={index}
-                      className={`flex p-2 pl-4 items-center w-full 
-                      ${param['*'] === '' ? 'border-b-[#339af0] border-b-2 ' : ''}
-                         ${
-                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-                         } rounded-[13px] cursor-pointer `}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setMainOpen(true)}
-                    >
-                      <CIcon
-                        icon={cilSpeedometer}
-                        style={{ color: `${param['*'] === '' ? '#339af0' : '#adb5bd'}` }}
-                        customClassName="nav-icon"
-                      />
-                      <NavLink to={route.path} key={index} activeClassName="active">
-                        <AnimatePresence>
-                          (
-                          <motion.div
-                            variants={showAnimation}
-                            initial="hidden"
-                            animate="show"
-                            exit="hidden"
-                            className={`text-[17px] ${
-                              param['*'] === '' ? 'text-[#339af0]' : 'text-[#adb5bd]'
-                            }  pr-16`}
-                          >
-                            {route.name}
-                          </motion.div>
-                          )
-                        </AnimatePresence>
-                      </NavLink>
-                    </motion.div>
+                    <SidebarMenuYear
+                      setIsOpen={setIsOpen}
+                      route={route}
+                      showAnimation={showAnimation}
+                      isOpen={isOpen}
+                    />
                   )
-                })}
-          </section>
-        </motion.div>
-        <motion.div>
-          <section className="flex flex-col gap-[6px] mb-1">
-            {routes.map((route, index) => {
-              if (route.subRoutes) {
-                return (
-                  <SidebarMenu
-                    setIsOpen={setIsOpen}
-                    route={route}
-                    showAnimation={showAnimation}
-                    isOpen={isOpen}
-                  />
-                )
-              }
+                }
 
-              return (
-                <div key={index}>
-                  <CIcon
-                    icon={cilSpeedometer}
-                    style={{ color: `${isOpen ? '#339af0' : '#adb5bd'}` }}
-                    customClassName="nav-icon"
-                  />
-                  {/* <NavLink to={route.path} key={index}>
-                    <AnimatePresence>
-                      (
-                      <motion.div
-                        variants={showAnimation}
-                        initial="hidden"
-                        animate="show"
-                        exit="hidden"
-                        className={`text-[17px] ${
-                          isOpen ? 'text-[#339af0]' : 'text-[#adb5bd]'
-                        } pr-16`}
-                      >
-                        {route.name}
-                      </motion.div>
-                      )
-                    </AnimatePresence>
-                  </NavLink> */}
-                </div>
-              )
-            })}
+                return (
+                  <motion.div
+                    key={index}
+                    className='flex p-2 pl-4 items-center w-full hover:text-[#00000] rounded-[13px] cursor-pointer'
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setMainOpen(true)}
+                  >
+                    <CIcon
+                      icon={cilSpeedometer}
+                      style={{ color: 'black' }}
+                      customClassName="nav-icon"
+                    />
+                    <NavLink to={route.path} key={index} activeClassName="active">
+                      <AnimatePresence>
+                        (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className={`text-[17px] ${param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
+                            }  pr-16`}
+                        >
+                          {route.name}
+                        </motion.div>
+                        )
+                      </AnimatePresence>
+                    </NavLink>
+                  </motion.div>
+                )
+              })}
           </section>
         </motion.div>
+
+        <motion.div>
+          <section className="flex flex-col gap-[6px]">
+            {routeDashboard === undefined
+              ? ''
+              : routes.map((route, index) => {
+                if (route.subRoutes) {
+                  return (
+                    <SidebarMenuYear
+                      setIsOpen={setIsOpen}
+                      route={route}
+                      showAnimation={showAnimation}
+                      isOpen={isOpen}
+                    />
+                  )
+                }
+
+                return (
+                  <motion.div
+                    key={index}
+                    className='flex p-2 pl-4 items-center w-full hover:text-[#00000] rounded-[13px] cursor-pointer'
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setMainOpen(true)}
+                  >
+                    <CIcon
+                      icon={cilSpeedometer}
+                      style={{ color: 'black' }}
+                      customClassName="nav-icon"
+                    />
+                    <NavLink to={route.path} key={index} activeClassName="active">
+                      <AnimatePresence>
+                        (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className='text-[17px] text-[#000000] pr-16'
+                        >
+                          {route.name}
+                        </motion.div>
+                        )
+                      </AnimatePresence>
+                    </NavLink>
+                  </motion.div>
+                )
+              })}
+          </section>
+        </motion.div>
+
         <motion.div>
           <section className="flex flex-col gap-[6px]">
             {routesPastYears === undefined
               ? ''
               : routesPastYears.map((route, index) => {
-                  if (route.subRoutes) {
-                    return (
-                      <SidebarMenuYear
-                        setIsOpen={setIsOpen}
-                        route={route}
-                        showAnimation={showAnimation}
-                        isOpen={isOpen}
-                      />
-                    )
-                  }
-
+                if (route.subRoutes) {
                   return (
-                    <motion.div
-                      key={index}
-                      className={`flex p-2 pl-4 items-center w-full 
-                      ${param['*'] === '' ? 'border-b-[#339af0] border-b-2 ' : ''}
-                         ${
-                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-                         } rounded-[13px] cursor-pointer `}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setMainOpen(true)}
-                    >
-                      <CIcon
-                        icon={cilSpeedometer}
-                        style={{ color: `${param['*'] === '' ? '#339af0' : '#adb5bd'}` }}
-                        customClassName="nav-icon"
-                      />
-                      <NavLink to={route.path} key={index} activeClassName="active">
-                        <AnimatePresence>
-                          (
-                          <motion.div
-                            variants={showAnimation}
-                            initial="hidden"
-                            animate="show"
-                            exit="hidden"
-                            className={`text-[17px] ${
-                              param['*'] === '' ? 'text-[#339af0]' : 'text-[#adb5bd]'
-                            }  pr-16`}
-                          >
-                            {route.name}
-                          </motion.div>
-                          )
-                        </AnimatePresence>
-                      </NavLink>
-                    </motion.div>
+                    <SidebarMenuYear
+                      setIsOpen={setIsOpen}
+                      route={route}
+                      showAnimation={showAnimation}
+                      isOpen={isOpen}
+                    />
                   )
-                })}
+                }
+
+                return (
+                  <motion.div
+                    key={index}
+                    className={`flex p-2 pl-4 items-center w-full ${param['*'] !== '' ? ' hover:text-[black]' : ' '} rounded-[13px] cursor-pointer `}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setMainOpen(true)}
+                  >
+                    <CIcon
+                      icon={cilSpeedometer}
+                      style={{ color: `${param['*'] === '' ? '#000000' : '#adb5bd'}` }}
+                      customClassName="nav-icon"
+                    />
+                    <NavLink to={route.path} key={index} activeClassName="active">
+                      <AnimatePresence>
+                        (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className={`text-[17px] ${param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
+                            }  pr-16`}
+                        >
+                          {route.name}
+                        </motion.div>
+                        )
+                      </AnimatePresence>
+                    </NavLink>
+                  </motion.div>
+                )
+              })}
           </section>
         </motion.div>
       </CSidebarNav>

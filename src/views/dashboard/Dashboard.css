@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body{
+  font-family: Roboto;
+}
+
 /* width */
 .scrollbarDesign::-webkit-scrollbar {
   width: 8px;
@@ -18,4 +24,59 @@
 /* Handle on hover */
 .scrollbarDesign::-webkit-scrollbar-thumb:hover {
   background: #1c7ed6;
+}
+
+
+/* Styling component */
+.chart-heading-container{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin: 50px 0px 30px;
+}
+
+.chart-heading{
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  margin: 0px 10px;
+  border-radius: 10px;
+  padding: 8px 0px;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s linear;
+}
+
+.chart-heading-active{
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  margin: 0px 10px;
+  border-radius: 10px;
+  padding: 8px 0px;
+  box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.15);
+  transition: all 0.1s linear;
+  transform: scale(1.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.chart-heading:hover{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.card-container{
+  border: none;
+  margin-bottom: 30px;
+  padding: 8px 5px 0px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.15s linear;
+}
+
+.card-container:hover{
+  transform: scale(1.008);
+  box-shadow: rgba(100, 100, 111, 0.35) 0px 7px 29px 0px;
 }

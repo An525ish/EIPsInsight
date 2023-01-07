@@ -87,9 +87,8 @@ const DefaultLayout = () => {
             ''
           ) : (
             <div
-              className="fixed rounded-[15px] flex flex-col justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] text-[3rem] w-[3rem] h-[12rem] mt-[15rem] px-[2rem] py-3 border-[#1c7ed6] border-[1.5px] drop-shadow-sm cursor-pointer shadow-[#1c7ed6] ease-in-out shadow-lg transition hover:scale-95 motion-reduce:transition delay-100 motion-reduce:focus:scale-95 animate-pulse"
+              style={{ zIndex: '999', position:'fixed', right:'0'}}
               onClick={() => navigate(-1)}
-              style={{ zIndex: 999 }}
             >
               <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
             </div>

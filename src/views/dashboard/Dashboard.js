@@ -267,7 +267,7 @@ const Dashboard = () => {
       style: {
         textAlign: 'center',
         fontSize: 12,
-        fill: 'rgba(0,0,0,0.6)',
+        fill: 'rgba(0,0,0,0.1)',
       },
       offsetY: -10,
     })
@@ -284,7 +284,7 @@ const Dashboard = () => {
         style: {
           textAlign: 'center',
           fontSize: 12,
-          fill: 'rgba(0,0,0,0.6)',
+          fill: 'rgba(0,0,0,0.1)',
         },
         offsetY: -10,
       })
@@ -910,11 +910,11 @@ const Dashboard = () => {
         className="cardHeader"
         style={{
           fontFamily: 'Roboto',
-          fontWeight: '800',
-          fontSize: '14px',
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontWeight: '500',
+          fontSize: '18px',
+          color: `black`,
+          background: `white`,
+          border: `none`,
         }}
       >
         {text}
@@ -930,9 +930,9 @@ const Dashboard = () => {
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
+          color: `black`,
+          background: `white`,
+          borderBottom: `none`,
         }}
       >
         <label style={{ fontSize: '10px', color: `${getBadgeColor(text)}` }}>{date}</label>
@@ -1037,7 +1037,7 @@ const Dashboard = () => {
   const yearlyInsights = (col, title, configName) => {
     return (
       <CCol xs={matches ? 12 : col}>
-        <CCard className="mb-2 cardBorder">
+        <CCard className="card-container">
           {header(title)}
           <CCardBody
             style={{
@@ -1101,13 +1101,16 @@ const Dashboard = () => {
 
   // temparary
 
+  const [insight,setInsight]=useState(1);
+
+
   return (
     <div>
       {loading ? (
         <div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+              <CCard className="card-container">
                 <Link to="/typeAll">{header('EIPs Type & Categories')} </Link>
                 <CCardBody
                   style={{
@@ -1125,7 +1128,7 @@ const Dashboard = () => {
               </CCard>
             </CCol>
             <CCol xs={matches ? 12 : 6}>
-              <CCard style={{ border: '2px solid #a5d8ff' }} className="mb-2 cardBorder">
+              <CCard className="card-container">
                 <Link to="/statusAll">{header('EIPs Status')} </Link>
                 <CCardBody
                   style={{
@@ -1144,7 +1147,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard style={{ border: '2px solid #a5d8ff' }}>
+              <CCard className='card-container'>
                 <Link to="/EIPS">{header('Search an EIP')}</Link>
                 <CCardBody
                   style={{
@@ -1366,18 +1369,18 @@ const Dashboard = () => {
                     }}
                   />
                 </CCardBody>
-                <CCardFooter
+                {footer(date)}
+                {/* <CCardFooter
                   className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   {loading ? (
                     <motion.div
-                      style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}
                       className="flex justify-between items-center"
                       variants={container}
                     >
                       <label>* </label>
-                      <motion.div className="ml-2 bg-white px-2 rounded-lg border-[#1c7ed6] border-l-[2px]">
+                      <motion.div >
                         <motion.span variants={child} key={1}>
                           Click to see more
                         </motion.span>
@@ -1385,39 +1388,25 @@ const Dashboard = () => {
                     </motion.div>
                   ) : null}
                   <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
-                </CCardFooter>
+                </CCardFooter> */}
               </CCard>
             </CCol>
           </CRow>
 
-          <CRow>
-            <CCol xs={12} className="mb-4">
-              <div
-                style={{
-                  fontSize: '30px',
-                  fontWeight: '400',
-                  marginBottom: '00px',
-                  backgroundColor: 'white',
-                  border: 'none',
-                  display: 'inline-block',
-
-                  padding: '14px',
-                  borderRadius: '5px',
-                  borderLeft: '4px solid #339af0',
-                  borderBottom: '2px solid #339af0',
-                  marginTop: '2rem',
-                }}
-              >
-                Insights
-              </div>
-            </CCol>
+          <div className="chart-heading-container">
+            <button className={insight==1?"chart-heading-active":"chart-heading"} onClick={() => setInsight(1)}>Insights</button>
+            <button className={insight==0?"chart-heading-active":"chart-heading"} onClick={() => setInsight(0)}>Yearly Insights</button>
+          </div>
+          {insight===1? (<CRow>
+            <CCol xs={12} className="mb-4"></CCol>
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Living')}
                 <CCardBody
                   style={{
                     // backgroundColor: '#fff9db',
                     height: '300px',
+                    border: 'none'
                     // backgroundImage: `url(${github})`,
                     // backgroundSize: '33% 30%',
                     // backgroundRepeat: 'no-repeat',
@@ -1431,7 +1420,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Final')}
                 <CCardBody
                   style={{
@@ -1450,7 +1439,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Last Call')}
                 <CCardBody
                   style={{
@@ -1469,7 +1458,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Review')}
                 <CCardBody
                   style={{
@@ -1488,7 +1477,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Draft')}
                 <CCardBody
                   style={{
@@ -1507,7 +1496,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Stagnant')}
                 <CCardBody
                   style={{
@@ -1526,7 +1515,7 @@ const Dashboard = () => {
             </CCol>
 
             <CCol xs={12}>
-              <CCard className="mb-2 cardBorder">
+              <CCard className="card-container">
                 {header('Withdrawn')}
                 <CCardBody
                   style={{
@@ -1543,28 +1532,8 @@ const Dashboard = () => {
                 {footer(date, 'Withdrawn')}
               </CCard>
             </CCol>
-          </CRow>
+          </CRow>):(
           <CRow>
-            <CCol xs={12} className="mb-4">
-              <div
-                style={{
-                  fontSize: '30px',
-                  fontWeight: '400',
-                  marginBottom: '00px',
-                  backgroundColor: 'white',
-                  border: 'none',
-                  display: 'inline-block',
-                  padding: '14px',
-                  borderRadius: '5px',
-                  borderLeft: '4px solid #339af0',
-                  borderBottom: '2px solid #339af0',
-                  marginTop: '2rem',
-                }}
-              >
-                Yearly Insights
-              </div>
-            </CCol>
-
             {/* Yearly Insights */}
             {yearlyInsights(4, 'Draft', yearlyDraftConfig)}
             {yearlyInsights(4, 'Final', yearlyFinalConfig)}
@@ -1573,7 +1542,8 @@ const Dashboard = () => {
             {yearlyInsights(6, 'Stagnant', yearlyStagnantConfig)}
             {yearlyInsights(6, 'Withdrawn', yearlyWithdrawnConfig)}
             {yearlyInsights(6, 'Living', yearlyLivingConfig)}
-          </CRow>
+          </CRow>)
+      }
         </div>
       ) : (
         <Loading />

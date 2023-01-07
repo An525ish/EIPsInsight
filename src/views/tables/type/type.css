@@ -1,24 +1,58 @@
 /* width */
 
-
-
 .scrollbarDesign::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  /* Track */
- .scrollbarDesign::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px var(--main-color-background); 
-    border-radius: 10px;
-  }
-   
-  /* Handle */
+  width: 8px;
+}
+
+/* Track */
+.scrollbarDesign::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--main-color-background);
+  border-radius: 10px;
+}
+
+/* Handle */
 .scrollbarDesign::-webkit-scrollbar-thumb {
-    background: var(--main-color); 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
+  background: var(--main-color);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
 .scrollbarDesign::-webkit-scrollbar-thumb:hover {
-    background: var(--main-color-background); 
-  }
+  background: var(--main-color-background);
+}
+
+.type-card-container {
+  border: none;
+  margin-bottom: 30px;
+  padding: 8px 5px 0px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.15s linear;
+}
+
+.type-card-container:hover {
+  transform: scale(1.003);
+  box-shadow: rgba(100, 100, 111, 0.35) 0px 7px 29px 0px;
+}
+
+.type-heading{
+  background-color: white;
+  font-size: 25px;
+  display: inline-block;
+  padding: 7px 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.type-heading-number{
+  background-color: #e7f5ff;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 5px;
+  margin-left: 5px;
+  border-radius: 5px;
+}

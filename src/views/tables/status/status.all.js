@@ -19,6 +19,7 @@ import { each, groupBy } from '@antv/util'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
+import './status.css'
 import { faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
 
@@ -189,23 +190,7 @@ function statusAll(props) {
   const customTableChart = (name, title) => {
     return (
       <>
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: '400',
-            marginBottom: '00px',
-            backgroundColor: 'white',
-            border: 'none',
-
-            padding: '15px',
-            borderRadius: '5px',
-            borderLeft: `4px solid ${getBadgeColor(name)}`,
-            borderBottom: `2px solid ${getBadgeColor(name)}`,
-            marginTop: '2rem',
-            display: 'inline-block',
-            color: `${getBadgeColor(name)}`,
-          }}
-        >
+        <div className='status-heading'>
           {title}{' '}
           <label
             style={{
@@ -218,15 +203,7 @@ function statusAll(props) {
               style={{ textDecoration: 'none', color: 'inherit' }}
               state={{ type: '', status: title, category: '', name: `${title}` }}
             >
-              <div
-                className={`className="h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                  name,
-                )}] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out`}
-                style={{
-                  backgroundColor: `${getBadge(name)}`,
-                }}
-              >
+              <div className='status-heading-number'>
                 {totalData(name)}
               </div>
             </Link>
@@ -234,13 +211,8 @@ function statusAll(props) {
         </div>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
-            <CCard>
-              <CCardBody
-                style={{
-                  height: '300px',
-                  borderLeft: `2px solid ${getBadgeColor(name)}`,
-                }}
-              >
+            <CCard className='status-card-container'>
+              <CCardBody style={{height:"300px"}}>
                 <Column {...fetchChartData(name)} />
               </CCardBody>
               <CCardFooter
@@ -248,9 +220,7 @@ function statusAll(props) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  borderLeft: `2px solid ${getBadgeColor(name)}`,
-                  borderBottom: `2px solid ${getBadgeColor(name)}`,
-                  background: `${getBadge(name)}`,
+                  backgroundColor: 'white'
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>
@@ -258,7 +228,7 @@ function statusAll(props) {
             </CCard>
           </CCol>
           <CCol xs={matches ? 12 : 6}>
-            <CCard>
+            <CCard  className='status-card-container'>
               <CCardBody
                 style={{
                   overflowX: 'auto',
@@ -266,7 +236,6 @@ function statusAll(props) {
                   height: '300px',
                   fontFamily: 'Roboto',
                   fontSize: '12px',
-                  borderRight: `2px solid ${getBadgeColor(name)}`,
                   '--main-color': `${getBadgeColor(name)}`,
                   '--main-color-background': `${getBadge(name)}`,
                 }}
@@ -496,9 +465,7 @@ function statusAll(props) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  borderRight: `2px solid ${getBadgeColor(name)}`,
-                  borderBottom: `2px solid ${getBadgeColor(name)}`,
-                  background: `${getBadge(name)}`,
+                  backgroundColor: 'white'
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>
