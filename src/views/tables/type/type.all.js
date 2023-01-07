@@ -20,6 +20,7 @@ import useMediaQuery from 'src/scss/useMediaQuery'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from 'src/views/theme/loading/loading'
+import { StatusColors, TypeColors } from 'src/constants'
 
 function typeAll() {
   const [post, getPost] = useState()
@@ -117,11 +118,11 @@ function typeAll() {
     const arr = []
     arr.push(
       {
-        type: 'Draft',
+        type: 'Living',
         value:
           name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Draft')
-            : fetchTableDataExtra(post, name, 'Draft'),
+            ? fetchTableData(post, name, 'Living')
+            : fetchTableDataExtra(post, name, 'Living'),
       },
       {
         type: 'Final',
@@ -131,6 +132,13 @@ function typeAll() {
             : fetchTableDataExtra(post, name, 'Final'),
       },
       {
+        type: 'Last_Call',
+        value:
+          name === 'Standard_Track'
+            ? fetchTableData(post, name, 'Last_Call')
+            : fetchTableDataExtra(post, name, 'Last_Call'),
+      },
+      {
         type: 'Review',
         value:
           name === 'Standard_Track'
@@ -138,12 +146,13 @@ function typeAll() {
             : fetchTableDataExtra(post, name, 'Review'),
       },
       {
-        type: 'Last_Call',
+        type: 'Draft',
         value:
           name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Last_Call')
-            : fetchTableDataExtra(post, name, 'Last_Call'),
+            ? fetchTableData(post, name, 'Draft')
+            : fetchTableDataExtra(post, name, 'Draft'),
       },
+
       {
         type: 'Stagnant',
         value:
@@ -157,13 +166,6 @@ function typeAll() {
           name === 'Standard_Track'
             ? fetchTableData(post, name, 'Withdrawn')
             : fetchTableDataExtra(post, name, 'Withdrawn'),
-      },
-      {
-        type: 'Living',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Living')
-            : fetchTableDataExtra(post, name, 'Living'),
       },
     )
 
@@ -224,7 +226,7 @@ function typeAll() {
         name === 'Standard_Track'
           ? fetchChartDataStandardTrack(post.length === 0 ? [] : post)
           : fetchChartData(post === undefined ? [] : post, name),
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      color: name === 'Standard_Track' ? TypeColors : StatusColors,
       angleField: 'value',
       colorField: 'type',
       radius: 1,
@@ -323,7 +325,72 @@ function typeAll() {
     <>
       {loading ? (
         <div>
-          <div className='type-heading'>
+          <div className="flex justify-center items-center">
+            <div
+              style={{
+                fontSize: '3rem',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+
+                padding: '20px',
+                borderRadius: '5px',
+
+                borderTop: '4px solid #339af0',
+                // textTransform: 'uppercase',
+              }}
+              className="flex justify-center items-center shadow-md"
+            >
+              Type - Category{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                }}
+              >
+                <Link
+                  to="/EIPs"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  state={{
+                    type: 'Standards Track',
+                    status: '',
+                    category: '',
+                    name: 'Standard_Track',
+                  }}
+                >
+                  <div
+                    className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[2.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out ml-3 tracking-wider'
+                    style={{
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                  >
+                    {getStandardAttribute(post === undefined ? [] : post, 'Core') +
+                      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+                      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+                      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+                      getMetaAndInformational('Meta') +
+                      getMetaAndInformational('Informational')}
+                  </div>
+                </Link>
+              </label>
+            </div>
+          </div>
+          <div
+            style={{
+              fontSize: '30px',
+              fontWeight: '400',
+              marginBottom: '00px',
+              backgroundColor: 'white',
+              border: 'none',
+              width: '18rem',
+              padding: '10px',
+              borderRadius: '5px',
+              borderLeft: '4px solid #339af0',
+              borderBottom: '2px solid #339af0',
+            }}
+            className="shadow-md"
+          >
             Standard Track{' '}
             <label
               style={{
@@ -342,7 +409,10 @@ function typeAll() {
                 }}
               >
                 <div
-                  className='type-heading-number'
+                  // className='type-heading-number'
+                  className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                  style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {post === undefined
                     ? 0
@@ -435,7 +505,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Core')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800] text[20px]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Core') /
                                 totalEIPs()) *
@@ -469,7 +542,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
                                 totalEIPs()) *
@@ -503,7 +579,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
                                 totalEIPs()) *
@@ -537,7 +616,10 @@ function typeAll() {
                           {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
                                 totalEIPs()) *
@@ -569,7 +651,10 @@ function typeAll() {
                         </CTableDataCell>
                         <CTableDataCell>{getMetaAndInformational('Meta')}</CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {((getMetaAndInformational('Meta') / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
@@ -596,12 +681,66 @@ function typeAll() {
                         </CTableDataCell>
                         <CTableDataCell>{getMetaAndInformational('Informational')}</CTableDataCell>
                         <CTableDataCell>
-                          <label className="font-[800]">
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[0.8rem]"
+                          >
                             {(
                               (getMetaAndInformational('Informational') / totalEIPs()) *
                               100
                             ).toFixed(2)}
                             %
+                          </label>
+                        </CTableDataCell>
+                      </CTableRow>
+                      <CTableRow>
+                        <CTableDataCell>
+                          <Link
+                            to="/EIPs"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            state={{
+                              type: 'Standards Track',
+                              status: '',
+                              category: 'Interface',
+                              name: 'Standard_Track_Interface',
+                            }}
+                          >
+                            <div
+                              className='className="h-7
+            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+                            >
+                              Total
+                            </div>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link to="/EIPs">
+                            <label
+                              style={{
+                                color: `${'#1c7ed6'}`,
+                                background: `${'#e7f5ff'}`,
+                                fontWeight: '800',
+                                fontSize: '15px',
+                                borderRadius: '12px',
+                                fontFamily: 'Big Shoulders Display',
+                              }}
+                              className="p-1.5 shadow-md tracking-wider cursor-pointer"
+                            >
+                              {getMetaAndInformational('Informational') +
+                                getMetaAndInformational('Meta') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Networking') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Interface') +
+                                getStandardAttribute(post === undefined ? [] : post, 'ERC') +
+                                getStandardAttribute(post === undefined ? [] : post, 'Core')}
+                            </label>
+                          </Link>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <label
+                            style={{ fontFamily: 'Big Shoulders Display' }}
+                            className="tracking-wider text-[1rem]"
+                          >
+                            100%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -622,7 +761,23 @@ function typeAll() {
             </CCol>
           </CRow>
           <div className="flex justify-between">
-            <div className='type-heading'>
+            <div
+              style={{
+                fontSize: '30px',
+                fontWeight: '400',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+                display: 'inline-block',
+                padding: '12px',
+                borderRadius: '5px',
+                borderLeft: '4px solid #339af0',
+                borderBottom: '2px solid #339af0',
+                marginTop: '2rem',
+              }}
+              className="shadow-md"
+            >
+            {/* <div className='type-heading'> */}
               Meta{' '}
               <label
                 style={{
@@ -636,14 +791,33 @@ function typeAll() {
                   state={{ type: 'Meta', status: '', category: '', name: 'Meta' }}
                 >
                   <div
-                    className='type-heading-number'
+                    // className='type-heading-number'
+                    className='className="h-7
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+                    style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {getMetaAndInformational('Meta')}
                   </div>
                 </Link>
               </label>
             </div>
-            <div className='type-heading'>
+            <div
+              style={{
+                fontSize: '30px',
+                fontWeight: '400',
+                marginBottom: '00px',
+                backgroundColor: 'white',
+                border: 'none',
+
+                padding: '12px',
+                display: 'inline-block',
+                borderRadius: '5px',
+                borderRight: '4px solid #339af0',
+                borderBottom: '2px solid #339af0',
+                marginTop: '2rem',
+              }}
+              className="shadow-md"
+            >
               Informational{' '}
               <label
                 style={{

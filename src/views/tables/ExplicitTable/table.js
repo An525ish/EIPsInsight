@@ -6,6 +6,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
 
+const statusArr = ['Final', 'Draft', 'Review', 'Last_Call', 'Stagnant', 'Withdrawn', 'Living']
+
 function table() {
   const location = useLocation()
   const [type, setType] = useState()
@@ -30,7 +32,7 @@ function table() {
   const fetchColumn = (status) => {
     console.log(status)
     const columns =
-      status === 'Last Call'
+      status === 'Last_Call' || status === 'Last Call'
         ? [
             {
               key: 'id',
@@ -51,7 +53,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '20%',
+                width: '30%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -63,19 +65,13 @@ function table() {
               },
             },
             {
-              key: 'Start Date',
+              key: 'Draft Date',
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
-            {
-              key: 'Final Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
+
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
@@ -120,7 +116,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '30%',
+                width: '35%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -132,19 +128,13 @@ function table() {
               },
             },
             {
-              key: 'Start Date',
+              key: status === 'Final' ? 'Final Date' : 'Draft Date',
               _style: {
-                width: '10%',
+                width: '15%',
                 color: `${getBadgeColor(status)}`,
               },
             },
-            {
-              key: 'Final Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
+
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
@@ -242,278 +232,139 @@ function table() {
     console.log('eipData')
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (eips[0]['Final'][i].status === status && eips[0]['Final'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (eips[1]['Draft'][i].status === status && eips[1]['Draft'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (eips[2]['Review'][i].status === status && eips[2]['Review'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (eips[3]['Last_Call'][i].status === status && eips[3]['Last_Call'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-            'PR No.': 0,
-          })
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (
+            eips[j][statusArr[j]][i].status === status &&
+            eips[j][statusArr[j]][i].type === type
+          ) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (eips[4]['Stagnant'][i].status === status && eips[4]['Stagnant'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (eips[5]['Withdrawn'][i].status === status && eips[5]['Withdrawn'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (eips[6]['Living'][i].status === status && eips[6]['Living'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
   }
   const eipDataCategory = (eips, type, status, category) => {
     console.log('eipDataCategory')
+
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (
-          eips[0]['Final'][i].status === status &&
-          eips[0]['Final'][i].type === type &&
-          eips[0]['Final'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (
-          eips[1]['Draft'][i].status === status &&
-          eips[1]['Draft'][i].type === type &&
-          eips[1]['Draft'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (
-          eips[2]['Review'][i].status === status &&
-          eips[2]['Review'][i].type === type &&
-          eips[2]['Review'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (
-          eips[3]['Last_Call'][i].status === status &&
-          eips[3]['Last_Call'][i].type === type &&
-          eips[3]['Last_Call'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-          })
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (
+            eips[j][statusArr[j]][i].status === status &&
+            eips[j][statusArr[j]][i].type === type &&
+            eips[j][statusArr[j]][i].category === category
+          ) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (
-          eips[4]['Stagnant'][i].status === status &&
-          eips[4]['Stagnant'][i].type === type &&
-          eips[4]['Stagnant'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (
-          eips[5]['Withdrawn'][i].status === status &&
-          eips[5]['Withdrawn'][i].type === type &&
-          eips[5]['Withdrawn'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (
-          eips[6]['Living'][i].status === status &&
-          eips[6]['Living'][i].type === type &&
-          eips[6]['Living'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -525,127 +376,64 @@ function table() {
     console.log({ status })
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (eips[0]['Final'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (eips[1]['Draft'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (eips[2]['Review'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (eips[3]['Last_Call'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-            'PR No.': 0,
-          })
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (eips[j][statusArr[j]][i].status === status) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (eips[4]['Stagnant'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (eips[5]['Withdrawn'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (eips[6]['Living'][i].status === status) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -657,167 +445,68 @@ function table() {
 
     if (eips[0] !== undefined) {
       let inc = 1
-      if (month === '10') {
-        arr.push({
-          id: inc++,
-          Number: 2535,
-          Title: 'Diamonds, Multi-Facet Proxy',
-          Type: 'Standards Track',
-          Category: 'ERC',
-          status: 'Final',
-          Author: 'Nick Mudge (@mudgen)',
-          'PR No.': 5802,
-        })
-      }
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (
-          eips[0]['Final'][i].status === status &&
-          eips[0]['Final'][i].created.substring(0, 4) === year &&
-          parseInt(eips[0]['Final'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (
-          eips[1]['Draft'][i].status === status &&
-          eips[1]['Draft'][i].created.substring(0, 4) === year &&
-          parseInt(eips[1]['Draft'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (
-          eips[2]['Review'][i].status === status &&
-          eips[2]['Review'][i].created.substring(0, 4) === year &&
-          parseInt(eips[2]['Review'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (
-          eips[3]['Last_Call'][i].status === status &&
-          eips[3]['Last_Call'][i].created.substring(0, 4) === year &&
-          parseInt(eips[3]['Last_Call'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-            'PR No.': 0,
-          })
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (
+            eips[j][statusArr[j]][i].status === status &&
+            eips[j][statusArr[j]][i].created.substring(0, 4) === year &&
+            parseInt(eips[j][statusArr[j]][i].created.substring(5, 7)) === parseInt(month)
+          ) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (
-          eips[4]['Stagnant'][i].status === status &&
-          eips[4]['Stagnant'][i].created.substring(0, 4) === year &&
-          parseInt(eips[4]['Stagnant'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (
-          eips[5]['Withdrawn'][i].status === status &&
-          eips[5]['Withdrawn'][i].created.substring(0, 4) === year &&
-          parseInt(eips[5]['Withdrawn'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (
-          eips[6]['Living'][i].status === status &&
-          eips[6]['Living'][i].created.substring(0, 4) === year &&
-          parseInt(eips[6]['Living'][i].created.substring(5, 7)) === parseInt(month)
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -827,134 +516,68 @@ function table() {
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (eips[0]['Final'][i].type === type && eips[0]['Final'][i].category === category) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (eips[1]['Draft'][i].type === type && eips[1]['Draft'][i].category === category) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (eips[2]['Review'][i].type === type && eips[2]['Review'][i].category === category) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (
-          eips[3]['Last_Call'][i].type === type &&
-          eips[3]['Last_Call'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-            'PR No.': 0,
-          })
+
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (
+            eips[j][statusArr[j]][i].type === type &&
+            eips[j][statusArr[j]][i].category === category
+          ) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (eips[4]['Stagnant'][i].type === type && eips[4]['Stagnant'][i].category === category) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (
-          eips[5]['Withdrawn'][i].type === type &&
-          eips[5]['Withdrawn'][i].category === category
-        ) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (eips[6]['Living'][i].type === type && eips[6]['Living'][i].category === category) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -964,127 +587,66 @@ function table() {
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        if (eips[0]['Final'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[0]['Final'][i].eip,
-            Title: eips[0]['Final'][i].title,
-            Type: eips[0]['Final'][i].type,
-            Category:
-              eips[0]['Final'][i].type === 'Standards Track'
-                ? eips[0]['Final'][i].category
-                : `Type - ${eips[0]['Final'][i].type}`,
-            status: eips[0]['Final'][i].status,
-            Author: eips[0]['Final'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        if (eips[1]['Draft'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[1]['Draft'][i].eip,
-            Title: eips[1]['Draft'][i].title,
-            Type: eips[1]['Draft'][i].type,
-            Category:
-              eips[1]['Draft'][i].type === 'Standards Track'
-                ? eips[1]['Draft'][i].category
-                : `Type - ${eips[1]['Draft'][i].type}`,
-            status: eips[1]['Draft'][i].status,
-            Author: eips[1]['Draft'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        if (eips[2]['Review'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[2]['Review'][i].eip,
-            Title: eips[2]['Review'][i].title,
-            Type: eips[2]['Review'][i].type,
-            Category:
-              eips[2]['Review'][i].type === 'Standards Track'
-                ? eips[2]['Review'][i].category
-                : `Type - ${eips[2]['Review'][i].type}`,
-            status: eips[2]['Review'][i].status,
-            Author: eips[2]['Review'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        if (eips[3]['Last_Call'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[3]['Last_Call'][i].eip,
-            Title: eips[3]['Last_Call'][i].title,
-            Type: eips[3]['Last_Call'][i].type,
-            Category:
-              eips[3]['Last_Call'][i].type === 'Standards Track'
-                ? eips[3]['Last_Call'][i].category
-                : `Type - ${eips[3]['Last_Call'][i].type}`,
-            status: eips[3]['Last_Call'][i].status,
-            'Last-Call Deadline': eips[3]['Last_Call'][i]['last-call-deadline'].substring(0, 10),
-            Author: eips[3]['Last_Call'][i].author,
-            'PR No.': 0,
-          })
+
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (eips[j][statusArr[j]][i].type === type) {
+            if (statusArr[j] === 'Final') {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else if (statusArr[j] === 'Last_Call') {
+              // console.log(eips[j][statusArr[j]][i].created.substring(0, 10))
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
+                  0,
+                  10,
+                ),
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            } else {
+              arr.push({
+                id: inc++,
+                Number: eips[j][statusArr[j]][i].eip,
+                Title: eips[j][statusArr[j]][i].title,
+                Type: eips[j][statusArr[j]][i].type,
+                Category:
+                  eips[j][statusArr[j]][i].type === 'Standards Track'
+                    ? eips[j][statusArr[j]][i].category
+                    : `Type - ${eips[j][statusArr[j]][i].type}`,
+                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+                status: eips[j][statusArr[j]][i].status,
+                Author: eips[j][statusArr[j]][i].author,
+                'PR No.': 0,
+              })
+            }
+          }
         }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        if (eips[4]['Stagnant'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[4]['Stagnant'][i].eip,
-            Title: eips[4]['Stagnant'][i].title,
-            Type: eips[4]['Stagnant'][i].type,
-            Category:
-              eips[4]['Stagnant'][i].type === 'Standards Track'
-                ? eips[4]['Stagnant'][i].category
-                : `Type - ${eips[4]['Stagnant'][i].type}`,
-            status: eips[4]['Stagnant'][i].status,
-            Author: eips[4]['Stagnant'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        if (eips[5]['Withdrawn'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[5]['Withdrawn'][i].eip,
-            Title: eips[5]['Withdrawn'][i].title,
-            Type: eips[5]['Withdrawn'][i].type,
-            Category:
-              eips[5]['Withdrawn'][i].type === 'Standards Track'
-                ? eips[5]['Withdrawn'][i].category
-                : `Type - ${eips[5]['Withdrawn'][i].type}`,
-            status: eips[5]['Withdrawn'][i].status,
-            Author: eips[5]['Withdrawn'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        if (eips[6]['Living'][i].type === type) {
-          arr.push({
-            id: inc++,
-            Number: eips[6]['Living'][i].eip,
-            Title: eips[6]['Living'][i].title,
-            Type: eips[6]['Living'][i].type,
-            Category:
-              eips[6]['Living'][i].type === 'Standards Track'
-                ? eips[6]['Living'][i].category
-                : `Type - ${eips[6]['Living'][i].type}`,
-            status: eips[6]['Living'][i].status,
-            Author: eips[6]['Living'][i].author,
-            'PR No.': 0,
-          })
-        }
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -1416,15 +978,38 @@ function table() {
                   </div>
                 </td>
               ),
-              'Start Date': (item) => (
-                <td>
-                  <div>{item['Start Date']}</div>
+              'Draft Date': (item) => (
+                <td
+                  style={{
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                  }}
+                  className="text-[12px]"
+                >
+                  <div>{item['Draft Date']}</div>
                 </td>
               ),
 
               'Final Date': (item) => (
-                <td>
+                <td
+                  style={{
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                  }}
+                  className="text-[12px]"
+                >
                   <div>{item['Final Date']}</div>
+                </td>
+              ),
+              'Last-Call Deadline': (item) => (
+                <td
+                  style={{
+                    color: `${getBadgeColor(item.status)}`,
+                    fontWeight: 'bold',
+                  }}
+                  className="text-[12px]"
+                >
+                  <div>{item['Last-Call Deadline']}</div>
                 </td>
               ),
               Type: (item) => (
@@ -1438,6 +1023,7 @@ function table() {
                   {item.Type}
                 </td>
               ),
+
               Category: (item) => (
                 <td
                   style={{

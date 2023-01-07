@@ -255,7 +255,7 @@ const AppHeader = (props) => {
             }`}
           >
             <Link
-              to="/december-2022"
+              to={`/${props.Month.toLowerCase()}-${props.Year}`}
               state={{
                 from: `/october`,
                 year: 2022,
@@ -266,7 +266,7 @@ const AppHeader = (props) => {
                 <label className="relative cursor-pointer">
                   <div
                     className=" h-7
-            shadow-2xl font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
+            shadow-md font-extrabold rounded-[0.3rem] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
                   >
                     {props.Month} <label className="text-[10px] cursor-pointer">{props.Year}</label>
                   </div>

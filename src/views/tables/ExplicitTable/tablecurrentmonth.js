@@ -7,6 +7,23 @@ import Loading from 'src/views/theme/loading/loading'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
 
+const currentDate = new Date()
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
 function tableCurrent() {
   const location = useLocation()
   const [status, setStatus] = useState()
@@ -15,7 +32,7 @@ function tableCurrent() {
   const [currentMonth, setCurrentMonth] = useState()
   const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/rawData'
-  const API3 = 'https://eipsinsight.com/api/currentMonth/2022/December'
+
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState()
 
@@ -28,6 +45,9 @@ function tableCurrent() {
       })
   }
   const fetchCurrentMonthEIPs = () => {
+    const API3 = `https://eipsinsight.com/api/currentMonth/${currentDate.getFullYear()}/${
+      months[currentDate.getMonth()]
+    }`
     fetch(API3)
       .then((res) => res.json())
       .then((res) => {
@@ -37,7 +57,7 @@ function tableCurrent() {
   const fetchColumn = (status) => {
     console.log(status)
     const columns =
-      status === 'Last Call'
+      status === 'Last_Call'
         ? [
             {
               key: 'id',
@@ -65,29 +85,23 @@ function tableCurrent() {
             {
               key: 'Author',
               _style: {
-                width: '10%',
+                width: '14%',
                 color: `${getBadgeColor(status)}`,
               },
             },
             {
-              key: 'Start Date',
+              key: 'Draft Date',
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
-            {
-              key: 'Final Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
-            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+
+            { key: 'Type', _style: { width: '8%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
               _style: {
-                width: '10%',
+                width: '8%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -139,19 +153,13 @@ function tableCurrent() {
               },
             },
             {
-              key: 'Start Date',
+              key: status === 'Final' ? 'Final Date' : 'Draft Date',
               _style: {
                 width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
-            {
-              key: 'Final Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
+
             { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
@@ -257,6 +265,7 @@ function tableCurrent() {
     return ans
   }
   const findAllEIPs = (eips, data, status) => {
+    console.log({ name })
     let arr = []
     let inc = 1
     if (data.length !== 0 && eips.length !== 0) {
@@ -265,35 +274,86 @@ function tableCurrent() {
       console.log({ filterData })
 
       let ans = []
-      ans.push(findEIPNum(filterData[0], 'Core'))
-      ans.push(findEIPNum(filterData[0], 'ERC'))
-      ans.push(findEIPNum(filterData[0], 'Networking'))
-      ans.push(findEIPNum(filterData[0], 'Interface'))
-      // ans.push(findEIPNum(filterData[0], 'Meta'))
-      // category
-      // ans.push(findEIPNum(filterData[0], 'Category'))
-      // ans.push(findEIPNum(filterData[0], 'Informational'))
+      if (filterData.length !== 0) {
+        ans.push(findEIPNum(filterData[0], 'Core'))
+        ans.push(findEIPNum(filterData[0], 'ERC'))
+        ans.push(findEIPNum(filterData[0], 'Networking'))
+        ans.push(findEIPNum(filterData[0], 'Interface'))
+        ans.push(findEIPNum(filterData[0], 'Meta'))
 
-      ans = ans.flat(Infinity)
+        ans.push(findEIPNum(filterData[0], 'Informational'))
+
+        let undefinedEIPs = findEIPNum(filterData[0], 'Undefined')
+        console.log({ undefinedEIPs })
+
+        ans = ans.flat(Infinity)
+
+        // here we remove undefined EIPs from the list ... if the status is not final
+        if (status !== 'Final') {
+          for (let i = 0; i < undefinedEIPs.length; i++) {
+            if (ans.includes(undefinedEIPs[i])) {
+              ans.splice(ans.indexOf(undefinedEIPs[i]), 1)
+            }
+          }
+        }
+      }
       console.log({ ans })
 
       for (let i = 0; i < ans.length; i++) {
         let findEip = eips.filter((item) => item.data.eip === ans[i])
         console.log({ findEip })
         console.log(findEip[0].type)
-        arr.push({
-          id: inc++,
-          Number: findEip[0].data.eip,
-          Title: findEip[0].data.title,
-          Type: findEip[0].data.type,
-          Category:
-            findEip[0].data.type === 'Standards Track'
-              ? findEip[0].data.category
-              : `Type - ${findEip[0].data.type}`,
-          status: findEip[0].data.status,
-          Author: findEip[0].data.author,
-          'PR No.': '#' + findEip[0].data.eip,
-        })
+        if (status === 'Last_Call') {
+          arr.push({
+            id: inc++,
+            Number: findEip[0].data.eip,
+            Title: findEip[0].data.title,
+            Type: findEip[0].data.type,
+            Category:
+              findEip[0].data.type === 'Standards Track'
+                ? findEip[0].data.category
+                : `Type - ${findEip[0].data.type}`,
+            'Last-Call Deadline': findEip[0].data.created.substring(0, 10),
+            'Draft Date': findEip[0].data.created.substring(0, 10),
+            status: findEip[0].data.status,
+            Author: findEip[0].data.author,
+            'PR No.': '#' + findEip[0].data.eip,
+          })
+        } else {
+          if (status === 'Final') {
+            arr.push({
+              id: inc++,
+              Number: findEip[0].data.eip,
+              Title: findEip[0].data.title,
+              Type: findEip[0].data.type,
+              Category:
+                findEip[0].data.type === 'Standards Track'
+                  ? findEip[0].data.category
+                  : `Type - ${findEip[0].data.type}`,
+
+              'Final Date': findEip[0].data.created.substring(0, 10),
+              status: findEip[0].data.status,
+              Author: findEip[0].data.author,
+              'PR No.': '#' + findEip[0].data.eip,
+            })
+          } else {
+            arr.push({
+              id: inc++,
+              Number: findEip[0].data.eip,
+              Title: findEip[0].data.title,
+              Type: findEip[0].data.type,
+              Category:
+                findEip[0].data.type === 'Standards Track'
+                  ? findEip[0].data.category
+                  : `Type - ${findEip[0].data.type}`,
+
+              'Draft Date': findEip[0].data.created.substring(0, 10),
+              status: findEip[0].data.status,
+              Author: findEip[0].data.author,
+              'PR No.': '#' + findEip[0].data.eip,
+            })
+          }
+        }
       }
       // console.log({ arr })
     }
@@ -411,11 +471,12 @@ function tableCurrent() {
   }
 
   useEffect(() => {
-    fetchCurrentMonthEIPs()
     setStatus(location.state.status)
     setName(location.state.name)
+
     fetchDate()
     fetchAllEIPs()
+    fetchCurrentMonthEIPs()
   }, [])
 
   console.log({ status })
@@ -567,15 +628,38 @@ function tableCurrent() {
                     </div>
                   </td>
                 ),
-                'Start Date': (item) => (
-                  <td>
-                    <div>{item['Start Date']}</div>
+                'Draft Date': (item) => (
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
+                    <div>{item['Draft Date']}</div>
                   </td>
                 ),
 
                 'Final Date': (item) => (
-                  <td>
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
                     <div>{item['Final Date']}</div>
+                  </td>
+                ),
+                'Last-Call Deadline': (item) => (
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
+                    <div>{item['Last-Call Deadline']}</div>
                   </td>
                 ),
                 Type: (item) => (

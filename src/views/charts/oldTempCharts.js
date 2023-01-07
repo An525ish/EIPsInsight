@@ -128,6 +128,8 @@ const oldCharts = (props) => {
       const list = param.id.split('-')
       const att = list[0]
       const y = list[1]
+      setMonth(monthNum[att])
+      setYear(y)
 
       let filterData = dataValue.filter((element) => {
         if (element.created !== undefined) {
@@ -523,6 +525,7 @@ const oldCharts = (props) => {
     let res = []
     res.push(statusData)
     res.push(findArr)
+    console.log(res)
     console.log(statusName + ' ' + findArr)
     return res
   }
@@ -666,26 +669,25 @@ const oldCharts = (props) => {
   const header = (text) => {
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
+          fontFamily: 'Big Shoulders Display',
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
-        {text === 'GeneralStats' ? (
-          ''
-        ) : (
-          <label style={{ fontWeight: '700' }}>
-            {'('}
-            {parseInt(
-              data === undefined
-                ? 0
-                : findTotalValueZero(AllData === undefined ? [] : AllData, text),
+        {text !== 'GeneralStats' && (
+          <div className="ml-2 bg-white rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
+            {text === 'GeneralStats' ? (
+              ''
+            ) : (
+              <label className="font-bold text-[1rem]">
+                {fetchStatusData(AllData === undefined ? [] : AllData, text)[1][0]}
+              </label>
             )}
-            {')'}
-          </label>
+          </div>
         )}
       </CCardHeader>
     )
@@ -764,28 +766,22 @@ const oldCharts = (props) => {
     return (
       <CTableRow>
         <CTableHeaderCell scope="row">
-          <CBadge
-            style={{
-              color: `${getBadgeColor(name)}`,
-              backgroundColor: `${getBadge(name)}`,
-              fontSize: '13px',
-            }}
-          >
-            {name}
-          </CBadge>
-        </CTableHeaderCell>
-        <CTableDataCell>
-          <label className="relative cursor-pointer">
-            <div
-              className={`h-7
-shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                name,
-              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+          <div className="flex items-center">
+            <label
               style={{
                 color: `${getBadgeColor(name)}`,
                 backgroundColor: `${getBadge(name)}`,
+                fontSize: '13px',
               }}
+              className="px-2 py-1 rounded-[0.3rem] shadow-md"
             >
+              {name}
+            </label>
+          </div>
+        </CTableHeaderCell>
+        <CTableDataCell>
+          <label className="relative cursor-pointer">
+            <div>
               <Link
                 to="/chartTable"
                 style={{
@@ -793,9 +789,10 @@ shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeC
 
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
+                  fontFamily: 'Big Shoulders Display',
                 }}
                 className={`githubIcon h-7
-shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
+            shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
                 state={{
                   type: '',
                   status: name,
@@ -837,7 +834,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
       <CCard className="mb-4 cardBorder">
         <Link
           to="/chartTable"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
             type: '',
             status: status,
@@ -897,7 +894,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
       setClick2Function(false)
       setClick3Function(false)
     }
-    allData()
+    // allData()
     allDataFetcher()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
@@ -906,48 +903,21 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
     <>
       {loading ? (
         <div>
-          <div
-            style={{
-              fontSize: '40px',
-              fontWeight: '800',
-              marginBottom: '60px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-
-              // textTransform: 'uppercase',
-            }}
-          >
-            <CCard
-              style={{
-                display: 'inline-block',
-                padding: '2rem',
-
-                // borderBottom: '4px solid #339af0',
-                // borderLeft: '2px solid #339af0',
-                // borderRight: '2px solid #339af0',
-                // borderBottomLeftRadius: '2rem',
-                // borderBottomRightRadius: '2rem',
-                // fontFamily: 'Quicksand',
-
-                borderRadius: '2rem',
-                border: '2px solid #1c7ed6',
-                // background: '#e7f5ff',
-                // borderTop: '4px solid #339af0',
-                // borderTop: '4px solid #339af0',
-              }}
-            >
-              <label className="translate-y-[-205%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
+          <div className="flex justify-center items-center mb-[4rem]">
+            <div className="flex justify-center items-center">
+              <div
+                className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
                 {year}
-                {/* <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
-            <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div> */}
-              </label>
-              {/* <label className="text-[5rem]">O</label> */}
-              <label className="text-[#1c7ed6]">{months[month - 1]} </label>{' '}
-              <label className="translate-y-[160%] w-max text-[1.3rem]  px-[0.6em] text-[#1c7ed6] border-[1px] border-[#1c7ed6] bg-[#e7f5ff] rounded-[10px] relative">
-                Insight
-              </label>
-            </CCard>
+              </div>
+              <div
+                className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                style={{ fontFamily: 'Big Shoulders Display' }}
+              >
+                {months[month - 1]}{' '}
+              </div>
+            </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
@@ -966,10 +936,10 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col" style={{ width: '70%' }}>
+                        <CTableHeaderCell scope="col" style={{ width: '82%' }}>
                           Status
                         </CTableHeaderCell>
-                        <CTableHeaderCell scope="col" style={{ width: '30%' }}>
+                        <CTableHeaderCell scope="col" style={{ width: '18%' }}>
                           Number
                         </CTableHeaderCell>
                       </CTableRow>
@@ -1007,14 +977,23 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
-                    *Click to see more
+                    * Click to see more
                   </label>
-                  <label style={{ color: '#1c7ed6', fontSize: '10px' }}>{date}</label>
+                  <label
+                    style={{
+                      color: '#1c7ed6',
+                      fontSize: '10px',
+                      fontFamily: 'Big Shoulders Display',
+                    }}
+                    className="tracking-wider text-[0.8rem]"
+                  >
+                    {date}
+                  </label>
                 </CCardFooter>
               </CCard>
             </div>
 
-            <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
+            {/* <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
               <CCol xs={12} className="mb-4">
                 <CCard>
                   <CCardBody
@@ -1094,11 +1073,11 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   </CCardFooter>
                 </CCard>
               </CCol>
-            </div>
+            </div> */}
           </div>
 
           <CRow>
-            <CCol xs={12}>
+            {/* <CCol xs={12}>
               <CCard className="mb-4 cardBorder">
                 {header('GeneralStats')}
 
@@ -1153,7 +1132,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
+            </CCol> */}
 
             <CCol xs={matches ? 12 : 6}>{statusChartsTemplate('Final', Pie, configPieCharts)}</CCol>
 
@@ -1185,11 +1164,12 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
             <CCol xs={matches ? 12 : 6}>
               <CCard className="mb-4 cardBorder">
                 <CCardHeader
-                  className="cardHeader"
+                  className="cardHeader flex tracking-widest font-bold text-[1.3rem]"
                   style={{
                     color: `${coloring('text')}`,
                     background: `${coloring('back')}`,
                     borderBottom: '2px solid #74c0fc',
+                    fontFamily: 'Big Shoulders Display',
                   }}
                 >
                   Final vs Draft

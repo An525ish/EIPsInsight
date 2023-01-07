@@ -2,12 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import { CSmartTable, CMultiSelect } from '@coreui/react-pro'
-import { CSVLink } from 'react-csv'
-import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
-import PropTypes from 'prop-types'
-import github from '../../assets/grey_logo.png'
+import { CSmartTable } from '@coreui/react-pro'
 import { motion } from 'framer-motion'
 import {
   CAvatar,
@@ -32,7 +27,7 @@ import {
 } from '@coreui/react'
 
 import { Link, useParams } from 'react-router-dom'
-import { ip } from 'src/constants'
+import { ip, TypeColors } from 'src/constants'
 
 import useMediaQuery from 'src/scss/useMediaQuery'
 
@@ -43,6 +38,7 @@ import './Dashboard.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 import { MotionConfig } from 'framer-motion'
+
 const Dashboard = () => {
   const [data, setData] = useState()
   const [info, setInfo] = useState()
@@ -52,6 +48,7 @@ const Dashboard = () => {
   const [post, getPost] = useState()
   const [pieChartData, setPieChartData] = useState()
   const [loading, setLoading] = useState(false)
+  const [AllData, setAllData] = useState([])
 
   const {
     click1,
@@ -71,26 +68,59 @@ const Dashboard = () => {
   const API = 'https://eipsinsight.com/api/overallData'
   const API2 = 'https://eipsinsight.com/api/allinfo'
   const API3 = 'https://eipsinsight.com/api/statusPage'
-  const fetchPost = () => {
-    fetch(API)
-      .then((res) => res.json())
-      .then((res) => {
-        getPost(res)
-      })
+
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
   }
-  const fetchAllEIPs = () => {
-    fetch(API2)
-      .then((res) => res.json())
-      .then((res) => {
-        setEips(res)
-      })
+
+  const API4 = `${ip}/getAll`
+  const fetchPost = async (ignore) => {
+    const data = await fetch(API)
+    const post = await data.json()
+    if (!ignore) {
+      getPost(post)
+    }
   }
-  const fetchAllStatus = () => {
-    fetch(API3)
-      .then((res) => res.json())
-      .then((res) => {
-        setPieChartData(res)
-      })
+  const fetchAllEIPs = async (ignore) => {
+    const data = await fetch(API2)
+    const post = await data.json()
+    if (!ignore) {
+      setEips(post)
+    }
+  }
+  const fetchAllStatus = async (ignore) => {
+    const data = await fetch(API3)
+    const post = await data.json()
+    if (!ignore) {
+      setPieChartData(post)
+    }
+  }
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      setAllData(factorOutDuplicate(Object.values(post[0])))
+    }
   }
 
   const fetchDate = () => {
@@ -118,7 +148,7 @@ const Dashboard = () => {
       return months.indexOf(a.name) - months.indexOf(b.name)
     }
   }
-  const allData = async () => {
+  const allData = async (ignore) => {
     try {
       const res = await fetch(`${ip}/register`, {
         // method: 'GET',
@@ -131,11 +161,13 @@ const Dashboard = () => {
       let datas = []
       datas = await res.json()
 
-      setData(datas)
+      if (!ignore) {
+        setData(datas)
 
-      const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
-      setYears(yearArr)
-      setLoading(true)
+        const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
+        setYears(yearArr)
+        setLoading(true)
+      }
 
       if (!res.status === 200) {
         const error = new Error(res.error)
@@ -185,75 +217,122 @@ const Dashboard = () => {
     return arr
   }
 
-  const checkDataPresent = (dataList) => {
-    let present = 0
-    for (let i = 0; i < dataList.length; i++) {
-      if (dataList[i] !== 0) {
-        present = 1
-      }
-    }
-    return present
-  }
-  const sortLabel = (data, name) => {
-    data.sort(sorter)
-    const arr = []
-    for (let i = 0; i < data.length; i++) {
-      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
-      arr.push(month)
-    }
+  // factor out all Data
+  function distributeData(data) {
+    let arr = []
+    // Types
+    let coreData = data.filter(
+      (item) => item.category === 'Core' && item.type === 'Standards Track',
+    )
+    let ercData = data.filter((item) => item.category === 'ERC' && item.type === 'Standards Track')
+    let networkingData = data.filter(
+      (item) => item.category === 'Networking' && item.type === 'Standards Track',
+    )
+    let interfaceData = data.filter(
+      (item) => item.category === 'Interface' && item.type === 'Standards Track',
+    )
+    let metaData = data.filter((item) => item.type === 'Meta')
+    let informationalData = data.filter((item) => item.type === 'Informational')
+
+    // statuses
+    let livingData = data.filter((item) => item.status === 'Living')
+    let finalData = data.filter((item) => item.status === 'Final')
+    let lastCallData = data.filter((item) => item.status === 'Last Call')
+    let reviewData = data.filter((item) => item.status === 'Review')
+    let draftData = data.filter((item) => item.status === 'Draft')
+    let stagnantData = data.filter((item) => item.status === 'Stagnant')
+    let withdrawnData = data.filter((item) => item.status === 'Withdrawn')
+
+    arr.push({
+      total: coreData.length,
+      data: coreData,
+    })
+    arr.push({
+      total: ercData.length,
+      data: ercData,
+    })
+    arr.push({
+      total: networkingData.length,
+      data: networkingData,
+    })
+    arr.push({
+      total: interfaceData.length,
+      data: interfaceData,
+    })
+    arr.push({
+      total: metaData.length,
+      data: metaData,
+    })
+    arr.push({
+      total: informationalData.length,
+      data: informationalData,
+    })
+
+    arr.push({
+      total: livingData.length,
+      data: livingData,
+    })
+    arr.push({
+      total: finalData.length,
+      data: finalData,
+    })
+    arr.push({
+      total: lastCallData.length,
+      data: lastCallData,
+    })
+    arr.push({
+      total: reviewData.length,
+      data: reviewData,
+    })
+    arr.push({
+      total: draftData.length,
+      data: draftData,
+    })
+    arr.push({
+      total: stagnantData.length,
+      data: stagnantData,
+    })
+    arr.push({
+      total: withdrawnData.length,
+      data: withdrawnData,
+    })
+
+    console.log(arr)
+
     return arr
   }
-  const sortData = (data, name, section) => {
-    data.sort(sorter)
 
-    const arr = []
-    for (let i = 0; i < data.length; i++) {
-      arr.push(data[i][name][section])
-    }
-
-    return arr
-  }
-  const sortRem = (data, name) => {
-    data.sort(sorter)
-
-    const arr = []
-    for (let i = 0; i < data.length; i++) {
-      arr.push(data[i]['summary'][name])
-    }
-
-    return arr
-  }
   const annotations = []
 
   const d1 = [
     {
       year: 'Standard Track',
-      value: post === undefined ? '' : post['Core'],
+      value: distributeData(AllData)[0].total,
       type: 'Core',
     },
     {
       year: 'Standard Track',
-      value: post === undefined ? '' : post['ERC'],
+      value: distributeData(AllData)[1].total,
       type: 'ERC',
     },
     {
       year: 'Standard Track',
-      value: post === undefined ? '' : post['Networking'],
+      value: distributeData(AllData)[2].total,
       type: 'Networking',
     },
     {
       year: 'Standard Track',
-      value: post === undefined ? '' : post['Interface'],
+      value: distributeData(AllData)[3].total,
       type: 'Interface',
     },
     {
       year: 'Meta',
-      value: post === undefined ? '' : post['Meta'],
+      value: distributeData(AllData)[4].total,
       type: 'Meta',
     },
     {
       year: 'Informational',
-      value: post === undefined ? '' : post['Informational'],
+      value: distributeData(AllData)[5].total,
       type: 'Informational',
     },
   ]
@@ -293,7 +372,7 @@ const Dashboard = () => {
   }
   const config = {
     data: d1,
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -306,7 +385,19 @@ const Dashboard = () => {
   // monthly Insights
 
   const draftDataFinding = (name, data) => {
-    data.sort(sorter)
+    const allData = distributeData(AllData)
+    const statusNum = {
+      Living: allData[6].total,
+      Final: allData[7].total,
+      Last_Call: allData[8].total,
+      Review: allData[9].total,
+      Draft: allData[10].total,
+      Stagnant: allData[11].total,
+      Withdrawn: allData[12].total,
+    }
+
+    console.log(statusNum[name])
+
     let arr = []
     for (let i = 0; i < data.length; i++) {
       const month = data[i].name.slice(0, 3) + ' ' + data[i].year
@@ -364,7 +455,7 @@ const Dashboard = () => {
       xField: 'year',
       yField: 'gdp',
       seriesField: 'name',
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
+      color: TypeColors,
       // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
       yAxis: {
         label: {
@@ -491,7 +582,7 @@ const Dashboard = () => {
 
   const yearlyDraftConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -502,7 +593,7 @@ const Dashboard = () => {
   }
   const yearlyFinalConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -513,7 +604,7 @@ const Dashboard = () => {
   }
   const yearlyReviewConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -526,7 +617,7 @@ const Dashboard = () => {
 
   const yearlyLastCallConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -538,7 +629,7 @@ const Dashboard = () => {
 
   const yearlyStagnantConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -549,7 +640,7 @@ const Dashboard = () => {
   }
   const yearlyWithdrawnConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -562,7 +653,7 @@ const Dashboard = () => {
   }
   const yearlyLivingConfig = {
     data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
+    color: TypeColors,
     isStack: true,
     xField: 'year',
     yField: 'value',
@@ -602,8 +693,9 @@ const Dashboard = () => {
       },
     },
     { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'Category', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'status', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    { key: 'Category', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    { key: 'status', _style: { width: '10%', color: '#1c7ed6' } },
+    { key: 'PR No.', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
   const coloring = (text) => {
     switch (text) {
@@ -695,109 +787,30 @@ const Dashboard = () => {
 
   const eipData = (eips) => {
     let arr = []
-    if (eips[0] !== undefined) {
-      let inc = 0
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[0]['Final'][i].eip,
-          Title: eips[0]['Final'][i].title,
-          Type: eips[0]['Final'][i].type,
-          Category:
-            eips[0]['Final'][i].type === 'Standards Track'
-              ? eips[0]['Final'][i].category
-              : `Type - ${eips[0]['Final'][i].type}`,
-          status: eips[0]['Final'][i].status,
-          Author: eips[0]['Final'][i].author,
-        })
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[1]['Draft'][i].eip,
-          Title: eips[1]['Draft'][i].title,
-          Type: eips[1]['Draft'][i].type,
-          Category:
-            eips[1]['Draft'][i].type === 'Standards Track'
-              ? eips[1]['Draft'][i].category
-              : `Type - ${eips[1]['Draft'][i].type}`,
-          status: eips[1]['Draft'][i].status,
-          Author: eips[1]['Draft'][i].author,
-        })
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[2]['Review'][i].eip,
-          Title: eips[2]['Review'][i].title,
-          Type: eips[2]['Review'][i].type,
-          Category:
-            eips[2]['Review'][i]?.type === 'Standards Track'
-              ? eips[2]['Review'][i]?.category
-              : `Type - ${eips[2]['Review'][i].type}`,
-          status: eips[2]['Review'][i].status,
-          Author: eips[2]['Review'][i].author,
-        })
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[3]['Last_Call'][i].eip,
-          Title: eips[3]['Last_Call'][i].title,
-          Type: eips[3]['Last_Call'][i].type,
-          Category:
-            eips[3]['Last_Call'][i].type === 'Standards Track'
-              ? eips[3]['Last_Call'][i].category
-              : `Type - ${eips[3]['Last_Call'][i].type}`,
-          status: eips[3]['Last_Call'][i].status,
-          Author: eips[3]['Last_Call'][i].author,
-        })
-      }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[4]['Stagnant'][i].eip,
-          Title: eips[4]['Stagnant'][i].title,
-          Type: eips[4]['Stagnant'][i].type,
-          Category:
-            eips[4]['Stagnant'][i].type === 'Standards Track'
-              ? eips[4]['Stagnant'][i].category
-              : `Type - ${eips[4]['Stagnant'][i].type}`,
-          status: eips[4]['Stagnant'][i].status,
-          Author: eips[4]['Stagnant'][i].author,
-        })
+    let inc = 0
+    for (let i = 0; i < eips.length; i++) {
+      console.log(eips[i].eip)
+      const temp = eips[i].eip.split('.md')[0].split('eip-')
+      if (temp.length === 2) {
+        if (temp[0] === '' && !isNaN(temp[1])) {
+          arr.push({
+            id: inc++,
+            Number: parseInt(temp[1]),
+            Title: eips[i].title,
+            Type: eips[i].type,
+            Category:
+              eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
+            status: eips[i].status,
+            Author: eips[i].author,
+            'PR No.': eips[i].pull,
+          })
+        }
       }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[5]['Withdrawn'][i].eip,
-          Title: eips[5]['Withdrawn'][i].title,
-          Type: eips[5]['Withdrawn'][i].type,
-          Category:
-            eips[5]['Withdrawn'][i].type === 'Standards Track'
-              ? eips[5]['Withdrawn'][i].category
-              : `Type - ${eips[5]['Withdrawn'][i].type}`,
-          status: eips[5]['Withdrawn'][i].status,
-          Author: eips[5]['Withdrawn'][i].author,
-        })
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        arr.push({
-          id: inc++,
-          Number: eips[6]['Living'][i].eip,
-          Title: eips[6]['Living'][i].title,
-          Type: eips[6]['Living'][i].type,
-          Category:
-            eips[6]['Living'][i].type === 'Standards Track'
-              ? eips[6]['Living'][i].category
-              : `Type - ${eips[6]['Living'][i].type}`,
-          status: eips[6]['Living'][i].status,
-          Author: eips[6]['Living'][i].author,
-        })
-      }
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
+
+    arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
+
     return arr
   }
   // pie config
@@ -805,109 +818,52 @@ const Dashboard = () => {
   const pieData = [
     {
       type: 'Living',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Living'] === undefined
-          ? 0
-          : pieChartData['Living']['Standard_Track']['Core'] +
-            pieChartData['Living']['Standard_Track']['ERC'] +
-            pieChartData['Living']['Standard_Track']['Networking'] +
-            pieChartData['Living']['Standard_Track']['Interface'] +
-            pieChartData['Living']['Meta'] +
-            pieChartData['Living']['Informational'],
+      value: distributeData(AllData)[6].total,
     },
     {
       type: 'Final',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Final'] === undefined
-          ? 0
-          : pieChartData['Final']['Standard_Track']['Core'] +
-            pieChartData['Final']['Standard_Track']['ERC'] +
-            pieChartData['Final']['Standard_Track']['Networking'] +
-            pieChartData['Final']['Standard_Track']['Interface'] +
-            pieChartData['Final']['Meta'] +
-            pieChartData['Final']['Informational'],
+      value: distributeData(AllData)[7].total,
     },
     {
       type: 'Last_Call',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Last_Call'] === undefined
-          ? 0
-          : pieChartData['Last_Call']['Standard_Track']['Core'] +
-            pieChartData['Last_Call']['Standard_Track']['ERC'] +
-            pieChartData['Last_Call']['Standard_Track']['Networking'] +
-            pieChartData['Last_Call']['Standard_Track']['Interface'] +
-            pieChartData['Last_Call']['Meta'] +
-            pieChartData['Last_Call']['Informational'],
+      value: distributeData(AllData)[8].total,
     },
     {
       type: 'Review',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Review'] === undefined
-          ? 0
-          : pieChartData['Review']['Standard_Track']['Core'] +
-            pieChartData['Review']['Standard_Track']['ERC'] +
-            pieChartData['Review']['Standard_Track']['Networking'] +
-            pieChartData['Review']['Standard_Track']['Interface'] +
-            pieChartData['Review']['Meta'] +
-            pieChartData['Review']['Informational'],
+      value: distributeData(AllData)[9].total,
     },
     {
       type: 'Draft',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Draft'] === undefined
-          ? 0
-          : pieChartData['Draft']['Standard_Track']['Core'] +
-            pieChartData['Draft']['Standard_Track']['ERC'] +
-            pieChartData['Draft']['Standard_Track']['Networking'] +
-            pieChartData['Draft']['Standard_Track']['Interface'] +
-            pieChartData['Draft']['Meta'] +
-            pieChartData['Draft']['Informational'],
+      value: distributeData(AllData)[10].total,
     },
     {
       type: 'Stagnant',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Stagnant'] === undefined
-          ? 0
-          : pieChartData['Stagnant']['Standard_Track']['Core'] +
-            pieChartData['Stagnant']['Standard_Track']['ERC'] +
-            pieChartData['Stagnant']['Standard_Track']['Networking'] +
-            pieChartData['Stagnant']['Standard_Track']['Interface'] +
-            pieChartData['Stagnant']['Meta'] +
-            pieChartData['Stagnant']['Informational'],
+      value: distributeData(AllData)[11].total,
     },
     {
       type: 'Withdrawn',
-      value:
-        pieChartData === undefined
-          ? 0
-          : pieChartData['Withdrawn'] === undefined
-          ? 0
-          : pieChartData['Withdrawn']['Standard_Track']['Core'] +
-            pieChartData['Withdrawn']['Standard_Track']['ERC'] +
-            pieChartData['Withdrawn']['Standard_Track']['Networking'] +
-            pieChartData['Withdrawn']['Standard_Track']['Interface'] +
-            pieChartData['Withdrawn']['Meta'] +
-            pieChartData['Withdrawn']['Informational'],
+      value: distributeData(AllData)[12].total,
     },
   ]
 
   // header
   const header = (text) => {
+    // console.log(AllData)
+    text = text === 'Last Call' ? 'Last_Call' : text
+    const allData = distributeData(AllData)
+    const statusNum = {
+      Living: allData[6].total,
+      Final: allData[7].total,
+      Last_Call: allData[8].total,
+      Review: allData[9].total,
+      Draft: allData[10].total,
+      Stagnant: allData[11].total,
+      Withdrawn: allData[12].total,
+    }
+
     return (
       <CCardHeader
-        className="cardHeader"
+        className="cardHeader flex tracking-wider text-[1.3rem] font-bold "
         style={{
           fontFamily: 'Roboto',
           fontWeight: '500',
@@ -917,7 +873,21 @@ const Dashboard = () => {
           border: `none`,
         }}
       >
-        {text}
+        {text === 'Last_Call' ? 'Last Call' : text}
+        {text === 'EIPs Type & Categories' || text === 'EIPs Status' || text === 'Search an EIP' ? (
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
+            {allData[0].total +
+              allData[1].total +
+              allData[2].total +
+              allData[3].total +
+              allData[4].total +
+              allData[5].total}
+          </div>
+        ) : (
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
+            {statusNum[text]}
+          </div>
+        )}
       </CCardHeader>
     )
   }
@@ -951,7 +921,7 @@ const Dashboard = () => {
           position: 'right',
         }
       : false,
-    color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+    color: ['#3bc9db', '#20c997', '#69db7c', '#339af0', '#fcc419', '#ffc078', '#ff6b6b'],
     label: matches1
       ? {
           type: 'inner',
@@ -1012,17 +982,16 @@ const Dashboard = () => {
   }
 
   const factorAuthor = (data) => {
-    let ans
-    // console.log({ data })
+    console.log({ data })
     let list = data.split(',')
     // console.log({ list })
-    for (let i = 0; i < list.length; i++) {
-      list[i] = list[i].split(' ')
-    }
-    // console.log({ list })
-    if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
-      list.pop()
-    }
+    // for (let i = 0; i < list.length; i++) {
+    //   list[i] = list[i].split(' ')
+    // }
+    // // console.log({ list })
+    // if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
+    //   list.pop()
+    // }
     return list
   }
 
@@ -1091,12 +1060,17 @@ const Dashboard = () => {
 
   useEffect(() => {
     // fetchData()
+    let ignore = false
+    fetchPost(ignore)
+    fetchDate(ignore)
+    fetchAllEIPs(ignore)
+    fetchAllStatus(ignore)
+    fetchAllData(ignore)
+    allData(ignore)
 
-    fetchPost()
-    fetchDate()
-    fetchAllEIPs()
-    fetchAllStatus()
-    allData()
+    return () => {
+      ignore = true
+    }
   }, [])
 
   // temparary
@@ -1162,7 +1136,7 @@ const Dashboard = () => {
                   className="scrollbarDesign"
                 >
                   <CSmartTable
-                    items={eipData(eips === undefined ? [] : eips)}
+                    items={eipData(AllData)}
                     activePage={1}
                     color="success"
                     clickableRows
@@ -1280,7 +1254,7 @@ const Dashboard = () => {
                                     className="hoverAuthor text-[10px]"
                                     style={{ '--author-color': `${getBadgeColor(it.status)}` }}
                                   >
-                                    {getString(item)}
+                                    {item}
                                   </a>
                                 </CBadge>
                               )

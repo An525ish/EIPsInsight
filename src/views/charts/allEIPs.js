@@ -8,6 +8,7 @@ import downloadIcon from 'src/assets/download.png'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import './allEIPs.css'
 import { MotionConfig } from 'framer-motion'
+const statusArr = ['Final', 'Draft', 'Review', 'Last_Call', 'Stagnant', 'Withdrawn', 'Living']
 
 const AllEIPs = () => {
   const [eips, setEips] = useState()
@@ -39,105 +40,60 @@ const AllEIPs = () => {
     let arr = []
     if (eips[0] !== undefined) {
       let inc = 1
-      for (let i = 0; i < eips[0]['Final'].length; i++) {
-        arr.push({
-          Number: eips[0]['Final'][i].eip,
-          Title: eips[0]['Final'][i].title,
-          Type: eips[0]['Final'][i].type,
-          Category:
-            eips[0]['Final'][i].type === 'Standards Track'
-              ? eips[0]['Final'][i].category
-              : `Type - ${eips[0]['Final'][i].type}`,
-          status: eips[0]['Final'][i].status,
-          Author: eips[0]['Final'][i].author,
-          'PR No.': '#' + eips[0]['Final'][i].eip,
-        })
-      }
-      for (let i = 0; i < eips[1]['Draft'].length; i++) {
-        arr.push({
-          Number: eips[1]['Draft'][i].eip,
-          Title: eips[1]['Draft'][i].title,
-          Type: eips[1]['Draft'][i].type,
-          Category:
-            eips[1]['Draft'][i].type === 'Standards Track'
-              ? eips[1]['Draft'][i].category
-              : `Type - ${eips[1]['Draft'][i].type}`,
-          status: eips[1]['Draft'][i].status,
-          Author: eips[1]['Draft'][i].author,
-          'PR No.': '#' + eips[1]['Draft'][i].eip,
-        })
-      }
-      for (let i = 0; i < eips[2]['Review'].length; i++) {
-        arr.push({
-          Number: eips[2]['Review'][i].eip,
-          Title: eips[2]['Review'][i].title,
-          Type: eips[2]['Review'][i].type,
-          Category:
-            eips[2]['Review'][i]?.type === 'Standards Track'
-              ? eips[2]['Review'][i]?.category
-              : `Type - ${eips[2]['Review'][i].type}`,
-          status: eips[2]['Review'][i].status,
-          Author: eips[2]['Review'][i].author,
-          'PR No.': '#' + eips[2]['Review'][i].eip,
-        })
-      }
-      for (let i = 0; i < eips[3]['Last_Call'].length; i++) {
-        arr.push({
-          Number: eips[3]['Last_Call'][i].eip,
-          Title: eips[3]['Last_Call'][i].title,
-          Type: eips[3]['Last_Call'][i].type,
-          Category:
-            eips[3]['Last_Call'][i].type === 'Standards Track'
-              ? eips[3]['Last_Call'][i].category
-              : `Type - ${eips[3]['Last_Call'][i].type}`,
-          status: eips[3]['Last_Call'][i].status,
-          Author: eips[3]['Last_Call'][i].author,
-          'PR No.': '#' + eips[3]['Last_Call'][i].eip,
-        })
+
+      for (let j = 0; j < statusArr.length; j++) {
+        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
+          if (statusArr[j] === 'Final') {
+            arr.push({
+              id: inc++,
+              Number: eips[j][statusArr[j]][i].eip,
+              Title: eips[j][statusArr[j]][i].title,
+              Type: eips[j][statusArr[j]][i].type,
+              Category:
+                eips[j][statusArr[j]][i].type === 'Standards Track'
+                  ? eips[j][statusArr[j]][i].category
+                  : `Type - ${eips[j][statusArr[j]][i].type}`,
+              'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+              status: eips[j][statusArr[j]][i].status,
+              Author: eips[j][statusArr[j]][i].author,
+              'PR No.': 0,
+            })
+          } else if (statusArr[j] === 'Last_Call') {
+            arr.push({
+              id: inc++,
+              Number: eips[j][statusArr[j]][i].eip,
+              Title: eips[j][statusArr[j]][i].title,
+              Type: eips[j][statusArr[j]][i].type,
+              Category:
+                eips[j][statusArr[j]][i].type === 'Standards Track'
+                  ? eips[j][statusArr[j]][i].category
+                  : `Type - ${eips[j][statusArr[j]][i].type}`,
+              'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+              'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(0, 10),
+              status: eips[j][statusArr[j]][i].status,
+              Author: eips[j][statusArr[j]][i].author,
+              'PR No.': 0,
+            })
+          } else {
+            arr.push({
+              id: inc++,
+              Number: eips[j][statusArr[j]][i].eip,
+              Title: eips[j][statusArr[j]][i].title,
+              Type: eips[j][statusArr[j]][i].type,
+              Category:
+                eips[j][statusArr[j]][i].type === 'Standards Track'
+                  ? eips[j][statusArr[j]][i].category
+                  : `Type - ${eips[j][statusArr[j]][i].type}`,
+              'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+
+              status: eips[j][statusArr[j]][i].status,
+              Author: eips[j][statusArr[j]][i].author,
+              'PR No.': 0,
+            })
+          }
+        }
       }
 
-      for (let i = 0; i < eips[4]['Stagnant'].length; i++) {
-        arr.push({
-          Number: eips[4]['Stagnant'][i].eip,
-          Title: eips[4]['Stagnant'][i].title,
-          Type: eips[4]['Stagnant'][i].type,
-          Category:
-            eips[4]['Stagnant'][i].type === 'Standards Track'
-              ? eips[4]['Stagnant'][i].category
-              : `Type - ${eips[4]['Stagnant'][i].type}`,
-          status: eips[4]['Stagnant'][i].status,
-          Author: eips[4]['Stagnant'][i].author,
-          'PR No.': '#' + eips[4]['Stagnant'][i].eip,
-        })
-      }
-      for (let i = 0; i < eips[5]['Withdrawn'].length; i++) {
-        arr.push({
-          Number: eips[5]['Withdrawn'][i].eip,
-          Title: eips[5]['Withdrawn'][i].title,
-          Type: eips[5]['Withdrawn'][i].type,
-          Category:
-            eips[5]['Withdrawn'][i].type === 'Standards Track'
-              ? eips[5]['Withdrawn'][i].category
-              : `Type - ${eips[5]['Withdrawn'][i].type}`,
-          status: eips[5]['Withdrawn'][i].status,
-          Author: eips[5]['Withdrawn'][i].author,
-          'PR No.': '#' + eips[5]['Withdrawn'][i].eip,
-        })
-      }
-      for (let i = 0; i < eips[6]['Living'].length; i++) {
-        arr.push({
-          Number: eips[6]['Living'][i].eip,
-          Title: eips[6]['Living'][i].title,
-          Type: eips[6]['Living'][i].type,
-          Category:
-            eips[6]['Living'][i].type === 'Standards Track'
-              ? eips[6]['Living'][i].category
-              : `Type - ${eips[6]['Living'][i].type}`,
-          status: eips[6]['Living'][i].status,
-          Author: eips[6]['Living'][i].author,
-          'PR No.': '#' + eips[6]['Living'][i].eip,
-        })
-      }
       arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
     return arr
@@ -167,7 +123,7 @@ const AllEIPs = () => {
       },
     },
     {
-      key: 'Start Date',
+      key: 'Draft Date',
       _style: {
         width: '10%',
         color: '#1c7ed6',
@@ -269,8 +225,11 @@ const AllEIPs = () => {
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
-        <div>
-          {text} ({allEIPs})
+        <div className="flex">
+          {text}{' '}
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
+            {allEIPs}
+          </div>
         </div>
 
         <CSVLink {...csvLink} className="drop-shadow-lg shadow-blue-500/50">
@@ -482,14 +441,26 @@ const AllEIPs = () => {
                     </div>
                   </td>
                 ),
-                'Start Date': (item) => (
-                  <td>
-                    <div>{item['Start Date']}</div>
+                'Draft Date': (item) => (
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
+                    <div>{item['Draft Date']}</div>
                   </td>
                 ),
 
                 'Final Date': (item) => (
-                  <td>
+                  <td
+                    style={{
+                      color: `${getBadgeColor(item.status)}`,
+                      fontWeight: 'bold',
+                    }}
+                    className="text-[12px]"
+                  >
                     <div>{item['Final Date']}</div>
                   </td>
                 ),

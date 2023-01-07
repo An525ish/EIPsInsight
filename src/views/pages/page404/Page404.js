@@ -1,39 +1,36 @@
 import React from 'react'
-import {
-  CButton,
-  CCol,
-  CContainer,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilMagnifyingGlass } from '@coreui/icons'
+
+import { Link } from 'react-router-dom'
 
 const Page404 = () => {
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <CContainer>
-        <CRow className="justify-content-center">
-          <CCol md={6}>
-            <div className="clearfix">
-              <h1 className="float-start display-3 me-4">404</h1>
-              <h4 className="pt-3">Oops! You{"'"}re lost.</h4>
-              <p className="text-medium-emphasis float-start">
-                The page you are looking for was not found.
-              </p>
-            </div>
-            <CInputGroup className="input-prepend">
-              <CInputGroupText>
-                <CIcon icon={cilMagnifyingGlass} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="What are you looking for?" />
-              <CButton color="info">Search</CButton>
-            </CInputGroup>
-          </CCol>
-        </CRow>
-      </CContainer>
+    <div className="flex flex-col justify-center items-center h-[80vh]">
+      <div className="text-[10rem] font-bold">404</div>
+      <div className="text-[4rem] text-[#868e96]">Something went</div>
+      <div
+        className="text-[3rem] font-bold mb-4 tracking-wider"
+        style={{ fontFamily: 'Big Shoulders Display' }}
+      >
+        WRONG!
+      </div>
+      <div className="flex">
+        <Link to="/">
+          <div
+            className="ml-3 bg-white text-[#1c7ed6] text-[1.3rem] p-2 rounded-[0.6rem] shadow-md tracking-wider"
+            style={{ fontFamily: 'Big Shoulders Display' }}
+          >
+            Go Home
+          </div>
+        </Link>
+        <Link to="/contactUs">
+          <div
+            className="ml-6 bg-[#e7f5ff] text-[#1c7ed6] text-[1.3rem] p-2 rounded-[0.6rem] shadow-md tracking-wider"
+            style={{ fontFamily: 'Big Shoulders Display' }}
+          >
+            CONTACT US
+          </div>
+        </Link>
+      </div>
     </div>
   )
 }
