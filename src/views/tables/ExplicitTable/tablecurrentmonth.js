@@ -35,6 +35,7 @@ function tableCurrent() {
 
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState()
+  const [eip, setEip] = useState()
 
   const fetchAllEIPs = () => {
     fetch(API2)
@@ -264,6 +265,16 @@ function tableCurrent() {
     }
     return ans
   }
+
+  function getLastCallDate(eipId) {
+    if (eip === undefined) return 'N/A'
+    for (let i = 0; i < eip.length; i++) {
+      if (eip[i].eip === parseInt(eipId)) {
+        return eip[i]['last-call-deadline'].substring(0, 10)
+      }
+    }
+    return 'N/A'
+  }
   const findAllEIPs = (eips, data, status) => {
     console.log({ name })
     let arr = []
@@ -313,7 +324,10 @@ function tableCurrent() {
               findEip[0].data.type === 'Standards Track'
                 ? findEip[0].data.category
                 : `Type - ${findEip[0].data.type}`,
-            'Last-Call Deadline': findEip[0].data.created.substring(0, 10),
+            'Last-Call Deadline':
+              getLastCallDate(findEip[0].data.eip) !== 'N/A'
+                ? getLastCallDate(findEip[0].data.eip)
+                : findEip[0].data.created.substring(0, 10),
             'Draft Date': findEip[0].data.created.substring(0, 10),
             status: findEip[0].data.status,
             Author: findEip[0].data.author,
@@ -473,7 +487,7 @@ function tableCurrent() {
   useEffect(() => {
     setStatus(location.state.status)
     setName(location.state.name)
-
+    setEip(location.state.eips)
     fetchDate()
     fetchAllEIPs()
     fetchCurrentMonthEIPs()

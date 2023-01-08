@@ -57,114 +57,38 @@ const AppHeader = (props) => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
-  const [data, setData] = useState()
-  const [years, setYears] = useState()
+  const [eips, setEips] = useState([])
 
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  const sorter = (a, b) => {
-    if (a.year !== b.year) {
-      return a.year - b.year
-    } else {
-      return months.indexOf(a.name) - months.indexOf(b.name)
-    }
-  }
-
-  const APII = 'https://eipsinsight.com/api/typePage'
-  const fetchPost = () => {
-    fetch(APII)
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res)
-      })
-  }
-
-  const [post, getPost] = useState()
-  const APIII = 'https://eipsinsight.com/api/statusPage'
-  const fetchPostI = () => {
-    fetch(APIII)
-      .then((res) => res.json())
-      .then((res) => {
-        getPost(res)
-      })
-  }
-
-  const getStandardAttribute = (post, name) => {
-    return post.length === 0
-      ? 0
-      : post['Final']['Standard_Track'] === undefined
-      ? 0
-      : post['Final']['Standard_Track'][name] +
-        post['Draft']['Standard_Track'][name] +
-        post['Review']['Standard_Track'][name] +
-        post['Last_Call']['Standard_Track'][name] +
-        post['Stagnant']['Standard_Track'][name] +
-        post['Withdrawn']['Standard_Track'][name] +
-        post['Living']['Standard_Track'][name]
-  }
-
-  const fetchTableDataExtra = (data, name, status) => {
-    const keys = Object.keys(data)
-    let res = 0
-    for (let i = 0; i < keys.length; i++) {
-      if (keys[i] === status) {
-        res = data[keys[i]][name]
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
       }
     }
 
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
     return res
   }
-  const totalEIPs = () => {
-    const total =
-      getStandardAttribute(post === undefined ? [] : post, 'Core') +
-      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
-      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
-      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Withdrawn') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Last_Call') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')
-    setAllEIPsFunction(total)
-    return total
-  }
 
-  const getMonth = (d) => {
-    if (d.length !== 0) {
-      d.sort(sorter)
-      d.reverse()
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
 
-      return d[0].name.toLowerCase()
-    }
-  }
-
-  const getYear = (d) => {
-    if (d.length !== 0) {
-      d.sort(sorter)
-      d.reverse()
-
-      return d[0].year
+    if (!ignore) {
+      setEips(factorOutDuplicate(Object.values(post[0])))
     }
   }
 
@@ -177,8 +101,7 @@ const AppHeader = (props) => {
   }
 
   useEffect(() => {
-    fetchPost()
-    fetchPostI()
+    fetchAllData()
   }, [])
 
   return (
@@ -228,7 +151,7 @@ const AppHeader = (props) => {
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2 h-2"></div>
                   <div className="absolute top-0 right-0 -mr-0 -mt-1   w-2 h-2 text-[10px] text-[#1c7ed6] font-extrabold">
-                    {totalEIPs()}
+                    {eips.length}
                   </div>
                 </label>
               </CNavLink>

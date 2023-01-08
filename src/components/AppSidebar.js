@@ -223,35 +223,11 @@ const AppSidebar = (props) => {
       objYear.exact = true
       objYear.subRoutes = []
 
-      if (allYears[j] >= 2021) {
-        for (let i = 11; i >= 0; i--) {
-          objYear.subRoutes.push({
-            path: `/${months[i].toLowerCase()}-${allYears[j]}`,
-            name: `${months[i]}`,
-          })
-        }
-      } else {
-        if (allYears[j] === 2021) {
-          for (let i = 11; i >= 7; i--) {
-            objYear.subRoutes.push({
-              path: `/${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-            })
-          }
-          for (let i = 6; i >= 0; i--) {
-            objYear.subRoutes.push({
-              path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-            })
-          }
-        } else {
-          for (let i = 11; i >= 0; i--) {
-            objYear.subRoutes.push({
-              path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-            })
-          }
-        }
+      for (let i = 11; i >= 0; i--) {
+        objYear.subRoutes.push({
+          path: `/${months[i].toLowerCase()}-${allYears[j]}`,
+          name: `${months[i]}`,
+        })
       }
 
       console.log({ objYear })

@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   CTable,
   CTableHeaderCell,
@@ -21,14 +21,64 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from 'src/views/theme/loading/loading'
 import { StatusColors, TypeColors } from 'src/constants'
+import { ip } from 'src/constants'
+import AllEIPs from 'src/views/charts/allEIPs'
 
 function typeAll() {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-
+  const [eips, setEips] = useState([])
+  // const [allData, setAllData] = useState([])
   const matches = useMediaQuery('(max-width: 767px)')
+
+  const [eip, setEip] = useState()
+
+  const API2 = `${ip}/allInfo`
+  const fetchAllEIps = async (ignore) => {
+    const data = await fetch(API2)
+    const post = await data.json()
+
+    if (!ignore) {
+      console.log(post)
+      setEip(post)
+    }
+  }
+
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
+  }
+
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      setEips(factorOutDuplicate(Object.values(post[0])))
+      setLoading(true)
+    }
+  }
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
@@ -36,7 +86,6 @@ function typeAll() {
       .then((res) => res.json())
       .then((res) => {
         getPost(res)
-        setLoading(true)
       })
   }
   const fetchAnnotations = (d) => {
@@ -89,9 +138,97 @@ function typeAll() {
     return res
   }
 
+  function distributeData(data) {
+    let arr = []
+    // Types
+    let coreData = data.filter(
+      (item) => item.category === 'Core' && item.type === 'Standards Track',
+    )
+    let ercData = data.filter((item) => item.category === 'ERC' && item.type === 'Standards Track')
+    let networkingData = data.filter(
+      (item) => item.category === 'Networking' && item.type === 'Standards Track',
+    )
+    let interfaceData = data.filter(
+      (item) => item.category === 'Interface' && item.type === 'Standards Track',
+    )
+    let metaData = data.filter((item) => item.type === 'Meta')
+    let informationalData = data.filter((item) => item.type === 'Informational')
+
+    // statuses
+    let livingData = data.filter((item) => item.status === 'Living')
+    let finalData = data.filter((item) => item.status === 'Final')
+    let lastCallData = data.filter((item) => item.status === 'Last Call')
+    let reviewData = data.filter((item) => item.status === 'Review')
+    let draftData = data.filter((item) => item.status === 'Draft')
+    let stagnantData = data.filter((item) => item.status === 'Stagnant')
+    let withdrawnData = data.filter((item) => item.status === 'Withdrawn')
+
+    arr.push({
+      total: coreData.length,
+      data: coreData,
+    })
+    arr.push({
+      total: ercData.length,
+      data: ercData,
+    })
+    arr.push({
+      total: networkingData.length,
+      data: networkingData,
+    })
+    arr.push({
+      total: interfaceData.length,
+      data: interfaceData,
+    })
+    arr.push({
+      total: metaData.length,
+      data: metaData,
+    })
+    arr.push({
+      total: informationalData.length,
+      data: informationalData,
+    })
+
+    arr.push({
+      total: livingData.length,
+      data: livingData,
+    })
+    arr.push({
+      total: finalData.length,
+      data: finalData,
+    })
+    arr.push({
+      total: lastCallData.length,
+      data: lastCallData,
+    })
+    arr.push({
+      total: reviewData.length,
+      data: reviewData,
+    })
+    arr.push({
+      total: draftData.length,
+      data: draftData,
+    })
+    arr.push({
+      total: stagnantData.length,
+      data: stagnantData,
+    })
+    arr.push({
+      total: withdrawnData.length,
+      data: withdrawnData,
+    })
+
+    console.log(arr)
+
+    return arr
+  }
+
+  const allData = useMemo(() => distributeData(eips), [eips])
+
   useEffect(() => {
     fetchPost()
     fetchDate()
+    fetchAllEIps()
+    fetchAllData()
   }, [])
 
   function renderStatistic(containerWidth, text, style) {
@@ -117,56 +254,47 @@ function typeAll() {
 
   const fetchChartData = (post, name) => {
     const arr = []
+    let allData = distributeData(eips)
+    allData = name === 'Meta' ? allData[4].data : allData[5].data
+    console.log(allData)
+
+    let livingData = allData.filter((item) => item.status === 'Living').length
+    let finalData = allData.filter((item) => item.status === 'Final').length
+    let lastCallData = allData.filter((item) => item.status === 'Last Call').length
+    let reviewData = allData.filter((item) => item.status === 'Review').length
+    let draftData = allData.filter((item) => item.status === 'Draft').length
+    let stagnantData = allData.filter((item) => item.status === 'Stagnant').length
+    let withdrawnData = allData.filter((item) => item.status === 'Withdrawn').length
+
     arr.push(
       {
         type: 'Living',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Living')
-            : fetchTableDataExtra(post, name, 'Living'),
+        value: livingData,
       },
       {
         type: 'Final',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Final')
-            : fetchTableDataExtra(post, name, 'Final'),
+        value: finalData,
       },
       {
         type: 'Last_Call',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Last_Call')
-            : fetchTableDataExtra(post, name, 'Last_Call'),
+        value: lastCallData,
       },
       {
         type: 'Review',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Review')
-            : fetchTableDataExtra(post, name, 'Review'),
+        value: reviewData,
       },
       {
         type: 'Draft',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Draft')
-            : fetchTableDataExtra(post, name, 'Draft'),
+        value: draftData,
       },
 
       {
         type: 'Stagnant',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Stagnant')
-            : fetchTableDataExtra(post, name, 'Stagnant'),
+        value: stagnantData,
       },
       {
         type: 'Withdrawn',
-        value:
-          name === 'Standard_Track'
-            ? fetchTableData(post, name, 'Withdrawn')
-            : fetchTableDataExtra(post, name, 'Withdrawn'),
+        value: withdrawnData,
       },
     )
 
@@ -200,22 +328,23 @@ function typeAll() {
   }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
+    let allData = distributeData(eips)
     arr.push(
       {
         type: 'Core',
-        value: getStandardAttribute(post.length === 0 ? [] : post, 'Core'),
+        value: allData[0].total,
       },
       {
         type: 'ERC',
-        value: getStandardAttribute(post.length === 0 ? [] : post, 'ERC'),
+        value: allData[1].total,
       },
       {
         type: 'Networking',
-        value: getStandardAttribute(post.length === 0 ? [] : post, 'Networking'),
+        value: allData[2].total,
       },
       {
         type: 'Interface',
-        value: getStandardAttribute(post.length === 0 ? [] : post, 'Interface'),
+        value: allData[3].total,
       },
     )
     return arr
@@ -300,24 +429,12 @@ function typeAll() {
 
   const totalEIPs = () => {
     const total =
-      getStandardAttribute(post === undefined ? [] : post, 'Core') +
-      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
-      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
-      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Living') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Final') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Withdrawn') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Draft') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Review') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Last_Call') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Meta', 'Stagnant') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Living') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Final') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Withdrawn') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Draft') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Review') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Last_Call') +
-      fetchTableDataExtra(post === undefined ? [] : post, 'Informational', 'Stagnant')
+      allData[0].total +
+      allData[1].total +
+      allData[2].total +
+      allData[3].total +
+      allData[4].total +
+      allData[5].total
 
     return total
   }
@@ -366,12 +483,12 @@ function typeAll() {
                       fontFamily: 'Big Shoulders Display',
                     }}
                   >
-                    {getStandardAttribute(post === undefined ? [] : post, 'Core') +
-                      getStandardAttribute(post === undefined ? [] : post, 'ERC') +
-                      getStandardAttribute(post === undefined ? [] : post, 'Networking') +
-                      getStandardAttribute(post === undefined ? [] : post, 'Interface') +
-                      getMetaAndInformational('Meta') +
-                      getMetaAndInformational('Informational')}
+                    {allData[0].total +
+                      allData[1].total +
+                      allData[2].total +
+                      allData[3].total +
+                      allData[4].total +
+                      allData[5].total}
                   </div>
                 </Link>
               </label>
@@ -407,6 +524,8 @@ function typeAll() {
                   status: '',
                   category: '',
                   name: 'Standard_Track',
+                  data: eips.filter((eip) => eip.type === 'Standards Track'),
+                  eips: eip[3]['Last_Call'],
                 }}
               >
                 <div
@@ -414,23 +533,7 @@ function typeAll() {
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
-                  {post === undefined
-                    ? 0
-                    : fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Living') +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Final') +
-                      fetchTableData(
-                        post === undefined ? [] : post,
-                        'Standard_Track',
-                        'Withdrawn',
-                      ) +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Draft') +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Review') +
-                      fetchTableData(
-                        post === undefined ? [] : post,
-                        'Standard_Track',
-                        'Last_Call',
-                      ) +
-                      fetchTableData(post === undefined ? [] : post, 'Standard_Track', 'Stagnant')}
+                  {allData[0].total + allData[1].total + allData[2].total + allData[3].total}
                 </div>
               </Link>
             </label>
@@ -498,6 +601,10 @@ function typeAll() {
                               status: '',
                               category: 'Core',
                               name: 'Standard_Track_Core',
+                              data: eips.filter(
+                                (eip) => eip.type === 'Standards Track' && eip.category === 'Core',
+                              ),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -508,20 +615,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {getStandardAttribute(post === undefined ? [] : post, 'Core')}
-                        </CTableDataCell>
+                        <CTableDataCell>{allData[0].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {(
-                              (getStandardAttribute(post === undefined ? [] : post, 'Core') /
-                                totalEIPs()) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {((allData[0].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -535,6 +635,10 @@ function typeAll() {
                               status: '',
                               category: 'ERC',
                               name: 'Standard_Track_ERC',
+                              data: eips.filter(
+                                (eip) => eip.type === 'Standards Track' && eip.category === 'ERC',
+                              ),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -545,20 +649,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {getStandardAttribute(post === undefined ? [] : post, 'ERC')}
-                        </CTableDataCell>
+                        <CTableDataCell>{allData[1].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {(
-                              (getStandardAttribute(post === undefined ? [] : post, 'ERC') /
-                                totalEIPs()) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {((allData[1].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -572,6 +669,11 @@ function typeAll() {
                               status: '',
                               category: 'Networking',
                               name: 'Standard_Track_Networking',
+                              data: eips.filter(
+                                (eip) =>
+                                  eip.type === 'Standards Track' && eip.category === 'Networking',
+                              ),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -582,20 +684,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {getStandardAttribute(post === undefined ? [] : post, 'Networking')}
-                        </CTableDataCell>
+                        <CTableDataCell>{allData[2].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {(
-                              (getStandardAttribute(post === undefined ? [] : post, 'Networking') /
-                                totalEIPs()) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {((allData[2].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -609,6 +704,11 @@ function typeAll() {
                               status: '',
                               category: 'Interface',
                               name: 'Standard_Track_Interface',
+                              data: eips.filter(
+                                (eip) =>
+                                  eip.type === 'Standards Track' && eip.category === 'Interface',
+                              ),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -619,20 +719,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {getStandardAttribute(post === undefined ? [] : post, 'Interface')}
-                        </CTableDataCell>
+                        <CTableDataCell>{allData[3].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {(
-                              (getStandardAttribute(post === undefined ? [] : post, 'Interface') /
-                                totalEIPs()) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {((allData[3].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -645,7 +738,9 @@ function typeAll() {
                               type: 'Standards Track',
                               status: '',
                               category: 'Interface',
-                              name: 'Standard_Track_Interface',
+                              name: 'Meta',
+                              data: eips.filter((eip) => eip.type === 'Meta'),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -656,13 +751,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>{getMetaAndInformational('Meta')}</CTableDataCell>
+                        <CTableDataCell>{allData[4].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {((getMetaAndInformational('Meta') / totalEIPs()) * 100).toFixed(2)}%
+                            {((allData[4].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -675,7 +770,9 @@ function typeAll() {
                               type: 'Standards Track',
                               status: '',
                               category: 'Interface',
-                              name: 'Standard_Track_Interface',
+                              name: 'Informational',
+                              data: eips.filter((eip) => eip.type === 'Informational'),
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -686,17 +783,13 @@ function typeAll() {
                             </div>
                           </Link>
                         </CTableDataCell>
-                        <CTableDataCell>{getMetaAndInformational('Informational')}</CTableDataCell>
+                        <CTableDataCell>{allData[5].total}</CTableDataCell>
                         <CTableDataCell>
                           <label
                             style={{ fontFamily: 'Big Shoulders Display' }}
                             className="tracking-wider text-[0.8rem]"
                           >
-                            {(
-                              (getMetaAndInformational('Informational') / totalEIPs()) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {((allData[5].total / totalEIPs()) * 100).toFixed(2)}%
                           </label>
                         </CTableDataCell>
                       </CTableRow>
@@ -710,6 +803,7 @@ function typeAll() {
                               status: '',
                               category: 'Interface',
                               name: 'Standard_Track_Interface',
+                              eips: eip[3]['Last_Call'],
                             }}
                           >
                             <div
@@ -733,12 +827,7 @@ function typeAll() {
                               }}
                               className="p-1.5 shadow-md tracking-wider cursor-pointer"
                             >
-                              {getMetaAndInformational('Informational') +
-                                getMetaAndInformational('Meta') +
-                                getStandardAttribute(post === undefined ? [] : post, 'Networking') +
-                                getStandardAttribute(post === undefined ? [] : post, 'Interface') +
-                                getStandardAttribute(post === undefined ? [] : post, 'ERC') +
-                                getStandardAttribute(post === undefined ? [] : post, 'Core')}
+                              {totalEIPs()}
                             </label>
                           </Link>
                         </CTableDataCell>
@@ -796,14 +885,21 @@ function typeAll() {
                 <Link
                   to="/chartTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
-                  state={{ type: 'Meta', status: '', category: '', name: 'Meta' }}
+                  state={{
+                    type: 'Meta',
+                    status: '',
+                    category: '',
+                    name: 'Meta',
+                    data: eips.filter((eip) => eip.type === 'Meta'),
+                    eips: eip[3]['Last_Call'],
+                  }}
                 >
                   <div
                     className='className="h-7
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
-                    {getMetaAndInformational('Meta')}
+                    {allData[4].total}
                   </div>
                 </Link>
               </label>
@@ -835,14 +931,21 @@ function typeAll() {
                 <Link
                   to="/chartTable"
                   style={{ textDecoration: 'none', color: 'inherit' }}
-                  state={{ type: 'Informational', status: '', category: '', name: 'Informational' }}
+                  state={{
+                    type: 'Informational',
+                    status: '',
+                    category: '',
+                    name: 'Informational',
+                    data: eips.filter((eip) => eip.type === 'Informational'),
+                    eips: eip[3]['Last_Call'],
+                  }}
                 >
                   <div
                     className='className="h-7
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
-                    {getMetaAndInformational('Informational')}
+                    {allData[5].total}
                   </div>
                 </Link>
               </label>

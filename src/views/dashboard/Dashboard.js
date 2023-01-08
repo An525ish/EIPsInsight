@@ -4,70 +4,25 @@
 import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
 import { motion } from 'framer-motion'
-import {
-  CAvatar,
-  CDataTable,
-  CButton,
-  CButtonGroup,
-  CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
-  CCol,
-  CCollapse,
-  CProgress,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CBadge,
-} from '@coreui/react'
-
-import { Link, useParams } from 'react-router-dom'
+import { CCard, CCardBody, CCardFooter, CCardHeader, CCol, CRow, CBadge } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import { ip, TypeColors } from 'src/constants'
-
 import useMediaQuery from 'src/scss/useMediaQuery'
-
 import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
-
 import './Dashboard.css'
-import { useUserAuth } from 'src/Context/AuthContext'
+
 import Loading from '../theme/loading/loading'
-import { MotionConfig } from 'framer-motion'
 
 const Dashboard = () => {
   const [data, setData] = useState()
-  const [info, setInfo] = useState()
-  const param = useParams()
+
   const [date, setDate] = useState()
-  const [eips, setEips] = useState()
-  const [post, getPost] = useState()
-  const [pieChartData, setPieChartData] = useState()
   const [loading, setLoading] = useState(false)
   const [AllData, setAllData] = useState([])
 
-  const {
-    click1,
-    click2,
-    click3,
-    setClick1Function,
-    setClick2Function,
-    setClick3Function,
-    setClick4Function,
-  } = useUserAuth()
-
-  const [years, setYears] = useState()
-
   const matches = useMediaQuery('(max-width: 767px)')
   const matches1 = useMediaQuery('(max-width: 950px)')
-
-  const API = 'https://eipsinsight.com/api/overallData'
-  const API2 = 'https://eipsinsight.com/api/allinfo'
-  const API3 = 'https://eipsinsight.com/api/statusPage'
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -93,33 +48,13 @@ const Dashboard = () => {
   }
 
   const API4 = `${ip}/getAll`
-  const fetchPost = async (ignore) => {
-    const data = await fetch(API)
-    const post = await data.json()
-    if (!ignore) {
-      getPost(post)
-    }
-  }
-  const fetchAllEIPs = async (ignore) => {
-    const data = await fetch(API2)
-    const post = await data.json()
-    if (!ignore) {
-      setEips(post)
-    }
-  }
-  const fetchAllStatus = async (ignore) => {
-    const data = await fetch(API3)
-    const post = await data.json()
-    if (!ignore) {
-      setPieChartData(post)
-    }
-  }
   const fetchAllData = async (ignore) => {
     const data = await fetch(API4)
     const post = await data.json()
 
     if (!ignore) {
       setAllData(factorOutDuplicate(Object.values(post[0])))
+      setLoading(true)
     }
   }
 
@@ -127,92 +62,150 @@ const Dashboard = () => {
     let date = new Date().toDateString()
     setDate(date)
   }
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  const sorter = (a, b) => {
-    if (a.year !== b.year) {
-      return a.year - b.year
-    } else {
-      return months.indexOf(a.name) - months.indexOf(b.name)
-    }
-  }
-  const allData = async (ignore) => {
-    try {
-      const res = await fetch(`${ip}/register`, {
-        // method: 'GET',
-        // headers: {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application',
-        // },
-        // credentials: 'include',
-      })
-      let datas = []
-      datas = await res.json()
 
-      if (!ignore) {
-        setData(datas)
-
-        const yearArr = datas === [] ? [] : [...new Set(datas.map((item) => item.year))]
-        setYears(yearArr)
-        setLoading(true)
-      }
-
-      if (!res.status === 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    } catch (err) {}
-  }
-  const fetchArrayYearWise = (yearList, name) => {
-    let arr = []
-    for (let i = 0; i < yearList.length; i++) {
-      let sumCore = 0
-      let sumERC = 0
-      let sumNetworking = 0
-      let sumInterface = 0
-      for (let j = 0; j < data.length; j++) {
-        if (yearList[i] === data[j].year) {
-          sumCore += parseInt(data[j][name]['Core'])
-          sumERC += parseInt(data[j][name]['ERC'])
-          sumNetworking += parseInt(data[j][name]['Networking'])
-          sumInterface += parseInt(data[j][name]['Interface'])
+  function AllMonthsGetAllAPI() {
+    let allMOnths = []
+    for (let i = 0; i < AllData.length; i++) {
+      if (AllData[i].merge_date !== undefined) {
+        let splitIt = AllData[i].merge_date.split(',')
+        // console.log(splitIt)
+        allMOnths.push(splitIt[0].substring(0, 3) + ' ' + splitIt[1].trim())
+      } else {
+        if (AllData[i].date !== undefined) {
+          let splitIt = AllData[i].date.split(' ')
+          allMOnths.push(splitIt[1] + ' ' + splitIt[3])
         }
       }
+    }
+
+    return allMOnths
+  }
+  function AllYearsGetAllAPI() {
+    let allYears = []
+    // console.log(AllData)
+    for (let i = 0; i < AllData.length; i++) {
+      if (AllData[i].merge_date !== undefined) {
+        let splitIt = AllData[i].merge_date.split(',')
+        // console.log(splitIt)
+        allYears.push(splitIt[1].trim())
+      } else {
+        if (AllData[i].date !== undefined) {
+          console.log(AllData[i])
+          console.log(AllData[i].date)
+          let splitIt = AllData[i].date.split(' ')
+          allYears.push(splitIt[3])
+        }
+      }
+    }
+
+    return [...new Set(allYears)]
+  }
+
+  function StandardsTrackYearsCollection(statusNum, allYears, i, type) {
+    // console.log(statusNum)
+    return statusNum.filter((item) => {
+      if (item.merge_date !== undefined) {
+        let splitIt = item.merge_date.split(',')
+        return (
+          splitIt[1].trim() === allYears[i] &&
+          item.type === 'Standards Track' &&
+          item.category === type
+        )
+      } else {
+        if (item.date !== undefined) {
+          let splitIt = item.date.split(' ')
+          return (
+            splitIt[3] === allYears[i] && item.type === 'Standards Track' && item.category === type
+          )
+        }
+      }
+    })
+  }
+  function ExtraYearsCollection(statusNum, allYears, i, type) {
+    // console.log(statusNum)
+    return statusNum.filter((item) => {
+      if (item.merge_date !== undefined) {
+        let splitIt = item.merge_date.split(',')
+        return splitIt[1].trim() === allYears[i] && item.type === type
+      } else {
+        if (item.date !== undefined) {
+          let splitIt = item.date.split(' ')
+          return splitIt[3] === allYears[i] && item.type === type
+        }
+      }
+    })
+  }
+
+  const fetchArrayYearWise = (name) => {
+    let arr = []
+    let yearList = AllYearsGetAllAPI()
+
+    const allData = distributeData(AllData)
+    const statusNum = {
+      Living: allData[6].data,
+      Final: allData[7].data,
+      'Last Call': allData[8].data,
+      Review: allData[9].data,
+      Draft: allData[10].data,
+      Stagnant: allData[11].data,
+      Withdrawn: allData[12].data,
+    }
+    console.log({ name })
+    console.log(statusNum[name])
+
+    for (let i = 0; i < yearList.length; i++) {
+      let sumCore = StandardsTrackYearsCollection(statusNum[name], yearList, i, 'Core').length
+      let sumERC = StandardsTrackYearsCollection(statusNum[name], yearList, i, 'ERC').length
+      let sumNetworking = StandardsTrackYearsCollection(
+        statusNum[name],
+        yearList,
+        i,
+        'Networking',
+      ).length
+      let sumInterface = StandardsTrackYearsCollection(
+        statusNum[name],
+        yearList,
+        i,
+        'Interface',
+      ).length
+
+      let meta = ExtraYearsCollection(statusNum[name], yearList, i, 'Meta').length
+      let informational = ExtraYearsCollection(statusNum[name], yearList, i, 'Informational').length
+
       arr.push(
         {
           year: yearList[i],
-          value: parseInt(sumCore),
+          value: sumCore,
           type: 'Core',
         },
         {
           year: yearList[i],
-          value: parseInt(sumERC),
+          value: sumERC,
           type: 'ERC',
         },
         {
           year: yearList[i],
-          value: parseInt(sumNetworking),
+          value: sumNetworking,
           type: 'Networking',
         },
         {
           year: yearList[i],
-          value: parseInt(sumInterface),
+          value: sumInterface,
           type: 'Interface',
+        },
+        {
+          year: yearList[i],
+          value: meta,
+          type: 'Meta',
+        },
+        {
+          year: yearList[i],
+          value: informational,
+          type: 'Informational',
         },
       )
     }
+    arr.reverse()
 
     return arr
   }
@@ -382,70 +375,118 @@ const Dashboard = () => {
     annotations,
   }
 
+  function StandardsTrackDataCollection(statusNum, allMonths, i, type) {
+    console.log(statusNum)
+    return statusNum.filter((item) => {
+      if (item.merge_date !== undefined) {
+        let splitIt = item.merge_date.split(',')
+        return (
+          splitIt[0].substring(0, 3) + ' ' + splitIt[1].trim() === allMonths[i] &&
+          item.type === 'Standards Track' &&
+          item.category === type
+        )
+      } else {
+        if (item.date !== undefined) {
+          let splitIt = item.date.split(' ')
+          return (
+            splitIt[1] + ' ' + splitIt[3] === allMonths[i] &&
+            item.type === 'Standards Track' &&
+            item.category === type
+          )
+        }
+      }
+    })
+  }
+  function ExtraDataCollection(statusNum, allMonths, i, type) {
+    console.log(statusNum)
+    return statusNum.filter((item) => {
+      if (item.merge_date !== undefined) {
+        let splitIt = item.merge_date.split(',')
+        return (
+          splitIt[0].substring(0, 3) + ' ' + splitIt[1].trim() === allMonths[i] &&
+          item.type === type
+        )
+      } else {
+        if (item.date !== undefined) {
+          let splitIt = item.date.split(' ')
+          return splitIt[1] + ' ' + splitIt[3] === allMonths[i] && item.type === type
+        }
+      }
+    })
+  }
+
   // monthly Insights
 
   const draftDataFinding = (name, data) => {
     const allData = distributeData(AllData)
     const statusNum = {
-      Living: allData[6].total,
-      Final: allData[7].total,
-      Last_Call: allData[8].total,
-      Review: allData[9].total,
-      Draft: allData[10].total,
-      Stagnant: allData[11].total,
-      Withdrawn: allData[12].total,
+      Living: allData[6].data,
+      Final: allData[7].data,
+      'Last Call': allData[8].data,
+      Review: allData[9].data,
+      Draft: allData[10].data,
+      Stagnant: allData[11].data,
+      Withdrawn: allData[12].data,
     }
-
+    console.log({ name })
     console.log(statusNum[name])
+    const allMonths = [...new Set(AllMonthsGetAllAPI())]
+    console.log(allMonths)
+    allMonths.reverse()
 
     let arr = []
-    for (let i = 0; i < data.length; i++) {
-      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
+    for (let i = 0; i < allMonths.length; i++) {
+      let core = StandardsTrackDataCollection(statusNum[name], allMonths, i, 'Core').length
+      let erc = StandardsTrackDataCollection(statusNum[name], allMonths, i, 'ERC').length
+      let networking = StandardsTrackDataCollection(
+        statusNum[name],
+        allMonths,
+        i,
+        'Networking',
+      ).length
+      let Interface = StandardsTrackDataCollection(
+        statusNum[name],
+        allMonths,
+        i,
+        'Interface',
+      ).length
+      let meta = ExtraDataCollection(statusNum[name], allMonths, i, 'Meta').length
+      let informational = ExtraDataCollection(statusNum[name], allMonths, i, 'Informational').length
+
       arr.push(
         {
           name: 'Core',
-          year: month,
-          gdp: parseInt(data[i][name]['Core']),
+          year: allMonths[i],
+          gdp: core,
         },
         {
           name: 'ERC',
-          year: month,
-          gdp: parseInt(data[i][name]['ERC']),
+          year: allMonths[i],
+          gdp: erc,
         },
         {
           name: 'Networking',
-          year: month,
-          gdp: parseInt(data[i][name]['Networking']),
+          year: allMonths[i],
+          gdp: networking,
         },
         {
           name: 'Interface',
-          year: month,
-          gdp: parseInt(data[i][name]['Interface']),
+          year: allMonths[i],
+          gdp: Interface,
+        },
+        {
+          name: 'Meta',
+          year: allMonths[i],
+          gdp: meta,
+        },
+        {
+          name: 'Informational',
+          year: allMonths[i],
+          gdp: informational,
         },
       )
     }
-    return arr
-  }
 
-  const DraftvsPotentialData = (name, data) => {
-    data.sort(sorter)
-    let arr = []
-    for (let i = 0; i < data.length; i++) {
-      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
-      arr.push(
-        {
-          name: 'Draft',
-          year: month,
-          value: parseInt(data[i]['summary']['Draft']),
-        },
-        {
-          name: 'Potential Proposal',
-          year: month,
-          value: parseInt(data[i]['summary']['potentialProposal']),
-        },
-      )
-    }
-    //
     return arr
   }
 
@@ -481,107 +522,9 @@ const Dashboard = () => {
     }
     return config
   }
-  // const monthlyFinalConfig = {
-  //   data: draftDataFinding('Final', data === undefined ? [] : data),
-  //   isGroup: true,
-  //   xField: 'year',
-  //   yField: 'gdp',
-  //   seriesField: 'name',
-  //   color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7'],
-  //   label: {
-  //     position: 'middle',
-  //     layout: [
-  //       {
-  //         type: 'interval-adjust-position',
-  //       },
-  //       {
-  //         type: 'interval-hide-overlap',
-  //       },
-  //       {
-  //         type: 'adjust-color',
-  //       },
-  //     ],
-  //   },
-  //   slider: {
-  //     start: 0.0,
-  //     end: 1.0,
-  //   },
-  // }
-
-  const montlyDraftvsFinalconfig = {
-    data: DraftvsPotentialData('summary', data === undefined ? [] : data),
-    xField: 'year',
-    yField: 'value',
-    seriesField: 'name',
-    color: ['#ffa8a8', '#ffe066', '#e599f7'],
-    yAxis: {
-      label: {
-        // 数值格式化为千分位
-        formatter: (v) => v,
-      },
-    },
-    legend: {
-      position: 'top',
-    },
-    axis: {
-      minLimit: 0,
-    },
-  }
-
-  const finalvsDraftData = (data) => {
-    data.sort(sorter)
-    let arr = []
-    for (let i = 0; i < data.length; i++) {
-      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
-      arr.push({
-        year: month,
-        value: parseInt(data[i]['summary']['Final']),
-        type: 'Final',
-      })
-    }
-    for (let i = 0; i < data.length; i++) {
-      const month = data[i].name.slice(0, 3) + ' ' + data[i].year
-      arr.push({
-        year: month,
-        value: parseInt(data[i]['summary']['Draft']),
-        type: 'Draft',
-      })
-    }
-
-    return arr
-  }
-
-  const finalvsDraftconfig = {
-    data: finalvsDraftData(data === undefined ? [] : data),
-    isStack: true,
-    xField: 'year',
-    yField: 'value',
-    seriesField: 'type',
-    // color: ['#ffa8a8', '#ffe066', '#e599f7'],
-    color: ['#1864ab', '#74c0fc'],
-    label: {
-      // 可手动配置 label 数据标签位置
-      position: 'middle', // 'top', 'bottom', 'middle'
-    },
-    interactions: [
-      {
-        type: 'active-region',
-        enable: false,
-      },
-    ],
-    connectedArea: {
-      style: (oldStyle, element) => {
-        return {
-          fill: 'rgba(0,0,0,0.25)',
-          stroke: oldStyle.fill,
-          lineWidth: 0.5,
-        }
-      },
-    },
-  }
 
   const yearlyDraftConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Draft'),
+    data: fetchArrayYearWise('Draft'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -589,10 +532,10 @@ const Dashboard = () => {
     seriesField: 'type',
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Draft')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Draft')),
   }
   const yearlyFinalConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Final'),
+    data: fetchArrayYearWise('Final'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -600,10 +543,10 @@ const Dashboard = () => {
     seriesField: 'type',
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Final')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Final')),
   }
   const yearlyReviewConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Review'),
+    data: fetchArrayYearWise('Review'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -612,11 +555,11 @@ const Dashboard = () => {
 
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Review')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Review')),
   }
 
   const yearlyLastCallConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'LastCall'),
+    data: fetchArrayYearWise('Last Call'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -624,11 +567,11 @@ const Dashboard = () => {
     seriesField: 'type',
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'LastCall')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Last Call')),
   }
 
   const yearlyStagnantConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant'),
+    data: fetchArrayYearWise('Stagnant'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -636,10 +579,10 @@ const Dashboard = () => {
     seriesField: 'type',
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Stagnant')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Stagnant')),
   }
   const yearlyWithdrawnConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
+    data: fetchArrayYearWise('Withdrawn'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -647,12 +590,10 @@ const Dashboard = () => {
     seriesField: 'type',
     label: false,
 
-    annotations: fetchAnnotations(
-      fetchArrayYearWise(years === undefined ? [] : years, 'Withdrawn'),
-    ),
+    annotations: fetchAnnotations(fetchArrayYearWise('Withdrawn')),
   }
   const yearlyLivingConfig = {
-    data: fetchArrayYearWise(years === undefined ? [] : years, 'Living'),
+    data: fetchArrayYearWise('Living'),
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -665,22 +606,21 @@ const Dashboard = () => {
     },
     label: false,
 
-    annotations: fetchAnnotations(fetchArrayYearWise(years === undefined ? [] : years, 'Living')),
+    annotations: fetchAnnotations(fetchArrayYearWise('Living')),
   }
 
   // smart chart
-  const [details, setDetails] = useState([])
   const columns = [
     {
       key: 'Number',
-      _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+      _style: { width: '7%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
       _props: { className: 'fw-semibold' },
       sorter: true,
     },
     {
       key: 'Title',
       _style: {
-        width: '40%',
+        width: '38%',
         color: '#1c7ed6',
       },
     },
@@ -697,16 +637,7 @@ const Dashboard = () => {
     { key: 'status', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'PR No.', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
-  const coloring = (text) => {
-    switch (text) {
-      case 'text':
-        return '#1c7ed6'
-      case 'back':
-        return '#e7f5ff'
-      default:
-        return '#e7f5ff'
-    }
-  }
+
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
@@ -774,21 +705,17 @@ const Dashboard = () => {
         return 'shadow-[#1c7ed6]'
     }
   }
-  const toggleDetails = (index) => {
-    const position = details.indexOf(index)
-    let newDetails = details.slice()
-    if (position !== -1) {
-      newDetails.splice(position, 1)
-    } else {
-      newDetails = [...details, index]
-    }
-    setDetails(newDetails)
-  }
 
   const eipData = (eips) => {
     let arr = []
 
     let inc = 0
+
+    for (let i = 0; i < eips.length; i++) {
+      if (eips[i]['merge_date'] === undefined) {
+        console.log(eips[i].eip)
+      }
+    }
     for (let i = 0; i < eips.length; i++) {
       console.log(eips[i].eip)
       const temp = eips[i].eip.split('.md')[0].split('eip-')
@@ -1004,13 +931,6 @@ const Dashboard = () => {
     return list
   }
 
-  const getString = (data) => {
-    let ans = ''
-    for (let i = 0; i < data.length - 1; i++) {
-      ans += data[i] + ' '
-    }
-    return ans
-  }
   // yearly Draft Component
   const yearlyInsights = (col, title, configName) => {
     return (
@@ -1070,12 +990,8 @@ const Dashboard = () => {
   useEffect(() => {
     // fetchData()
     let ignore = false
-    fetchPost(ignore)
     fetchDate(ignore)
-    fetchAllEIPs(ignore)
-    fetchAllStatus(ignore)
     fetchAllData(ignore)
-    allData(ignore)
 
     return () => {
       ignore = true
@@ -1446,7 +1362,7 @@ const Dashboard = () => {
                     // backgroundPosition: 'right -12px bottom -40px',
                   }}
                 >
-                  <Line {...monthlyStatusConfig('LastCall', data)} />
+                  <Line {...monthlyStatusConfig('Last Call', data)} />
                 </CCardBody>
                 {footer(date, 'Last_Call')}
               </CCard>

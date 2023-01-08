@@ -78,6 +78,19 @@ const CurrentMonth = () => {
     december: 12,
   }
 
+  const [eip, setEip] = useState()
+
+  const API2 = `${ip}/allInfo`
+  const fetchAllEIps = async (ignore) => {
+    const data = await fetch(API2)
+    const post = await data.json()
+
+    if (!ignore) {
+      console.log(post)
+      setEip(post)
+    }
+  }
+
   const fetchCurrentMonthData = async () => {
     console.log('api fetch')
     const monthName = param['*'].split('-')[0][0].toUpperCase() + param['*'].split('-')[0].slice(1)
@@ -729,6 +742,7 @@ const CurrentMonth = () => {
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
                   fontFamily: 'Big Shoulders Display',
+                  eips: eip === undefined ? eip : eip[3]['Last_Call'],
                 }}
                 className={`githubIcon h-7
             shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
@@ -778,6 +792,7 @@ const CurrentMonth = () => {
             month: `${month}`,
             year: `${year}`,
             name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_${name}`,
+            eips: eip === undefined ? eip : eip[3]['Last_Call'],
           }}
         >
           {header(name)}
@@ -830,6 +845,7 @@ const CurrentMonth = () => {
       setClick2Function(false)
       setClick3Function(false)
     }
+    fetchAllEIps()
     for (let i = 0; i < 2; i++) fetchCurrentMonthData()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
