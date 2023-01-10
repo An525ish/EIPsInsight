@@ -41,7 +41,6 @@ function typeAll() {
     const post = await data.json()
 
     if (!ignore) {
-      console.log(post)
       setEip(post)
     }
   }
@@ -217,8 +216,6 @@ function typeAll() {
       data: withdrawnData,
     })
 
-    console.log(arr)
-
     return arr
   }
 
@@ -256,7 +253,6 @@ function typeAll() {
     const arr = []
     let allData = distributeData(eips)
     allData = name === 'Meta' ? allData[4].data : allData[5].data
-    console.log(allData)
 
     let livingData = allData.filter((item) => item.status === 'Living').length
     let finalData = allData.filter((item) => item.status === 'Final').length

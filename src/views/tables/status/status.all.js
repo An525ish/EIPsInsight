@@ -39,7 +39,6 @@ function statusAll(props) {
     const post = await data.json()
 
     if (!ignore) {
-      console.log(post)
       setEip(post)
     }
   }
@@ -336,8 +335,6 @@ function statusAll(props) {
       total: withdrawnData.length,
       data: withdrawnData,
     })
-
-    console.log(arr)
 
     return arr
   }

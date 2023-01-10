@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [date, setDate] = useState()
   const [loading, setLoading] = useState(false)
   const [AllData, setAllData] = useState([])
+  const [duplicateData, setDuplicateData] = useState([])
 
   const matches = useMediaQuery('(max-width: 767px)')
   const matches1 = useMediaQuery('(max-width: 950px)')
@@ -53,6 +54,9 @@ const Dashboard = () => {
     const post = await data.json()
 
     if (!ignore) {
+      let arr = Object.values(post[0])
+      arr.shift()
+      setDuplicateData(arr)
       setAllData(factorOutDuplicate(Object.values(post[0])))
       setLoading(true)
     }
@@ -68,7 +72,7 @@ const Dashboard = () => {
     for (let i = 0; i < AllData.length; i++) {
       if (AllData[i].merge_date !== undefined) {
         let splitIt = AllData[i].merge_date.split(',')
-        // console.log(splitIt)
+        //
         allMOnths.push(splitIt[0].substring(0, 3) + ' ' + splitIt[1].trim())
       } else {
         if (AllData[i].date !== undefined) {
@@ -82,16 +86,14 @@ const Dashboard = () => {
   }
   function AllYearsGetAllAPI() {
     let allYears = []
-    // console.log(AllData)
+    //
     for (let i = 0; i < AllData.length; i++) {
       if (AllData[i].merge_date !== undefined) {
         let splitIt = AllData[i].merge_date.split(',')
-        // console.log(splitIt)
+        //
         allYears.push(splitIt[1].trim())
       } else {
         if (AllData[i].date !== undefined) {
-          console.log(AllData[i])
-          console.log(AllData[i].date)
           let splitIt = AllData[i].date.split(' ')
           allYears.push(splitIt[3])
         }
@@ -102,7 +104,7 @@ const Dashboard = () => {
   }
 
   function StandardsTrackYearsCollection(statusNum, allYears, i, type) {
-    // console.log(statusNum)
+    //
     return statusNum.filter((item) => {
       if (item.merge_date !== undefined) {
         let splitIt = item.merge_date.split(',')
@@ -122,7 +124,7 @@ const Dashboard = () => {
     })
   }
   function ExtraYearsCollection(statusNum, allYears, i, type) {
-    // console.log(statusNum)
+    //
     return statusNum.filter((item) => {
       if (item.merge_date !== undefined) {
         let splitIt = item.merge_date.split(',')
@@ -150,8 +152,6 @@ const Dashboard = () => {
       Stagnant: allData[11].data,
       Withdrawn: allData[12].data,
     }
-    console.log({ name })
-    console.log(statusNum[name])
 
     for (let i = 0; i < yearList.length; i++) {
       let sumCore = StandardsTrackYearsCollection(statusNum[name], yearList, i, 'Core').length
@@ -290,8 +290,6 @@ const Dashboard = () => {
       data: withdrawnData,
     })
 
-    console.log(arr)
-
     return arr
   }
 
@@ -376,7 +374,6 @@ const Dashboard = () => {
   }
 
   function StandardsTrackDataCollection(statusNum, allMonths, i, type) {
-    console.log(statusNum)
     return statusNum.filter((item) => {
       if (item.merge_date !== undefined) {
         let splitIt = item.merge_date.split(',')
@@ -398,7 +395,6 @@ const Dashboard = () => {
     })
   }
   function ExtraDataCollection(statusNum, allMonths, i, type) {
-    console.log(statusNum)
     return statusNum.filter((item) => {
       if (item.merge_date !== undefined) {
         let splitIt = item.merge_date.split(',')
@@ -415,6 +411,19 @@ const Dashboard = () => {
     })
   }
 
+  function statusUpdateFirstTime(allData, statusData) {
+    let ans = []
+    for (let i = 0; i < statusData.length; i++) {
+      let eip = statusData[i]
+      let arr = allData.filter((e) => {
+        let status = e.status === 'Active' ? 'Living' : e.status
+        return e.eip === eip.eip && status === eip.status
+      })
+      ans.push(arr[arr.length - 1])
+    }
+    return ans
+  }
+
   // monthly Insights
 
   const draftDataFinding = (name, data) => {
@@ -428,30 +437,39 @@ const Dashboard = () => {
       Stagnant: allData[11].data,
       Withdrawn: allData[12].data,
     }
-    console.log({ name })
-    console.log(statusNum[name])
+    // console.log(duplicateData)
+    // console.log(name)
+    // console.log(statusNum[name])
+    let filterDataStatusUpdate = statusUpdateFirstTime(duplicateData, statusNum[name])
+    // console.log(filterDataStatusUpdate)
+
     const allMonths = [...new Set(AllMonthsGetAllAPI())]
-    console.log(allMonths)
+
     allMonths.reverse()
 
     let arr = []
     for (let i = 0; i < allMonths.length; i++) {
-      let core = StandardsTrackDataCollection(statusNum[name], allMonths, i, 'Core').length
-      let erc = StandardsTrackDataCollection(statusNum[name], allMonths, i, 'ERC').length
+      let core = StandardsTrackDataCollection(filterDataStatusUpdate, allMonths, i, 'Core').length
+      let erc = StandardsTrackDataCollection(filterDataStatusUpdate, allMonths, i, 'ERC').length
       let networking = StandardsTrackDataCollection(
-        statusNum[name],
+        filterDataStatusUpdate,
         allMonths,
         i,
         'Networking',
       ).length
       let Interface = StandardsTrackDataCollection(
-        statusNum[name],
+        filterDataStatusUpdate,
         allMonths,
         i,
         'Interface',
       ).length
-      let meta = ExtraDataCollection(statusNum[name], allMonths, i, 'Meta').length
-      let informational = ExtraDataCollection(statusNum[name], allMonths, i, 'Informational').length
+      let meta = ExtraDataCollection(filterDataStatusUpdate, allMonths, i, 'Meta').length
+      let informational = ExtraDataCollection(
+        filterDataStatusUpdate,
+        allMonths,
+        i,
+        'Informational',
+      ).length
 
       arr.push(
         {
@@ -713,11 +731,9 @@ const Dashboard = () => {
 
     for (let i = 0; i < eips.length; i++) {
       if (eips[i]['merge_date'] === undefined) {
-        console.log(eips[i].eip)
       }
     }
     for (let i = 0; i < eips.length; i++) {
-      console.log(eips[i].eip)
       const temp = eips[i].eip.split('.md')[0].split('eip-')
       if (temp.length === 2) {
         if (temp[0] === '' && !isNaN(temp[1])) {
@@ -775,7 +791,7 @@ const Dashboard = () => {
 
   // header
   const header = (text) => {
-    // console.log(AllData)
+    //
     text = text === 'Last Call' ? 'Last_Call' : text
     const allData = distributeData(AllData)
     const statusNum = {
@@ -918,13 +934,12 @@ const Dashboard = () => {
   }
 
   const factorAuthor = (data) => {
-    console.log({ data })
     let list = data.split(',')
-    // console.log({ list })
+    //
     // for (let i = 0; i < list.length; i++) {
     //   list[i] = list[i].split(' ')
     // }
-    // // console.log({ list })
+    // //
     // if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
     //   list.pop()
     // }
@@ -999,7 +1014,6 @@ const Dashboard = () => {
   }, [])
 
   // temparary
-  console.log({ AllData })
 
   return (
     <div>

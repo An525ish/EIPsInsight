@@ -56,7 +56,6 @@ function tableCurrent() {
       })
   }
   const fetchColumn = (status) => {
-    console.log(status)
     const columns =
       status === 'Last_Call'
         ? [
@@ -256,8 +255,7 @@ function tableCurrent() {
 
   const findEIPNum = (list, category) => {
     const ans = []
-    console.log({ list })
-    console.log(list[category])
+
     if (parseInt(list[category][0]) !== 0) {
       for (let i = 1; i < list[category].length; i++) {
         ans.push(parseInt(list[category][i].substring(4)))
@@ -276,13 +274,10 @@ function tableCurrent() {
     return 'N/A'
   }
   const findAllEIPs = (eips, data, status) => {
-    console.log({ name })
     let arr = []
     let inc = 1
     if (data.length !== 0 && eips.length !== 0) {
-      console.log({ data })
       let filterData = data?.filter((item) => item.Status === status)
-      console.log({ filterData })
 
       let ans = []
       if (filterData.length !== 0) {
@@ -295,7 +290,6 @@ function tableCurrent() {
         ans.push(findEIPNum(filterData[0], 'Informational'))
 
         let undefinedEIPs = findEIPNum(filterData[0], 'Undefined')
-        console.log({ undefinedEIPs })
 
         ans = ans.flat(Infinity)
 
@@ -308,12 +302,10 @@ function tableCurrent() {
           }
         }
       }
-      console.log({ ans })
 
       for (let i = 0; i < ans.length; i++) {
         let findEip = eips.filter((item) => item.data.eip === ans[i])
-        console.log({ findEip })
-        console.log(findEip[0].type)
+
         if (status === 'Last_Call') {
           arr.push({
             id: inc++,
@@ -369,9 +361,9 @@ function tableCurrent() {
           }
         }
       }
-      // console.log({ arr })
+      //
     }
-    console.log({ arr })
+
     return arr
   }
 
@@ -435,13 +427,13 @@ function tableCurrent() {
 
   const factorAuthor = (data) => {
     let ans
-    // console.log({ data })
+    //
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -492,8 +484,6 @@ function tableCurrent() {
     fetchAllEIPs()
     fetchCurrentMonthEIPs()
   }, [])
-
-  console.log({ status })
 
   return (
     <>
@@ -735,7 +725,7 @@ function tableCurrent() {
                 ),
               }}
               // onRowClick={(item) => {
-              //   console.log(item)
+              //
               //   navigate('/EIP-' + item.Number)
               // }}
               sorterValue={{ column: 'name', state: 'asc' }}

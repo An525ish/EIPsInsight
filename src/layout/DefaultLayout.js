@@ -74,7 +74,6 @@ const DefaultLayout = () => {
     }
   }, [param['*']])
 
-  console.log({ par })
   const [data, setInfo] = useState()
 
   return (

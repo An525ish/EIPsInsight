@@ -36,7 +36,6 @@ const EIPs = () => {
       })
       let datas = []
       datas = await res.json()
-      console.log(datas)
 
       setData(datas)
 
@@ -46,20 +45,18 @@ const EIPs = () => {
 
       setAllData(filterData)
       setLoading(true)
-    } catch (err) {
-      console.log({ err })
-    }
+    } catch (err) {}
   }
 
   const factorAuthor = (data) => {
     let ans
-    // console.log({ data })
+    //
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -77,8 +74,6 @@ const EIPs = () => {
   useEffect(() => {
     fetchAllData()
   }, [])
-
-  console.log(allData)
 
   return (
     <div>

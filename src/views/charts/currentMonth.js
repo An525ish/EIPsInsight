@@ -61,7 +61,6 @@ const CurrentMonth = () => {
     useUserAuth()
   let [data, setData] = useState() // i set the data here
   let [currentMonthData, setCurrentMonthData] = useState()
-  console.log(param)
 
   const monthNum = {
     january: 1,
@@ -86,19 +85,16 @@ const CurrentMonth = () => {
     const post = await data.json()
 
     if (!ignore) {
-      console.log(post)
       setEip(post)
     }
   }
 
   const fetchCurrentMonthData = async () => {
-    console.log('api fetch')
     const monthName = param['*'].split('-')[0][0].toUpperCase() + param['*'].split('-')[0].slice(1)
     const response = await fetch(`${ip}/currentMonth/${param['*'].split('-')[1]}/${monthName}`)
 
     let data = await response.json()
 
-    console.log(data)
     setCurrentMonthData(data)
     setLoading(true)
   }
@@ -112,7 +108,6 @@ const CurrentMonth = () => {
     let f = 0
     let arr = []
 
-    console.log(data)
     a = parseInt(fetchStatusCategorySum(data, name, 'Core'))
     b = parseInt(fetchStatusCategorySum(data, name, 'ERC'))
     c = parseInt(fetchStatusCategorySum(data, name, 'Networking'))
@@ -375,11 +370,11 @@ const CurrentMonth = () => {
 
   const fetchStatusCategorySum = (monthData, status, category) => {
     let arr = []
-    console.log(status, category)
+
     let statusArr = monthData.filter((elem) => {
       return elem.Status === status
     })
-    console.log(statusArr)
+
     if (statusArr.length === 0) return 0
     for (let i = 0; i < statusArr[0][category][0]; i++) {
       arr.push(statusArr[0][category][i + 1])
@@ -394,9 +389,6 @@ const CurrentMonth = () => {
         }
       }
     }
-
-    console.log(arr)
-    console.log(arr.length)
 
     return arr.length
   }

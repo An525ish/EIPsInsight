@@ -61,11 +61,9 @@ const AllEIPs = () => {
 
     for (let i = 0; i < eips.length; i++) {
       if (eips[i]['merge_date'] === undefined) {
-        console.log(eips[i].eip)
       }
     }
     for (let i = 0; i < eips.length; i++) {
-      console.log(eips[i].eip)
       const temp = eips[i].eip.split('.md')[0].split('eip-')
       if (temp.length === 2) {
         if (temp[0] === '' && !isNaN(temp[1])) {
@@ -234,13 +232,13 @@ const AllEIPs = () => {
 
   const factorAuthor = (data) => {
     let ans
-    // console.log({ data })
+    //
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }

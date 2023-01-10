@@ -23,7 +23,6 @@ function table() {
   const [loading, setLoading] = useState(false)
 
   const fetchColumn = (status) => {
-    console.log(status)
     const columns =
       status === 'Last_Call' || status === 'Last Call'
         ? [
@@ -90,6 +89,73 @@ function table() {
               _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
           ]
+        : status === 'Final'
+        ? [
+            {
+              key: 'id',
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Number',
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Title',
+              _style: {
+                width: '30%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Author',
+              _style: {
+                width: '15%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Draft Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            {
+              key: 'Category',
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'status',
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+            },
+            {
+              key: 'PR No.',
+
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+          ]
         : [
             {
               key: 'id',
@@ -109,7 +175,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '35%',
+                width: '40%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -121,9 +187,9 @@ function table() {
               },
             },
             {
-              key: status === 'Final' ? 'Final Date' : 'Draft Date',
+              key: 'Draft Date',
               _style: {
-                width: '15%',
+                width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -232,7 +298,7 @@ function table() {
   }
   const eipData = (data) => {
     let arr = []
-    console.log(data)
+
     if (data !== undefined) {
       let inc = 1
       for (let i = 0; i < data.length; i++) {
@@ -245,6 +311,7 @@ function table() {
             Category:
               data[i].type === 'Standards Track' ? data[i].category : `Type - ${data[i].type}`,
             'Final Date': data[i].merge_date === undefined ? data[i].date : data[i].merge_date,
+            'Draft Date': data[i].created,
             status: data[i].status,
             Author: data[i].author,
             'PR No.': data[i].pull,
@@ -286,7 +353,7 @@ function table() {
 
       // arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
-    console.log(arr)
+
     return arr
   }
 
@@ -348,13 +415,13 @@ function table() {
 
   const factorAuthor = (data) => {
     let ans
-    // console.log({ data })
+    //
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -402,10 +469,9 @@ function table() {
     setStatus(location.state.status)
     setName(location.state.name)
     setEips(location.state.eips)
+    fetchDate()
   }, [])
 
-  console.log({ data })
-  console.log({ eips })
   return (
     <>
       <CCard>
@@ -641,7 +707,7 @@ function table() {
               ),
             }}
             // onRowClick={(item) => {
-            //   console.log(item)
+            //
             //   navigate('/EIP-' + item.Number)
             // }}
             sorterValue={{ column: 'name', state: 'asc' }}

@@ -101,7 +101,6 @@ const autoCharts = (props) => {
     const post = await data.json()
 
     if (!ignore) {
-      console.log(post)
       setEip(post)
     }
   }
@@ -133,7 +132,7 @@ const autoCharts = (props) => {
           return monthYear === att + ' ' + y
         }
       })
-      console.log({ filterData })
+
       setEips(filterData)
       setLoading(true)
     }
@@ -141,7 +140,7 @@ const autoCharts = (props) => {
 
   const dataCapture = (name, data) => {
     let arr = []
-    console.log({ name })
+
     let coreItem = allDatas[statusIndex(name)].data.filter(
       (e) => e.type === 'Standards Track' && e.category === 'Core',
     )
@@ -676,7 +675,6 @@ const autoCharts = (props) => {
 
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
-    console.log({ data })
     return (
       <CCard className="mb-4 cardBorder shadow-md">
         <Link
@@ -891,14 +889,10 @@ const autoCharts = (props) => {
       })
     }
 
-    console.log(arr)
-
     return arr
   }
 
   const allDatas = useMemo(() => distributeData(eips), [eips])
-
-  console.log({ allDatas })
 
   // for duplicate fetching...
 
