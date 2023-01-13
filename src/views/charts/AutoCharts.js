@@ -88,6 +88,7 @@ const autoCharts = (props) => {
   const G = G2.getEngine('canvas')
   let location = useLocation()
   const matches = useMediaQuery('(max-width: 767px)')
+  const headingResponse = useMediaQuery('(max-width: 450px)')
   const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
   let [data, setData] = useState() // i set the data here
@@ -923,15 +924,17 @@ const autoCharts = (props) => {
         ) : (
           <div>
             <div className="flex justify-center items-center mb-[4rem]">
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center flex-wrap">
                 <div
-                  className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
-                  style={{ fontFamily: 'Big Shoulders Display' }}
+                  className={`${
+                    !headingResponse ? 'rotate-[270deg] bg-white' : 'rotate-[0deg] bg-white '
+                  }bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] `}
+                  style={{ fontFamily: 'Big Shoulders Display', backgroundColor: 'white' }}
                 >
                   {year}
                 </div>
                 <div
-                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md flex-auto"
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {months[month - 1]}{' '}

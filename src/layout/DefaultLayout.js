@@ -93,7 +93,7 @@ const DefaultLayout = () => {
               <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
             </div>
           )}
-          <AppContent />
+          <AppContent className="bg-white" />
         </div>
         <AppFooter />
       </div>

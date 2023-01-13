@@ -152,6 +152,7 @@ const Dashboard = () => {
       Stagnant: allData[11].data,
       Withdrawn: allData[12].data,
     }
+    console.log(statusNum[name])
 
     for (let i = 0; i < yearList.length; i++) {
       let sumCore = StandardsTrackYearsCollection(statusNum[name], yearList, i, 'Core').length
@@ -819,12 +820,7 @@ const Dashboard = () => {
         {text === 'Last_Call' ? 'Last Call' : text}
         {text === 'EIPs Type & Categories' || text === 'EIPs Status' || text === 'Search an EIP' ? (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
-            {allData[0].total +
-              allData[1].total +
-              allData[2].total +
-              allData[3].total +
-              allData[4].total +
-              allData[5].total}
+            {AllData.length}
           </div>
         ) : (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">

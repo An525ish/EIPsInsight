@@ -219,7 +219,11 @@ const AllEIPs = () => {
         <div className="flex">
           {text}{' '}
           <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
-            {eips !== undefined ? eips.length : 0}
+            {eips !== undefined ? (
+              eips.length
+            ) : (
+              <div className="flex rounded-full justify-center items-center h-[0.4rem] w-[0.4rem] relative bg-blue-500 animate-pulse"></div>
+            )}
           </div>
         </div>
 

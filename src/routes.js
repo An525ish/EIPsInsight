@@ -135,11 +135,11 @@ const routes = [
   // { path: '/currentMonth', name: 'Current Month', element: CurrentMonth },
   { path: '/:id', name: 'Month', element: autoCharts },
   { path: '/old-:id', name: 'Month', element: oldCharts },
-  {
-    path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
-    name: `${months[date.getMonth()]} ${date.getFullYear()}`,
-    element: CurrentMonth,
-  },
+  // {
+  //   path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
+  //   name: `${months[date.getMonth()]} ${date.getFullYear()}`,
+  //   element: CurrentMonth,
+  // },
 
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },
