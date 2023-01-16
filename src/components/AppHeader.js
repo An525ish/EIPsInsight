@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,10 +14,8 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cibDiscord, cibGithub, cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
-import { AppHeaderDropdown } from './header/index'
 import logo from 'src/assets/logo2.gif'
 import logoAndroid from 'src/assets/logo3.gif'
 import leftIcon from 'src/assets/left.svg'
@@ -27,14 +24,10 @@ import midIcon from 'src/assets/mid.png'
 import discordIcon from 'src/assets/discord.svg'
 import githubIcon from 'src/assets/github.svg'
 import emailIcon from 'src/assets/email.png'
-import { ReactComponent as left } from 'src/assets/brand/left.svg'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
-import { ip } from 'src/constants'
-import { ResponsiveStream } from 'nivo/lib/components/charts/stream'
 import useMediaQuery from 'src/scss/useMediaQuery'
-
-import back from 'src/assets/back.png'
+const AppHeaderDropdown = React.lazy(() => import('./header/AppHeaderDropdown'))
 
 const AppHeader = (props) => {
   const [changeIcon, setChangeIcon] = useState(0)
@@ -108,8 +101,8 @@ const AppHeader = (props) => {
     return post.length === 0
       ? 0
       : post['Final']['Standard_Track'] === undefined
-      ? 0
-      : post['Final']['Standard_Track'][name] +
+        ? 0
+        : post['Final']['Standard_Track'][name] +
         post['Draft']['Standard_Track'][name] +
         post['Review']['Standard_Track'][name] +
         post['Last_Call']['Standard_Track'][name] +
@@ -220,9 +213,8 @@ const AppHeader = (props) => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem
-            className={`navbar-items ${
-              click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-            }`}
+            className={`navbar-items ${click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              }`}
           >
             <CNavLink style={{ padding: '0px' }} to="/EIPS" component={NavLink}>
               All EIPs
@@ -230,9 +222,8 @@ const AppHeader = (props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${
-              click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-            }`}
+            className={`navbar-items ${click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              }`}
           >
             <CNavLink style={{ padding: '0px' }} to="/typeAll" component={NavLink}>
               Type
@@ -240,9 +231,8 @@ const AppHeader = (props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${
-              click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-            }`}
+            className={`navbar-items ${click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              }`}
           >
             <CNavLink style={{ padding: '0px' }} to="/statusAll" component={NavLink}>
               Status
@@ -250,9 +240,8 @@ const AppHeader = (props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${
-              click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-            }`}
+            className={`navbar-items ${click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              }`}
           >
             <Link
               to={`/${props.Month.toLowerCase()}-${props.Year}`}
@@ -302,7 +291,7 @@ const AppHeader = (props) => {
                 rel="noreferrer"
                 className="githubIcon"
               >
-                <img className="nav-social" src={githubIcon} alt="github Icon" />
+                <img className="nav-social" loading="lazy" src={githubIcon} alt="github Icon" />
               </a>
             </CNavLink>
           </CNavItem>
@@ -314,14 +303,14 @@ const AppHeader = (props) => {
                 rel="noreferrer"
                 className="discordIcon"
               >
-                <img className="nav-social" src={discordIcon} alt="Discord Icon" />
+                <img className="nav-social" loading="lazy" src={discordIcon} alt="Discord Icon" />
               </a>
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">
               <Link to="/contactUs" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <img className="nav-social" src={emailIcon} alt="Email Icon" />
+                <img className="nav-social" loading="lazy" src={emailIcon} alt="Email Icon" />
               </Link>
             </CNavLink>
           </CNavItem>
@@ -343,10 +332,14 @@ const AppHeader = (props) => {
           ''
         ) : (
           <div
-            style={{ zIndex: '999', position: 'fixed', right: '0' }}
+            style={{ zIndex: '999',
+            cursor: "pointer",
+            borderRadius: "5px",
+            border: "2px solid black",
+            padding: "5px 10px", backgroundColor: "rgb(240,240,240)" }}
             onClick={() => navigate(-1)}
           >
-            <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
+            Go back
           </div>
         )}
         {/* <motion.div

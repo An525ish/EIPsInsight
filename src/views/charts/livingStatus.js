@@ -5,28 +5,13 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
 import {
-  CTable,
-  CTableHeaderCell,
-  CTableHead,
-  CTableRow,
-  CTableBody,
-  CTableDataCell,
-} from '@coreui/react'
-
-import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
-  CCardHeader,
   CCol,
-  CProgress,
   CRow,
 } from '@coreui/react'
-import { CChartBar, CChartLine, CChartDoughnut, CChartRadar } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
+import { CChartBar } from '@coreui/react-chartjs'
+import { getStyle } from '@coreui/utils'
 
 function livingStatusChart(props) {
   const [info, setInfo] = useState()
@@ -192,14 +177,6 @@ function livingStatusChart(props) {
       localStorage.setItem('withdrawnInterface', JSON.stringify(calculateWithdrawn(info, 3)))
     }
   }, [info])
-
-  function filterDraft(item, index) {
-    if (index >= 130 && item[1] === 'mayDraft') {
-      return true
-    } else {
-      return false
-    }
-  }
 
   function calculateDraft(data, ind) {
     let ans = 0

@@ -15,8 +15,8 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
-import { logoNegative } from 'src/assets/brand/logo-negative'
 import { sygnet } from 'src/assets/brand/sygnet'
+import eiplogo from '../assets/logo2.webm'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -354,7 +354,9 @@ const AppSidebar = (props) => {
     >
       <CSidebarBrand style={{ backgroundColor: 'black' }} className="" to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <div className="logoDesign"></div>
+          <video autoPlay loop controls>
+            <source src={eiplogo} />
+          </video>
         </Link>
       </CSidebarBrand>
       <CSidebarNav className="scrollbarDesign z-20">

@@ -80,10 +80,10 @@ const DefaultLayout = () => {
   return (
     <div>
       <AppSidebar Year={date.getFullYear()} Month={months[date.getMonth()]} />
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+      <div style={{backgroundColor:"#FAFAFA"}} className="wrapper d-flex flex-column min-vh-100">
         <AppHeader Year={date.getFullYear()} Month={months[date.getMonth()]} />
         <div className="body flex flex-grow-1 px-3">
-          {par?.length === 0 || matches ? (
+          {/* {par?.length === 0 || matches ? (
             ''
           ) : (
             <div
@@ -92,7 +92,7 @@ const DefaultLayout = () => {
             >
               <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
             </div>
-          )}
+          )} */}
           <AppContent />
         </div>
         <AppFooter />

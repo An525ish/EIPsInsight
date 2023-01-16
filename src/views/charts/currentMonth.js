@@ -29,8 +29,6 @@ import {
   CChartPolarArea,
   CChartRadar,
 } from '@coreui/react-chartjs'
-import 'chartjs-plugin-datalabels'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -45,6 +43,8 @@ import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 import Page404 from '../pages/page404/Page404'
+
+import './currentMonth.css'
 
 const CurrentMonth = () => {
   const [month, setMonth] = useState()
@@ -238,9 +238,8 @@ const CurrentMonth = () => {
     }
 
     const textStyleStr = `width:${containerWidth}px;`
-    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
-      scale < 1 ? 1 : 'inherit'
-    };">${text}</div>`
+    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'
+      };">${text}</div>`
   }
   const configDougnutChart = (name, data) => {
     const config = {
@@ -534,49 +533,41 @@ const CurrentMonth = () => {
   const getBadge = (status) => {
     switch (status) {
       case 'Final':
-        return '#c3fae8'
+        // return '#c3fae8'
+        return 'white'
       case 'Last_Call':
-        return '#d3f9d8'
-      case 'Last Call':
-        return '#d3f9d8'
+        // return '#d3f9d8'
+        return 'white'
+        case 'Last Call':
+          // return '#d3f9d8'
+          return 'white'
       case 'LastCall':
-        return '#d3f9d8'
+        // return '#d3f9d8'
+        return 'white'
       case 'Draft':
-        return '#fff3bf'
+        // return '#fff3bf'
+        return 'white'
       case 'Stagnant':
-        return '#ffe8cc'
+        // return '#ffe8cc'
+        return 'white'
       case 'Withdrawn':
-        return '#ffe3e3'
+        // return '#ffe3e3'
+        return 'white'
       case 'Review':
-        return '#d0ebff'
+        // return '#d0ebff'
+        return 'white'
       case 'Living':
-        return '#c5f6fa'
+        // return '#c5f6fa'
+        return 'white'
       default:
-        return '#e7f5ff'
+        // return '#e7f5ff'
+        return 'white'
     }
   }
   const getBadgeColor = (status) => {
     switch (status) {
-      case 'Final':
-        return '#0ca678'
-      case 'Last_Call':
-        return '#37b24d'
-      case 'Last Call':
-        return '#37b24d'
-      case 'LastCall':
-        return '#37b24d'
-      case 'Draft':
-        return '#f08c00'
-      case 'Stagnant':
-        return '#e8590c'
-      case 'Withdrawn':
-        return '#e03131'
-      case 'Review':
-        return '#1971c2'
-      case 'Living':
-        return '#0c8599'
       default:
-        return '#1c7ed6'
+        return 'black'
     }
   }
 
@@ -599,8 +590,7 @@ const CurrentMonth = () => {
         style={{
           color: `${getBadgeColor(text)}`,
           background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
-          fontFamily: 'Big Shoulders Display',
+          fontFamily: 'Helvetica',
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
@@ -728,7 +718,7 @@ const CurrentMonth = () => {
                   textDecoration: 'none',
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
-                  fontFamily: 'Big Shoulders Display',
+                  fontFamily: 'Helvetica',
                 }}
                 className={`githubIcon h-7
             shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
@@ -767,7 +757,7 @@ const CurrentMonth = () => {
 
   const statusChartTemplate = (name) => {
     return (
-      <CCard className="mb-4 cardBorder">
+      <CCard className="current-month-card-container">
         <Link
           to="/currentMonthTable"
           style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
@@ -809,13 +799,12 @@ const CurrentMonth = () => {
           )}
           <Column
             style={{
-              visibility: `${
-                parseInt(
-                  fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, name),
-                ) === 0
+              visibility: `${parseInt(
+                fetchStatusSum(currentMonthData === undefined ? [] : currentMonthData, name),
+              ) === 0
                   ? 'hidden'
                   : 'visible'
-              }`,
+                }`,
             }}
             {...configColumnCharts(name, currentMonthData === undefined ? [] : currentMonthData)}
           />
@@ -841,32 +830,26 @@ const CurrentMonth = () => {
           <Page404 />
         ) : (
           <div>
-            <div className="flex justify-center items-center mb-[4rem]">
-              <div className="flex justify-center items-center">
-                <div
-                  className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
-                  style={{ fontFamily: 'Big Shoulders Display' }}
-                >
-                  {param['*'].split('-')[1]}
-                </div>
-                <div
-                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
-                  style={{ fontFamily: 'Big Shoulders Display' }}
-                >
+            <div className="flex mb-[2rem]">
+              <div className="currentmonth-heading">
+                <div className=''>
                   {param['*'].split('-')[0][0].toUpperCase() +
                     param['*'].split('-')[0].substring(1)}{' '}
+                </div>
+                <div style={{marginLeft:"10px"}}>
+                  {param['*'].split('-')[1]}
                 </div>
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: matches ? 'column' : 'row' }}>
-              <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-                <CCard>
+              <div  style={{ width: matches ? '100%' : '50%' }}>
+                <CCard className='current-month-card-container'>
                   <CCardBody
                     style={{
                       overflowX: 'auto',
                       overflowY: 'auto',
                       width: '100%',
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Helvetica',
                       fontSize: '15px',
                       borderBottom: '2px solid #74c0fc',
                     }}
@@ -876,14 +859,14 @@ const CurrentMonth = () => {
                         <CTableRow>
                           <CTableHeaderCell
                             scope="col"
-                            style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
+                            style={{ width: '82%', fontFamily: 'Helvetica' }}
                             className="tracking-wider text-[1.3rem]"
                           >
                             Status
                           </CTableHeaderCell>
                           <CTableHeaderCell
                             scope="col"
-                            style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
+                            style={{ width: '18%', fontFamily: 'Helvetica' }}
                             className="tracking-wider text-[1.3rem]"
                           >
                             Number
@@ -954,19 +937,17 @@ const CurrentMonth = () => {
                     </CTable>
                   </CCardBody>
                   <CCardFooter
-                    className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                    className="text-[black]"
+                    style={{ display: 'flex', justifyContent: 'space-between', backgroundColor:'white' }}
                   >
-                    <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                    <label style={{ color: 'black', fontSize: '16px', fontWeight: 'bold' }}>
                       *Click to see more
                     </label>
                     <label
                       style={{
-                        color: '#1c7ed6',
-                        fontSize: '10px',
-                        fontFamily: 'Big Shoulders Display',
+                        color: 'black',
+                        fontSize: '16px',
                       }}
-                      className="tracking-widest text-[0.8rem]"
                     >
                       {date}
                     </label>
@@ -981,7 +962,7 @@ const CurrentMonth = () => {
                         overflowX: 'auto',
                         overflowY: 'auto',
                         width: '100%',
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Helvetica',
                         fontSize: '15px',
                         borderBottom: '2px solid #74c0fc',
                       }}
@@ -991,14 +972,14 @@ const CurrentMonth = () => {
                           <CTableRow>
                             <CTableHeaderCell
                               scope="col"
-                              style={{ width: '82%', fontFamily: 'Big Shoulders Display' }}
+                              style={{ width: '82%', fontFamily: 'Helvetica' }}
                               className="tracking-wider text-[1.3rem]"
                             >
                               Other Stats
                             </CTableHeaderCell>
                             <CTableHeaderCell
                               scope="col"
-                              style={{ width: '18%', fontFamily: 'Big Shoulders Display' }}
+                              style={{ width: '18%', fontFamily: 'Helvetica' }}
                               className="tracking-wider text-[1.3rem]"
                             >
                               Number
@@ -1009,7 +990,7 @@ const CurrentMonth = () => {
                           <CTableRow>
                             <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
                             <CTableDataCell
-                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              style={{ fontFamily: 'Helvetica' }}
                               className="text-[1rem] tracking-wider"
                             >
                               <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2  shadow-md rounded-[0.2rem]">
@@ -1021,7 +1002,7 @@ const CurrentMonth = () => {
                           <CTableRow>
                             <CTableHeaderCell scope="row">Users</CTableHeaderCell>
                             <CTableDataCell
-                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              style={{ fontFamily: 'Helvetica' }}
                               className="text-[1rem] tracking-wider"
                             >
                               <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
@@ -1033,7 +1014,7 @@ const CurrentMonth = () => {
                           <CTableRow>
                             <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
                             <CTableDataCell
-                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              style={{ fontFamily: 'Helvetica' }}
                               className="text-[1rem] tracking-wider"
                             >
                               <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
@@ -1045,7 +1026,7 @@ const CurrentMonth = () => {
                           <CTableRow>
                             <CTableHeaderCell scope="row">Files</CTableHeaderCell>
                             <CTableDataCell
-                              style={{ fontFamily: 'Big Shoulders Display' }}
+                              style={{ fontFamily: 'Helvetica' }}
                               className="text-[1rem] tracking-wider"
                             >
                               <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
@@ -1066,7 +1047,7 @@ const CurrentMonth = () => {
                       style={{
                         color: '#1c7ed6',
                         fontSize: '10px',
-                        fontFamily: 'Big Shoulders Display',
+                        fontFamily: 'Helvetica',
                       }}
                       className="tracking-widest text-[0.8rem]"
                     >
@@ -1099,14 +1080,13 @@ const CurrentMonth = () => {
               <CCol xs={matches ? 12 : 6}>{statusChartTemplate('Living')}</CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                <CCard className="mb-4 cardBorder">
+                <CCard className="current-month-card-container">
                   <CCardHeader
                     className="cardHeader tracking-widest font-bold text-[1.3rem]"
                     style={{
-                      color: `${coloring('text')}`,
-                      background: `${coloring('back')}`,
-                      borderBottom: '2px solid #74c0fc',
-                      fontFamily: 'Big Shoulders Display',
+                      color: `black`,
+                      background: `white`,
+                      fontFamily: 'Helvetica',
                     }}
                   >
                     Final vs Draft
@@ -1118,12 +1098,12 @@ const CurrentMonth = () => {
                         'Draft',
                       ),
                     ) === 0 &&
-                    parseInt(
-                      fetchStatusSum(
-                        currentMonthData === undefined ? [] : currentMonthData,
-                        'Final',
-                      ),
-                    ) === 0 ? (
+                      parseInt(
+                        fetchStatusSum(
+                          currentMonthData === undefined ? [] : currentMonthData,
+                          'Final',
+                        ),
+                      ) === 0 ? (
                       <div
                         style={{
                           textAlign: 'center',
@@ -1147,22 +1127,21 @@ const CurrentMonth = () => {
                     )}
                     <Column
                       style={{
-                        visibility: `${
-                          parseInt(
-                            fetchStatusSum(
-                              currentMonthData === undefined ? [] : currentMonthData,
-                              'Draft',
-                            ),
-                          ) === 0 &&
-                          parseInt(
-                            fetchStatusSum(
-                              currentMonthData === undefined ? [] : currentMonthData,
-                              'Final',
-                            ),
-                          ) === 0
+                        visibility: `${parseInt(
+                          fetchStatusSum(
+                            currentMonthData === undefined ? [] : currentMonthData,
+                            'Draft',
+                          ),
+                        ) === 0 &&
+                            parseInt(
+                              fetchStatusSum(
+                                currentMonthData === undefined ? [] : currentMonthData,
+                                'Final',
+                              ),
+                            ) === 0
                             ? 'hidden'
                             : 'visible'
-                        }`,
+                          }`,
                       }}
                       {...configDraftvsFinalCharts(
                         currentMonthData === undefined ? [] : currentMonthData,

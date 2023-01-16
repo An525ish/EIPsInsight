@@ -9,13 +9,11 @@ import './contactUs.styles.css'
 import {
   CButton,
   CForm,
-  CFormCheck,
   CFormInput,
   CFormLabel,
   CFormText,
   CFormTextarea,
   CModal,
-  CModalBody,
   CModalHeader,
   CModalTitle,
 } from '@coreui/react'

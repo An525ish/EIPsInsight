@@ -38,28 +38,15 @@ import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
-import { MotionConfig } from 'framer-motion'
 
 const Dashboard = () => {
   const [data, setData] = useState()
-  const [info, setInfo] = useState()
-  const param = useParams()
   const [date, setDate] = useState()
   const [eips, setEips] = useState()
   const [post, getPost] = useState()
   const [pieChartData, setPieChartData] = useState()
   const [loading, setLoading] = useState(false)
   const [AllData, setAllData] = useState([])
-
-  const {
-    click1,
-    click2,
-    click3,
-    setClick1Function,
-    setClick2Function,
-    setClick3Function,
-    setClick4Function,
-  } = useUserAuth()
 
   const [years, setYears] = useState()
 

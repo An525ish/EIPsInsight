@@ -14,20 +14,18 @@ import {
 } from '@coreui/react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
-import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
+import { Column } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import '../type/type.css'
 import './status.css'
-import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
 import Loading from 'src/views/theme/loading/loading'
 import { TypeColors } from 'src/constants'
 
 function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
   const matches = useMediaQuery('(max-width: 767px)')

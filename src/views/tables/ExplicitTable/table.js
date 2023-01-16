@@ -19,7 +19,6 @@ function table() {
   const [date, setDate] = useState()
   const [name, setName] = useState()
   const [data, setData] = useState()
-  const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/allinfo'
 
   const fetchAllEIPs = () => {
@@ -770,7 +769,6 @@ function table() {
   }
 
   const factorAuthor = (data) => {
-    let ans
     // console.log({ data })
     let list = data.split(',')
     // console.log({ list })

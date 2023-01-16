@@ -2,7 +2,7 @@
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Loading from 'src/views/theme/loading/loading'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
@@ -30,7 +30,6 @@ function tableCurrent() {
   const [eips, setEips] = useState()
   const [date, setDate] = useState()
   const [currentMonth, setCurrentMonth] = useState()
-  const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/rawData'
 
   const [loading, setLoading] = useState(true)
@@ -45,9 +44,8 @@ function tableCurrent() {
       })
   }
   const fetchCurrentMonthEIPs = () => {
-    const API3 = `https://eipsinsight.com/api/currentMonth/${currentDate.getFullYear()}/${
-      months[currentDate.getMonth()]
-    }`
+    const API3 = `https://eipsinsight.com/api/currentMonth/${currentDate.getFullYear()}/${months[currentDate.getMonth()]
+      }`
     fetch(API3)
       .then((res) => res.json())
       .then((res) => {
@@ -59,128 +57,128 @@ function tableCurrent() {
     const columns =
       status === 'Last_Call'
         ? [
-            {
-              key: 'id',
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
-              _props: { className: 'fw-semibold' },
-              sorter: true,
+          {
+            key: 'id',
+            _style: { width: '5%', color: `${getBadgeColor(status)}` },
+            _props: { className: 'fw-semibold' },
+            sorter: true,
+          },
+          {
+            key: 'Number',
+            _style: {
+              width: '5%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Number',
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
-              _props: { className: 'fw-semibold' },
-              sorter: true,
-            },
+            _props: { className: 'fw-semibold' },
+            sorter: true,
+          },
 
-            {
-              key: 'Title',
-              _style: {
-                width: '20%',
-                color: `${getBadgeColor(status)}`,
-              },
+          {
+            key: 'Title',
+            _style: {
+              width: '20%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Author',
-              _style: {
-                width: '14%',
-                color: `${getBadgeColor(status)}`,
-              },
+          },
+          {
+            key: 'Author',
+            _style: {
+              width: '14%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Draft Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
+          },
+          {
+            key: 'Draft Date',
+            _style: {
+              width: '10%',
+              color: `${getBadgeColor(status)}`,
             },
+          },
 
-            { key: 'Type', _style: { width: '8%', color: `${getBadgeColor(status)}` } },
-            {
-              key: 'Category',
-              _style: {
-                width: '8%',
-                color: `${getBadgeColor(status)}`,
-              },
+          { key: 'Type', _style: { width: '8%', color: `${getBadgeColor(status)}` } },
+          {
+            key: 'Category',
+            _style: {
+              width: '8%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Last-Call Deadline',
-              _style: { width: '10%', color: `${getBadgeColor(status)}` },
+          },
+          {
+            key: 'Last-Call Deadline',
+            _style: { width: '10%', color: `${getBadgeColor(status)}` },
+          },
+          {
+            key: 'status',
+            _style: {
+              width: '5%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'status',
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
-            {
-              key: 'PR No.',
+          },
+          {
+            key: 'PR No.',
 
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
-            },
-          ]
+            _style: { width: '5%', color: `${getBadgeColor(status)}` },
+          },
+        ]
         : [
-            {
-              key: 'id',
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
-              _props: { className: 'fw-semibold' },
-              sorter: true,
+          {
+            key: 'id',
+            _style: { width: '5%', color: `${getBadgeColor(status)}` },
+            _props: { className: 'fw-semibold' },
+            sorter: true,
+          },
+          {
+            key: 'Number',
+            _style: {
+              width: '5%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Number',
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
-              _props: { className: 'fw-semibold' },
-              sorter: true,
+            _props: { className: 'fw-semibold' },
+            sorter: true,
+          },
+          {
+            key: 'Title',
+            _style: {
+              width: '30%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Title',
-              _style: {
-                width: '30%',
-                color: `${getBadgeColor(status)}`,
-              },
+          },
+          {
+            key: 'Author',
+            _style: {
+              width: '15%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'Author',
-              _style: {
-                width: '15%',
-                color: `${getBadgeColor(status)}`,
-              },
+          },
+          {
+            key: status === 'Final' ? 'Final Date' : 'Draft Date',
+            _style: {
+              width: '10%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: status === 'Final' ? 'Final Date' : 'Draft Date',
-              _style: {
-                width: '10%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
+          },
 
-            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
-            {
-              key: 'Category',
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
+          { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+          {
+            key: 'Category',
+            _style: {
+              width: '5%',
+              color: `${getBadgeColor(status)}`,
             },
-            {
-              key: 'status',
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
-            },
-            {
-              key: 'PR No.',
+          },
+          {
+            key: 'status',
+            _style: { width: '5%', color: `${getBadgeColor(status)}` },
+          },
+          {
+            key: 'PR No.',
 
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
+            _style: {
+              width: '5%',
+              color: `${getBadgeColor(status)}`,
             },
-          ]
+          },
+        ]
 
     return columns
   }
@@ -420,7 +418,6 @@ function tableCurrent() {
   }
 
   const factorAuthor = (data) => {
-    let ans
     // console.log({ data })
     let list = data.split(',')
     // console.log({ list })
@@ -450,9 +447,9 @@ function tableCurrent() {
         style={{
           fontFamily: 'Roboto',
           fontWeight: '800',
-          fontSize: '14px',
-          color: `${getBadgeColor(status)}`,
-          background: `${getBadge(status)}`,
+          fontSize: '16px',
+          color: `black`,
+          background: `white`,
           borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
@@ -608,13 +605,12 @@ function tableCurrent() {
                           >
                             <a
                               key={index}
-                              href={`${
-                                item[item.length - 1].substring(
-                                  item[item.length - 1].length - 1,
-                                ) === '>'
-                                  ? 'mailto:' + t
-                                  : 'https://github.com/' + t.substring(1)
-                              }`}
+                              href={`${item[item.length - 1].substring(
+                                item[item.length - 1].length - 1,
+                              ) === '>'
+                                ? 'mailto:' + t
+                                : 'https://github.com/' + t.substring(1)
+                                }`}
                               target="_blank"
                               rel="noreferrer"
                               className="hoverAuthor text-[10px]"
@@ -699,9 +695,8 @@ function tableCurrent() {
                 'PR No.': (item) => (
                   <td>
                     <a
-                      href={`https://github.com/ethereum/EIPs/pull/${
-                        item['PR No.'] === 0 ? item.Number : item['PR No.']
-                      }`}
+                      href={`https://github.com/ethereum/EIPs/pull/${item['PR No.'] === 0 ? item.Number : item['PR No.']
+                        }`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -742,16 +737,12 @@ function tableCurrent() {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            color: `${getBadgeColor(status)}`,
-            backgroundColor: `${getBadge(status)}`,
+            color: `black`,
+            backgroundColor: `white`,
           }}
         >
-          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
-          <label
-            style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
-          >
-            {date}
-          </label>
+          <label style={{ color: 'black', fontSize: '17px', fontWeight: 'bold' }}></label>
+          <label style={{ fontSize: '14px', fontWeight: 'regular', color: `black` }}>{date}</label>
         </CCardFooter>
       </CCard>
     </>

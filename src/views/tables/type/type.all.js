@@ -379,18 +379,9 @@ function typeAll() {
           </div>
           <div
             style={{
-              fontSize: '30px',
-              fontWeight: '400',
-              marginBottom: '00px',
-              backgroundColor: 'white',
-              border: 'none',
-              width: '18rem',
-              padding: '10px',
-              borderRadius: '5px',
-              borderLeft: '4px solid #339af0',
-              borderBottom: '2px solid #339af0',
+              marginTop:"30px"
             }}
-            className="shadow-md"
+            className="type-heading"
           >
             Standard Track{' '}
             <label
@@ -438,7 +429,7 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
+              <CCard className="type-card-container">
                 <CCardBody>
                   <Pie
                     {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
@@ -769,21 +760,10 @@ function typeAll() {
           <div className="flex justify-between">
             <div
               style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-                display: 'inline-block',
-                padding: '12px',
-                borderRadius: '5px',
-                borderLeft: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
+                
               }}
-              className="shadow-md"
+              className="type-heading"
             >
-              {/* <div className='type-heading'> */}
               Meta{' '}
               <label
                 style={{
@@ -797,7 +777,6 @@ function typeAll() {
                   state={{ type: 'Meta', status: '', category: '', name: 'Meta' }}
                 >
                   <div
-                    // className='type-heading-number'
                     className='className="h-7
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
@@ -808,21 +787,7 @@ function typeAll() {
               </label>
             </div>
             <div
-              style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-
-                padding: '12px',
-                display: 'inline-block',
-                borderRadius: '5px',
-                borderRight: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
-              }}
-              className="shadow-md"
+              className="type-heading"
             >
               Informational{' '}
               <label
@@ -849,7 +814,7 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     height: '300px',
@@ -875,7 +840,7 @@ function typeAll() {
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     height: '300px',
