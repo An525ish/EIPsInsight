@@ -4,29 +4,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
-import {
-  CTable,
-  CTableHeaderCell,
-  CTableHead,
-  CTableRow,
-  CTableBody,
-  CTableDataCell,
-} from '@coreui/react'
 
 import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
-  CCardHeader,
   CCol,
-  CProgress,
   CRow,
 } from '@coreui/react'
-import { CChartBar, CChartLine, CChartDoughnut, CChartRadar } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
+import { CChartBar } from '@coreui/react-chartjs'
+import { getStyle } from '@coreui/utils'
 
 function withdrawnStatusChart(props) {
   const [info, setInfo] = useState()

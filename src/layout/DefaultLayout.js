@@ -79,21 +79,20 @@ const DefaultLayout = () => {
   return (
     <div>
       <AppSidebar Year={date.getFullYear()} Month={months[date.getMonth()]} />
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+      <div style={{backgroundColor:"#FAFAFA"}} className="wrapper d-flex flex-column min-vh-100">
         <AppHeader Year={date.getFullYear()} Month={months[date.getMonth()]} />
         <div className="body flex flex-grow-1 px-3">
-          {par?.length === 0 || matches ? (
+          {/* {par?.length === 0 || matches ? (
             ''
           ) : (
             <div
-              className="fixed rounded-[15px] flex flex-col justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] text-[3rem] w-[3rem] h-[12rem] mt-[15rem] px-[2rem] py-3 border-[#1c7ed6] border-[1.5px] drop-shadow-sm cursor-pointer shadow-[#1c7ed6] ease-in-out shadow-lg transition hover:scale-95 motion-reduce:transition delay-100 motion-reduce:focus:scale-95 animate-pulse"
+              style={{ zIndex: '999', position:'fixed', right:'0'}}
               onClick={() => navigate(-1)}
-              style={{ zIndex: 999 }}
             >
               <img src={back} alt="back" className="w-[2rem] h-[2rem] max-w-none" />
             </div>
-          )}
-          <AppContent className="bg-white" />
+          )} */}
+          <AppContent />
         </div>
         <AppFooter />
       </div>

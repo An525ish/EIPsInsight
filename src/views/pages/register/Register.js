@@ -14,11 +14,10 @@ import {
   CToast,
   CToastBody,
   CToaster,
-  CToastHeader,
   CToastClose,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked } from '@coreui/icons'
 import { useState } from 'react'
 import { useUserAuth } from 'src/Context/AuthContext'
 import { useNavigate } from 'react-router-dom'

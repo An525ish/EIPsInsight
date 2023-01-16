@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import GitHubButton from 'react-github-button'
 import Github from '../../../assets/images/github.png'
 import Google from '../../../assets/images/google.png'
 import {
@@ -19,13 +18,11 @@ import {
   CToast,
   CToastBody,
   CToaster,
-  CToastHeader,
   CToastClose,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import './login.styles.css'
-import { GoogleButton } from 'react-google-button'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
 const Login = () => {
@@ -42,9 +39,6 @@ const Login = () => {
     setImageFunction,
     setImageFunction1,
     githubSignIn,
-    forgotPassword,
-    adminCheck,
-    adminLogin,
   } = useUserAuth()
 
   const [toast, addToast] = useState(0)

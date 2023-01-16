@@ -29,8 +29,6 @@ import {
   CChartPolarArea,
   CChartRadar,
 } from '@coreui/react-chartjs'
-import 'chartjs-plugin-datalabels'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { DocsCallout } from 'src/components'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 

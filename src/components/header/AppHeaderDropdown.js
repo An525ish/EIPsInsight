@@ -28,7 +28,7 @@ import profilePic from './../../assets/images/avatars/profilePic.png'
 import { useUserAuth } from 'src/Context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
-const AppHeaderDropdown = () => {
+export default function AppHeaderDropdown() {
   const { user, logOut, setImageFunction1, adminCheckAgain, adminLogin } = useUserAuth()
   const navigate = useNavigate()
 
@@ -111,5 +111,3 @@ const AppHeaderDropdown = () => {
     </CDropdown>
   )
 }
-
-export default AppHeaderDropdown

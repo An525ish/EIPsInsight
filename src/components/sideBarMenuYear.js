@@ -66,18 +66,31 @@ const menuItemAnimation = {
     },
   }),
   show: (i) => ({
-    x: 0,
+    x: '10%',
     transition: {
       duration: (i + 1) * 0.1,
     },
   }),
 }
 
-const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
+const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
     setIsOpen(true)
+  }
+
+  function handleFocus(id) {
+    for (let i = 0; i < allRoutes.length; i++) {
+      for (let j = 0; j < allRoutes[i].subRoutes.length; j++) {
+        if (allRoutes[i].subRoutes[j].id === id) {
+          allRoutes[i].subRoutes[j].focus = true
+        } else {
+          allRoutes[i].subRoutes[j].focus = false
+        }
+      }
+    }
   }
 
   const itemVariants = {
@@ -94,11 +107,13 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
       setIsMenuOpen(false)
     }
   }, [isOpen])
+
+  console.log({ allRoutes })
   return (
     <>
       <motion.nav
         className={`flex p-2 pl-4 items-center w-full ${
-          isMenuOpen ? 'border-b-[#339af0] border-b-2 ' : ''
+          isMenuOpen ? 'border-b-black border-b-2 ' : ''
         } ${
           !isMenuOpen ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
         } rounded-[13px] cursor-pointer `}
@@ -108,7 +123,7 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
       >
         <CIcon
           icon={route.icon}
-          style={{ color: `${isMenuOpen ? '#339af0' : '#adb5bd'}` }}
+          style={{ color: `${isMenuOpen ? 'black' : '#adb5bd'}` }}
           customClassName="nav-icon"
         />
         <div className="menu_item">
@@ -118,7 +133,7 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
               initial="hidden"
               animate="show"
               exit="hidden"
-              className={`text-[17px] ${isMenuOpen ? 'text-[#339af0]' : 'text-[#adb5bd]'} pr-10`}
+              className={`text-[17px] ${isMenuOpen ? 'text-black' : 'text-[#adb5bd]'} pr-10`}
             >
               {route.name}
             </motion.div>
@@ -138,7 +153,7 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
             width="13"
             height="12"
             viewBox="0 0 20 20"
-            className={`${isMenuOpen ? 'fill-[#339af0]' : 'fill-[#adb5bd]'}`}
+            className={`${isMenuOpen ? 'fill-black' : 'fill-[#adb5bd]'}`}
           >
             <path d="M0 7 L 20 7 L 10 16" />
           </svg>
@@ -147,7 +162,7 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.ul
-            variants={menuAnimation}
+            // variants={menuAnimation}
             initial="hidden"
             animate="show"
             exit="hidden"
@@ -159,15 +174,24 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen }) => {
                   variants={menuItemAnimation}
                   key={i}
                   custom={i}
-                  className="px-5 ml-auto pt-2 flex text-[17px] hover:text-white text-[#adb5bd]  cursor-pointer hover:transition-all hover:duration-100  hover:scale-105 hover:opacity-90 duration-500  hover:border-white hover:border-r-[2rem] focus:border-[white] focus:border-l-[2rem] focus:text-[white]"
+                  className="px-5 ml-auto pt-2 flex text-[17px] hover:text-black text-[#868e96]  cursor-pointer hover:transition-all hover:duration-100  hover:opacity-90 duration-500 focus:text-black "
                 >
-                  <motion.div className="text-[17px] ml-auto mr-7 hover:text-white ">
+                  <motion.div className="text-[17px] hover:text-white ">
                     <NavLink
                       to={subRoute.path}
                       activeClassName="active2"
-                      className="hover:text-[#339af0] "
+                      className="hover:text-black "
                     >
-                      {subRoute.name}
+                      <div
+                        className={`${
+                          !subRoute.focus
+                            ? 'bg-[#e9ecef] hover:bg-[#dee2e6]'
+                            : 'bg-[#ced4da] scale-105 hover:bg-[#ced4da]'
+                        }  w-[15rem] px-2 h-[3rem] flex items-center rounded-[0.6rem] font-bold tracking-wider hover:scale-105 hover:transition-all `}
+                        onClick={() => handleFocus(subRoute.id)}
+                      >
+                        {subRoute.name}
+                      </div>
                     </NavLink>
                   </motion.div>
                 </motion.li>

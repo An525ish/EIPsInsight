@@ -14,19 +14,18 @@ import {
 } from '@coreui/react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
-import { Column, Pie, G2, Line, Area, Bar } from '@ant-design/plots'
+import { Column } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import useMediaQuery from 'src/scss/useMediaQuery'
 import { ip } from 'src/constants'
 import '../type/type.css'
-import { faLeftLong, faLessThan } from '@fortawesome/free-solid-svg-icons'
+import './status.css'
 import Loading from 'src/views/theme/loading/loading'
 import { TypeColors } from 'src/constants'
 
 function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [eips, setEips] = useState([])
   const matches = useMediaQuery('(max-width: 767px)')
@@ -378,24 +377,7 @@ function statusAll(props) {
   const customTableChart = (name, title) => {
     return (
       <>
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: '400',
-            marginBottom: '00px',
-            backgroundColor: 'white',
-            border: 'none',
-
-            padding: '15px',
-            borderRadius: '5px',
-            borderLeft: `4px solid ${getBadgeColor(name)}`,
-            borderBottom: `2px solid ${getBadgeColor(name)}`,
-            marginTop: '2rem',
-            display: 'inline-block',
-            color: `${getBadgeColor(name)}`,
-          }}
-          className="shadow-lg"
-        >
+        <div className="status-heading">
           {title}{' '}
           <label
             style={{
@@ -415,40 +397,22 @@ function statusAll(props) {
                 eips: eip[3]['Last_Call'],
               }}
             >
-              <div
-                className={`className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                  name,
-                )}] text-[1.5rem] flex justify-center items-center p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2`}
-                style={{
-                  backgroundColor: `${getBadge(name)}`,
-                  fontFamily: 'Big Shoulders Display',
-                }}
-              >
-                {allData[totalData(name)].total}
-              </div>
+              <div className="status-heading-number">{totalData(name)}</div>
             </Link>
           </label>
         </div>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
-            <CCard className="shadow-sm">
-              <CCardBody
-                style={{
-                  height: '300px',
-                  borderLeft: `2px solid ${getBadgeColor(name)}`,
-                }}
-              >
-                <Column {...fetchChartData(name, allData[totalData(name)].total)} />
+            <CCard className="status-card-container">
+              <CCardBody style={{ height: '300px' }}>
+                <Column {...fetchChartData(name)} />
               </CCardBody>
               <CCardFooter
                 className="cardFooter"
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  borderLeft: `2px solid ${getBadgeColor(name)}`,
-                  borderBottom: `2px solid ${getBadgeColor(name)}`,
-                  background: `${getBadge(name)}`,
+                  backgroundColor: 'white',
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>
@@ -456,7 +420,7 @@ function statusAll(props) {
             </CCard>
           </CCol>
           <CCol xs={matches ? 12 : 6}>
-            <CCard className="shadow-sm">
+            <CCard className="status-card-container">
               <CCardBody
                 style={{
                   overflowX: 'auto',
@@ -464,7 +428,6 @@ function statusAll(props) {
                   height: '300px',
                   fontFamily: 'Roboto',
                   fontSize: '12px',
-                  borderRight: `2px solid ${getBadgeColor(name)}`,
                   '--main-color': `${getBadgeColor(name)}`,
                   '--main-color-background': `${getBadge(name)}`,
                 }}
@@ -758,9 +721,7 @@ function statusAll(props) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  borderRight: `2px solid ${getBadgeColor(name)}`,
-                  borderBottom: `2px solid ${getBadgeColor(name)}`,
-                  background: `${getBadge(name)}`,
+                  backgroundColor: 'white',
                 }}
               >
                 <label style={{ color: `${getBadgeColor(name)}`, fontSize: '10px' }}>{date}</label>
