@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
 import {
+  CBadge,
   CCard,
   CCardBody,
   CCardFooter,
@@ -23,6 +24,7 @@ import Loading from '../theme/loading/loading'
 
 const Dashboard = () => {
   const [data, setData] = useState()
+  const [duplicateData, setDuplicateData] = useState()
   const [date, setDate] = useState()
   const [loading, setLoading] = useState(false)
   const [AllData, setAllData] = useState([])
@@ -447,7 +449,9 @@ const Dashboard = () => {
     }
     // console.log(duplicateData)
     // console.log(name)
-    // console.log(statusNum[name])
+    console.log(statusNum)
+    console.log(statusNum[name])
+    console.log(name)
     let filterDataStatusUpdate = statusUpdateFirstTime(duplicateData, statusNum[name])
     // console.log(filterDataStatusUpdate)
 
@@ -1370,7 +1374,7 @@ const Dashboard = () => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('LastCall', data)} />
+                    <Line {...monthlyStatusConfig('Last Call', data)} />
                   </CCardBody>
                   {footer(date, 'Last_Call')}
                 </CCard>

@@ -16,6 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import { AppBreadcrumb } from './index'
+import { ip } from 'src/constants'
 import logo from 'src/assets/logo2.gif'
 import logoAndroid from 'src/assets/logo3.gif'
 import leftIcon from 'src/assets/left.svg'
