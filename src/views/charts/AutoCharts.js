@@ -4,7 +4,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import github from '../../assets/grey_logo.png'
 import { ip, TypeColors } from './../../constants'
 import {
@@ -86,223 +86,102 @@ const autoCharts = (props) => {
   const G = G2.getEngine('canvas')
   let location = useLocation()
   const matches = useMediaQuery('(max-width: 767px)')
+  const headingResponse = useMediaQuery('(max-width: 450px)')
   const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
   let [data, setData] = useState() // i set the data here
   const [AllData, setAllData] = useState() // all data
+  const [eips, setEips] = useState([])
+  const [eip, setEip] = useState()
 
-  const allDataAPI = `${ip}/getAll`
+  const API = `${ip}/allInfo`
+  const fetchAllEIps = async (ignore) => {
+    const data = await fetch(API)
+    const post = await data.json()
 
-  const allDataFetcher = async () => {
-    try {
-      const response = await fetch(allDataAPI)
-      const data = await response.json()
-      const dataValue = Object.values(data[0])
-
-      dataValue.splice(0, 2)
-      console.log(dataValue)
-
-      const list = param.id.split('-')
-      const att = list[0]
-      const y = list[1]
-
-      let filterData = dataValue.filter((element) => {
-        if (element.date !== undefined) {
-          let elementMergedDate = element.date.split(' ')
-
-          return (
-            elementMergedDate[1] === (att.charAt(0).toUpperCase() + att.slice(1)).substring(0, 3) &&
-            elementMergedDate[3] === y
-          )
-        } else if (element.created !== undefined) {
-          let elementCreatedDate = element.created.split(',')
-          if (elementCreatedDate.length === 1) {
-            elementCreatedDate = elementCreatedDate[0].split('-')
-          }
-          if (elementCreatedDate.length === 1) {
-            elementCreatedDate = elementCreatedDate[0].split('/')
-          }
-
-          return (
-            parseInt(elementCreatedDate[1].trim()) === monthNum[att] && elementCreatedDate[0] === y
-          )
-        }
-      })
-      console.log(filterData)
-      filterData = factorOutDuplicate(filterData)
-      console.log(filterData)
-      // console.log(dataValue)
-      setAllData(filterData)
-      setLoading(true)
-    } catch (e) {
-      console.log("Can't access " + allDataAPI + ' response. ' + e)
+    if (!ignore) {
+      setEip(post)
     }
   }
 
-  const allData = async () => {
-    try {
-      const res = await fetch(`${ip}/register`, {
-        // method: 'GET',
-        // headers: {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application',
-        // },
-        // credentials: 'include',
-      })
-      let datas = await res.json()
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      let eips = factorOutDuplicate(Object.values(post[0]))
       const list = param.id.split('-')
-      const att = list[0]
+      const att = list[0][0].toUpperCase() + list[0].slice(1, 3)
       const y = list[1]
 
-      console.log({ att, y })
       setMonthName(list[0])
       setMonth(monthNum[list[0]])
       setYear(y)
 
-      let filterData =
-        att.toLowerCase() === 'october' && y === '2022'
-          ? [
-              {
-                _id: { $oid: '6309ef70756fa134910777ed' },
-                name: 'October',
-                year: '2022',
-                summary: {
-                  Draft: '9',
-                  Final: '1',
-                  LastCall: '6',
-                  Review: '8',
-                  Stagnant: '0',
-                  Withdrawn: '0',
-                  Living: '0',
-                  potentialProposal: '0',
-                  SummaryInfo:
-                    'In October, we have added 9 new EIPs as Draft. 8 EIPs are available in Review status. 6 EIPs are available in Last Call status. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.',
-                  HighlightText:
-                    'This repo has 3958 Forks and 925 users have put it on the watchlist. Open Pull Request-84 & Issues-26.',
-                },
-                Draft: { Core: '1', ERC: '8', Networking: '0', Interface: '0' },
-                Final: { Core: '0', ERC: '1', Networking: '0', Interface: '0' },
-                Review: { Core: '2', ERC: '6', Networking: '0', Interface: '0' },
-                LastCall: { Core: '0', ERC: '6', Networking: '0', Interface: '0' },
-                Stagnant: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
-                Withdrawn: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
-                Living: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
-                GeneralStats: { OpenPR: '27', MergedPR: '87', ClosedIssues: '8', NewIssues: '1' },
-                OtherStats: { Forks: '3958', Users: '925', Authors: '47', Files: '102' },
-                __v: { $numberInt: '0' },
-              },
-            ]
-          : att.toLowerCase() === 'november' && y === '2022'
-          ? [
-              {
-                _id: { $oid: '6309ef70756fa134910745ed' },
-                name: 'November',
-                year: '2022',
-                summary: {
-                  Draft: '16',
-                  Final: '7',
-                  LastCall: '6',
-                  Review: '6',
-                  Stagnant: '34',
-                  Withdrawn: '0',
-                  Living: '0',
-                  potentialProposal: '0',
-                  SummaryInfo:
-                    'In October, we have added 9 new EIPs as Draft. 8 EIPs are available in Review status. 6 EIPs are available in Last Call status. 1 EIP, EIP-2535: Diamonds, Multi-Facet Proxy is promoted to Final status.',
-                  HighlightText:
-                    'This repo has 3958 Forks and 925 users have put it on the watchlist. Open Pull Request-84 & Issues-26.',
-                },
-                Draft: { Core: '4', ERC: '7', Networking: '1', Interface: '4' },
-                Final: { Core: '0', ERC: '7', Networking: '0', Interface: '0' },
-                Review: { Core: '1', ERC: '5', Networking: '0', Interface: '0' },
-                LastCall: { Core: '1', ERC: '4', Networking: '0', Interface: '1' },
-                Stagnant: { Core: '12', ERC: '20', Networking: '1', Interface: '1' },
-                Withdrawn: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
-                Living: { Core: '0', ERC: '0', Networking: '0', Interface: '0' },
-                GeneralStats: { OpenPR: '51', MergedPR: '141', ClosedIssues: '22', NewIssues: '5' },
-                OtherStats: { Forks: '3958', Users: '925', Authors: '61', Files: '130' },
-                __v: { $numberInt: '0' },
-              },
-            ]
-          : datas.filter((e) => {
-              return e.name.toLowerCase() === att.toLowerCase() && e.year === y
-            }) // we filter from here
+      let filterData = eips.filter((eip) => {
+        if (eip['merge_date'] !== undefined) {
+          let splitIt = eip['merge_date'].split(',')
+          let monthYear = splitIt[0].substring(0, 3) + ' ' + splitIt[1].trim()
+          return monthYear === att + ' ' + y
+        } else {
+          if (eip.date === undefined) return false
+          let splitIt = eip.date.split(' ')
+          let monthYear = splitIt[1] + ' ' + splitIt[3]
+          return monthYear === att + ' ' + y
+        }
+      })
 
-      console.log({ filterData })
-      setData(filterData)
+      setEips(filterData)
       setLoading(true)
-
-      if (!res.status === 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    } catch (err) {}
-  }
-  const dataCapture = (name, data) => {
-    let a = 0
-    let b = 0
-    let c = 0
-    let d = 0
-    let arr = []
-    for (let i = 0; i < data.length; i++) {
-      a += parseInt(data[i][name].Core)
-      b += parseInt(data[i][name].ERC)
-      c += parseInt(data[i][name].Networking)
-      d += parseInt(data[i][name].Interface)
     }
+  }
+
+  const dataCapture = (name, data) => {
+    let arr = []
+
+    let coreItem = allDatas[statusIndex(name)].data.filter(
+      (e) => e.type === 'Standards Track' && e.category === 'Core',
+    )
+    let ercItem = allDatas[statusIndex(name)].data.filter(
+      (e) => e.type === 'Standards Track' && e.category === 'ERC',
+    )
+    let networkingItem = allDatas[statusIndex(name)].data.filter(
+      (e) => e.type === 'Standards Track' && e.category === 'Networking',
+    )
+    let interfaceItem = allDatas[statusIndex(name)].data.filter(
+      (e) => e.type === 'Standards Track' && e.category === 'Interface',
+    )
+    let metaItem = allDatas[statusIndex(name)].data.filter((e) => e.type === 'Meta')
+    let infoItem = allDatas[statusIndex(name)].data.filter((e) => e.type === 'Informational')
     arr.push(
       {
         type: 'Core',
-        value: a,
+        value: coreItem.length,
       },
       {
         type: 'ERC',
-        value: b,
+        value: ercItem.length,
       },
       {
         type: 'Networking',
-        value: c,
+        value: networkingItem.length,
       },
       {
         type: 'Interface',
-        value: d,
+        value: interfaceItem.length,
+      },
+      {
+        type: 'Meta',
+        value: metaItem.length,
+      },
+      {
+        type: 'Informational',
+        value: infoItem.length,
       },
     )
     return arr
   }
-  // const dataCapture = (name, data) => {
-  //   let arr = []
-  //   const statusList = fetchStatusData(data, name)[1]
-
-  //   arr.push(
-  //     {
-  //       type: 'Core',
-  //       value: statusList[1],
-  //     },
-  //     {
-  //       type: 'ERC',
-  //       value: statusList[2],
-  //     },
-  //     {
-  //       type: 'Networking',
-  //       value: statusList[3],
-  //     },
-  //     {
-  //       type: 'Interface',
-  //       value: statusList[4],
-  //     },
-  //     {
-  //       type: 'Meta',
-  //       value: statusList[5],
-  //     },
-  //     {
-  //       type: 'Informational',
-  //       value: statusList[6],
-  //     },
-  //   )
-
-  //   return arr
-  // }
 
   const configColumnCharts = (name, data) => {
     const config = {
@@ -498,6 +377,7 @@ const autoCharts = (props) => {
   }
 
   const factorOutDuplicate = (data) => {
+    data.shift()
     for (let i = 0; i < data.length; i++) {
       if (Object.keys(data[i]).length !== 0) {
         for (let j = i + 1; j < data.length; j++) {
@@ -519,80 +399,109 @@ const autoCharts = (props) => {
     return res
   }
 
-  //status Data
-  const fetchStatusData = (data, statusName) => {
-    let statusData = factorOutDuplicate(data.filter((item) => item.status === statusName))
-    let coreData = statusData.filter((item) => item.category === 'Core')
-    let ERCData = statusData.filter((item) => item.category === 'ERC')
-    let NetworkingData = statusData.filter((item) => item.category === 'Networking')
-
-    let InterfaceData = statusData.filter((item) => item.category === 'Interface')
-    let metaData = statusData.filter((item) => item.type === 'Meta')
-    let informationalData = statusData.filter((item) => item.type === 'Informational')
-
-    // console.log({ statusData })
-
-    let findArr = [
-      statusData.length,
-      coreData.length,
-      ERCData.length,
-      NetworkingData.length,
-      InterfaceData.length,
-      metaData.length,
-      informationalData.length,
-    ]
-    let res = []
-    res.push(statusData)
-    res.push(findArr)
-    console.log(statusName + ' ' + findArr)
-    return res
-  }
-
   const annotations = []
 
-  const d1 = [
-    {
-      year: 'Draft',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Draft.Core),
-      type: 'Core',
-    },
-    {
-      year: 'Draft',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Draft.ERC),
-      type: 'ERC',
-    },
-    {
-      year: 'Draft',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Draft.Networking),
-      type: 'Networking',
-    },
-    {
-      year: 'Draft',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Draft.Interface),
-      type: 'Interface',
-    },
-    {
-      year: 'Final',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Final.Core),
-      type: 'Core',
-    },
-    {
-      year: 'Final',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Final.ERC),
-      type: 'ERC',
-    },
-    {
-      year: 'Final',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Final.Networking),
-      type: 'Networking',
-    },
-    {
-      year: 'Final',
-      value: data === undefined || data.length === 0 ? 0 : parseInt(data[0]?.Final.Interface),
-      type: 'Interface',
-    },
-  ]
-  each(groupBy(d1, 'year'), (values, k) => {
+  function draftvsFinalData() {
+    let FinalData = allDatas[statusIndex('Final')].data
+    let DraftData = allDatas[statusIndex('Draft')].data
+
+    let FinalCoreData = FinalData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Core',
+    )
+    let FinalERCData = FinalData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'ERC',
+    )
+    let FinalNetworkingData = FinalData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Networking',
+    )
+    let FinalInterfaceData = FinalData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Interface',
+    )
+    let FinalMeta = FinalData.filter((item) => item.type === 'Meta')
+    let FinalInformational = FinalData.filter((item) => item.type === 'Informational')
+
+    let DraftCoreData = DraftData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Core',
+    )
+    let DraftERCData = DraftData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'ERC',
+    )
+    let DraftNetworkingData = DraftData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Networking',
+    )
+    let DraftInterfaceData = DraftData.filter(
+      (item) => item.type === 'Standards Track' && item.category === 'Interface',
+    )
+    let DraftMeta = DraftData.filter((item) => item.type === 'Meta')
+    let DraftInformational = DraftData.filter((item) => item.type === 'Informational')
+
+    const d1 = [
+      {
+        year: 'Draft',
+        value: DraftCoreData.length,
+        type: 'Core',
+      },
+      {
+        year: 'Draft',
+        value: DraftERCData.length,
+        type: 'ERC',
+      },
+      {
+        year: 'Draft',
+        value: DraftNetworkingData.length,
+        type: 'Networking',
+      },
+      {
+        year: 'Draft',
+        value: DraftInterfaceData.length,
+        type: 'Interface',
+      },
+      {
+        year: 'Draft',
+        value: DraftMeta.length,
+        type: 'Meta',
+      },
+      {
+        year: 'Draft',
+        value: DraftInformational.length,
+        type: 'Informational',
+      },
+      {
+        year: 'Final',
+        value: FinalCoreData.length,
+        type: 'Core',
+      },
+      {
+        year: 'Final',
+        value: FinalERCData.length,
+        type: 'ERC',
+      },
+      {
+        year: 'Final',
+        value: FinalNetworkingData.length,
+        type: 'Networking',
+      },
+      {
+        year: 'Final',
+        value: FinalInterfaceData.length,
+        type: 'Interface',
+      },
+      {
+        year: 'Final',
+        value: FinalMeta.length,
+        type: 'Meta',
+      },
+      {
+        year: 'Final',
+        value: FinalInformational.length,
+        type: 'Informational',
+      },
+    ]
+
+    return d1
+  }
+
+  each(groupBy(draftvsFinalData, 'year'), (values, k) => {
     const value = values.reduce((a, b) => a + b.value, 0)
 
     annotations.push({
@@ -610,7 +519,7 @@ const autoCharts = (props) => {
 
   const configDraftvsFinalCharts = (data) => {
     const config = {
-      data: d1,
+      data: draftvsFinalData(),
       color: TypeColors,
       isStack: true,
       xField: 'year',
@@ -703,11 +612,7 @@ const autoCharts = (props) => {
                 style={{ fontWeight: '700', fontFamily: 'Big Shoulders Display' }}
                 className="tracking-wider text-[1rem]"
               >
-                {parseInt(
-                  data === undefined || data.length === 0
-                    ? 0
-                    : findTotalValueZero(data === undefined || data.length === 0 ? [] : data, text),
-                )}
+                {allDatas[statusIndex(text)].total}
               </label>
             )}
           </div>
@@ -758,17 +663,8 @@ const autoCharts = (props) => {
     return config
   }
 
-  const findTotalValueZero = (data, name) => {
-    console.log({ data })
-    if (data.length !== 0) {
-      return (
-        parseInt(data === undefined || data.length === 0 ? 0 : data[0][name].Core) +
-        parseInt(data === undefined || data.length === 0 ? 0 : data[0][name].ERC) +
-        parseInt(data === undefined || data.length === 0 ? 0 : data[0][name].Networking) +
-        parseInt(data === undefined || data.length === 0 ? 0 : data[0][name].Interface)
-      )
-    }
-    return 0
+  const findTotalValueZero = (name) => {
+    return allDatas[statusIndex(name)].total
   }
   // for date fetching
   const fetchDate = () => {
@@ -776,110 +672,24 @@ const autoCharts = (props) => {
     setDate(date)
   }
 
-  // new set of Data fetching
-
-  // tablerowsStatus
-  const statusRows = (name) => {
-    return (
-      <CTableRow>
-        <CTableHeaderCell scope="row">
-          <CBadge
-            style={{
-              color: `${getBadgeColor(name)}`,
-              backgroundColor: `${getBadge(name)}`,
-              fontSize: '13px',
-            }}
-          >
-            {name}
-          </CBadge>
-        </CTableHeaderCell>
-        <CTableDataCell>
-          <label className="relative cursor-pointer">
-            <div
-              className={`h-7
-shadow-2xl font-extrabold rounded-[8px] bg-[${getBadge(name)}] text-[${getBadgeColor(
-                name,
-              )}] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-              style={{
-                color: `${getBadgeColor(name)}`,
-                backgroundColor: `${getBadge(name)}`,
-              }}
-            >
-              <Link
-                to="/chartTable"
-                style={{
-                  textDecoration: 'none',
-
-                  color: `${getBadgeColor(name)}`,
-                  backgroundColor: `${getBadge(name)}`,
-                }}
-                className={`githubIcon h-7
-shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer`}
-                state={{
-                  type: '',
-                  status: name,
-                  category: '',
-                  month: `${month}`,
-                  year: `${year}`,
-                  name: `${monthName}_${year}_${name}`,
-                  data: fetchStatusData(
-                    Alldata === undefined || data.length === 0 ? [] : AllData,
-                    name,
-                  )[0],
-                }}
-              >
-                {
-                  fetchStatusData(
-                    Alldata === undefined || data.length === 0 ? [] : AllData,
-                    name,
-                  )[1][0]
-                }{' '}
-                <label className="text-[8rem]">*</label>
-              </Link>
-            </div>
-            <div
-              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                name,
-              )}] animate-ping`}
-              style={{
-                backgroundColor: `${getBadgeColor(name)}`,
-              }}
-            ></div>
-            <div
-              className={`absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[${getBadgeColor(
-                name,
-              )}]`}
-              style={{
-                backgroundColor: `${getBadgeColor(name)}`,
-              }}
-            ></div>
-          </label>
-        </CTableDataCell>
-      </CTableRow>
-    )
-  }
-
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
-    console.log({ data })
     return (
       <CCard className="mb-4 cardBorder shadow-md">
         <Link
           to="/chartTable"
           style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
-            type: '',
+            data: allDatas[statusIndex(status)].data,
             status: status,
-            category: '',
-            month: `${month}`,
-            year: `${year}`,
             name: `${monthName}_${year}_${status}`,
+            eips: eip === undefined ? eip : eip[3]['Last_Call'],
           }}
         >
           {header(status)}
         </Link>
         <CCardBody className="childChartContainer">
-          {findTotalValueZero(data === undefined || data.length === 0 ? [] : data, status) === 0 ? (
+          {findTotalValueZero(status) === 0 ? (
             <div
               style={{
                 textAlign: 'center',
@@ -903,18 +713,34 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
           )}
           <ChartType
             style={{
-              visibility: `${
-                findTotalValueZero(data === undefined || data.length === 0 ? [] : data, status) ===
-                0
-                  ? 'hidden'
-                  : 'visible'
-              }`,
+              visibility: `${findTotalValueZero(status) === 0 ? 'hidden' : 'visible'}`,
             }}
-            {...configChartType(status, data === undefined || data.length === 0 ? [] : data)}
+            {...configChartType(status)}
           />
         </CCardBody>
       </CCard>
     )
+  }
+  // had to be external
+  function statusIndex(name) {
+    switch (name) {
+      case 'Living':
+        return 6
+      case 'Final':
+        return 7
+      case 'Last_Call':
+        return 8
+      case 'Review':
+        return 9
+      case 'Draft':
+        return 10
+      case 'Stagnant':
+        return 11
+      case 'Withdrawn':
+        return 12
+      default:
+        return 0
+    }
   }
 
   function StatusTableRow(name, month, year, monthName) {
@@ -948,20 +774,13 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                 className={`githubIcon h-7
             shadow-md font-extrabold rounded-[8px] tracking-wider  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer`}
                 state={{
-                  type: '',
+                  data: allDatas[statusIndex(name)].data,
                   status: name,
-                  category: '',
-                  month: `${month}`,
-                  year: `${year}`,
                   name: `${monthName}_${year}_${name}`,
+                  eips: eip === undefined ? eip : eip[3]['Last_Call'],
                 }}
               >
-                {parseInt(
-                  data === undefined || data.length === 0
-                    ? 0
-                    : data[0]?.summary[name === 'Last_Call' ? 'LastCall' : name],
-                )}
-                *
+                {allDatas[statusIndex(name)].total}*
               </Link>
             </div>
             <div
@@ -986,16 +805,111 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
     )
   }
 
+  function distributeData(data) {
+    let arr = []
+    // Types
+    if (data.length !== 0) {
+      let coreData = data.filter(
+        (item) => item.category === 'Core' && item.type === 'Standards Track',
+      )
+      let ercData = data.filter(
+        (item) => item.category === 'ERC' && item.type === 'Standards Track',
+      )
+      let networkingData = data.filter(
+        (item) => item.category === 'Networking' && item.type === 'Standards Track',
+      )
+      let interfaceData = data.filter(
+        (item) => item.category === 'Interface' && item.type === 'Standards Track',
+      )
+      let metaData = data.filter((item) => item.type === 'Meta')
+      let informationalData = data.filter((item) => item.type === 'Informational')
+
+      // statuses
+      let livingData = data.filter((item) => item.status === 'Living')
+      let finalData = data.filter((item) => item.status === 'Final')
+      let lastCallData = data.filter((item) => item.status === 'Last Call')
+      let reviewData = data.filter((item) => item.status === 'Review')
+      let draftData = data.filter((item) => item.status === 'Draft')
+      let stagnantData = data.filter((item) => item.status === 'Stagnant')
+      let withdrawnData = data.filter((item) => item.status === 'Withdrawn')
+
+      arr.push({
+        total: coreData.length,
+        data: coreData,
+      })
+      arr.push({
+        total: ercData.length,
+        data: ercData,
+      })
+      arr.push({
+        total: networkingData.length,
+        data: networkingData,
+      })
+      arr.push({
+        total: interfaceData.length,
+        data: interfaceData,
+      })
+      arr.push({
+        total: metaData.length,
+        data: metaData,
+      })
+      arr.push({
+        total: informationalData.length,
+        data: informationalData,
+      })
+
+      arr.push({
+        total: livingData.length,
+        data: livingData,
+      })
+      arr.push({
+        total: finalData.length,
+        data: finalData,
+      })
+      arr.push({
+        total: lastCallData.length,
+        data: lastCallData,
+      })
+      arr.push({
+        total: reviewData.length,
+        data: reviewData,
+      })
+      arr.push({
+        total: draftData.length,
+        data: draftData,
+      })
+      arr.push({
+        total: stagnantData.length,
+        data: stagnantData,
+      })
+      arr.push({
+        total: withdrawnData.length,
+        data: withdrawnData,
+      })
+    }
+
+    return arr
+  }
+
+  const allDatas = useMemo(() => distributeData(eips), [eips])
+
   // for duplicate fetching...
 
   useEffect(() => {
+    let ignore = false
     fetchDate()
     if (param['*'] === 'autoCharts') {
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
     }
-    allData()
+    // allData()
+    fetchAllEIps(ignore)
+    fetchAllData(ignore)
+
+    return () => {
+      ignore = true
+    }
     // allDataFetcher()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])
@@ -1003,20 +917,22 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
   return (
     <>
       {loading ? (
-        data.length === 0 || data === undefined ? (
+        eips.length === 0 ? (
           <Page404 />
         ) : (
           <div>
             <div className="flex justify-center items-center mb-[4rem]">
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center flex-wrap">
                 <div
-                  className="rotate-[270deg] bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] "
-                  style={{ fontFamily: 'Big Shoulders Display' }}
+                  className={`${
+                    !headingResponse ? 'rotate-[270deg] bg-white' : 'rotate-[0deg] bg-white '
+                  }bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] `}
+                  style={{ fontFamily: 'Big Shoulders Display', backgroundColor: 'white' }}
                 >
                   {year}
                 </div>
                 <div
-                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md "
+                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md flex-auto"
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {months[month - 1]}{' '}
@@ -1058,42 +974,26 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                           </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Final,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Final')].total) === 0
                             ? ''
                             : StatusTableRow('Final', month, year, monthName)}
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.LastCall,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Last_Call')].total) === 0
                             ? ''
                             : StatusTableRow('Last_Call', month, year, monthName)}
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Review,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Review')].total) === 0
                             ? ''
                             : StatusTableRow('Review', month, year, monthName)}
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Draft,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Draft')].total) === 0
                             ? ''
                             : StatusTableRow('Draft', month, year, monthName)}
 
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Stagnant,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Stagnant')].total) === 0
                             ? ''
                             : StatusTableRow('Stagnant', month, year, monthName)}
-                          {parseInt(
-                            data === undefined || data.length === 0
-                              ? 0
-                              : data[0]?.summary.Withdrawn,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Withdrawn')].total) === 0
                             ? ''
                             : StatusTableRow('Withdrawn', month, year, monthName)}
-                          {parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Living,
-                          ) === 0
+                          {parseInt(allDatas[statusIndex('Living')].total) === 0
                             ? ''
                             : StatusTableRow('Living', month, year, monthName)}
                         </CTableBody>
@@ -1229,7 +1129,7 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                           : 'visible'
                       }`,
                     }}
-                    {...configgeneralStatsCharts(data === undefined || data.length === 0 ? [] : data)}
+                    {...configgeneralStatsChart)}
                   />
                 </CCardBody>
               </CCard>
@@ -1242,57 +1142,27 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'LastCall',
-                  Area,
-                  configAreaCharts,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Last_Call', Area, configAreaCharts)}
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'Review',
-                  Pie,
-                  configDougnutChart,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Review', Pie, configDougnutChart)}
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'Draft',
-                  Column,
-                  configColumnCharts,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Draft', Column, configColumnCharts)}
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'Stagnant',
-                  Pie,
-                  configPieCharts,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Stagnant', Pie, configPieCharts)}
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'Withdrawn',
-                  Column,
-                  configColumnCharts,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Withdrawn', Column, configColumnCharts)}
               </CCol>
 
               <CCol xs={matches ? 12 : 6}>
-                {statusChartsTemplate(
-                  'Living',
-                  Column,
-                  configColumnCharts,
-                  data === undefined || data.length === 0 ? [] : data,
-                )}
+                {statusChartsTemplate('Living', Column, configColumnCharts)}
               </CCol>
 
               {/* Final vs Draft */}
@@ -1310,12 +1180,8 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                     Final vs Draft
                   </CCardHeader>
                   <CCardBody className="childChartContainer">
-                    {parseInt(
-                      data === undefined || data.length === 0 ? 0 : data[0]?.summary.Draft,
-                    ) === 0 &&
-                    parseInt(
-                      data === undefined || data.length === 0 ? 0 : data[0]?.summary.Final,
-                    ) === 0 ? (
+                    {allDatas[statusIndex('Final')].total === 0 &&
+                    allDatas[statusIndex('Draft')].total === 0 ? (
                       <div
                         style={{
                           textAlign: 'center',
@@ -1348,24 +1214,18 @@ shadow-2xl font-extrabold rounded-[8px]  text-[12px] inline-block p-[4px] drop-s
                           : 'visible'
                       }`,
                     }}
-                    {...configDraftvsFinalCharts(data === undefined || data.length === 0 ? [] : data)}
+                    {...configDraftvsFinalChart)}
                   /> */}
                     <Column
                       style={{
                         visibility: `${
-                          parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Draft,
-                          ) === 0 &&
-                          parseInt(
-                            data === undefined || data.length === 0 ? 0 : data[0]?.summary.Final,
-                          ) === 0
+                          allDatas[statusIndex('Final')].total === 0 &&
+                          allDatas[statusIndex('Draft')].total === 0
                             ? 'hidden'
                             : 'visible'
                         }`,
                       }}
-                      {...configDraftvsFinalCharts(
-                        data === undefined || data.length === 0 ? [] : data,
-                      )}
+                      {...configDraftvsFinalCharts()}
                     />
                   </CCardBody>
                 </CCard>

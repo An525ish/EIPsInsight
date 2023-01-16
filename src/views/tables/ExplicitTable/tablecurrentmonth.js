@@ -34,6 +34,7 @@ function tableCurrent() {
 
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState()
+  const [eip, setEip] = useState()
 
   const fetchAllEIPs = () => {
     fetch(API2)
@@ -53,7 +54,6 @@ function tableCurrent() {
       })
   }
   const fetchColumn = (status) => {
-    console.log(status)
     const columns =
       status === 'Last_Call'
         ? [
@@ -253,8 +253,7 @@ function tableCurrent() {
 
   const findEIPNum = (list, category) => {
     const ans = []
-    console.log({ list })
-    console.log(list[category])
+
     if (parseInt(list[category][0]) !== 0) {
       for (let i = 1; i < list[category].length; i++) {
         ans.push(parseInt(list[category][i].substring(4)))
@@ -262,14 +261,21 @@ function tableCurrent() {
     }
     return ans
   }
+
+  function getLastCallDate(eipId) {
+    if (eip === undefined) return 'N/A'
+    for (let i = 0; i < eip.length; i++) {
+      if (eip[i].eip === parseInt(eipId)) {
+        return eip[i]['last-call-deadline'].substring(0, 10)
+      }
+    }
+    return 'N/A'
+  }
   const findAllEIPs = (eips, data, status) => {
-    console.log({ name })
     let arr = []
     let inc = 1
     if (data.length !== 0 && eips.length !== 0) {
-      console.log({ data })
       let filterData = data?.filter((item) => item.Status === status)
-      console.log({ filterData })
 
       let ans = []
       if (filterData.length !== 0) {
@@ -282,7 +288,6 @@ function tableCurrent() {
         ans.push(findEIPNum(filterData[0], 'Informational'))
 
         let undefinedEIPs = findEIPNum(filterData[0], 'Undefined')
-        console.log({ undefinedEIPs })
 
         ans = ans.flat(Infinity)
 
@@ -295,12 +300,10 @@ function tableCurrent() {
           }
         }
       }
-      console.log({ ans })
 
       for (let i = 0; i < ans.length; i++) {
         let findEip = eips.filter((item) => item.data.eip === ans[i])
-        console.log({ findEip })
-        console.log(findEip[0].type)
+
         if (status === 'Last_Call') {
           arr.push({
             id: inc++,
@@ -311,7 +314,10 @@ function tableCurrent() {
               findEip[0].data.type === 'Standards Track'
                 ? findEip[0].data.category
                 : `Type - ${findEip[0].data.type}`,
-            'Last-Call Deadline': findEip[0].data.created.substring(0, 10),
+            'Last-Call Deadline':
+              getLastCallDate(findEip[0].data.eip) !== 'N/A'
+                ? getLastCallDate(findEip[0].data.eip)
+                : findEip[0].data.created.substring(0, 10),
             'Draft Date': findEip[0].data.created.substring(0, 10),
             status: findEip[0].data.status,
             Author: findEip[0].data.author,
@@ -353,9 +359,9 @@ function tableCurrent() {
           }
         }
       }
-      // console.log({ arr })
+      //
     }
-    console.log({ arr })
+
     return arr
   }
 
@@ -420,11 +426,11 @@ function tableCurrent() {
   const factorAuthor = (data) => {
     // console.log({ data })
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -470,13 +476,11 @@ function tableCurrent() {
   useEffect(() => {
     setStatus(location.state.status)
     setName(location.state.name)
-
+    setEip(location.state.eips)
     fetchDate()
     fetchAllEIPs()
     fetchCurrentMonthEIPs()
   }, [])
-
-  console.log({ status })
 
   return (
     <>
@@ -716,7 +720,7 @@ function tableCurrent() {
                 ),
               }}
               // onRowClick={(item) => {
-              //   console.log(item)
+              //
               //   navigate('/EIP-' + item.Number)
               // }}
               sorterValue={{ column: 'name', state: 'asc' }}

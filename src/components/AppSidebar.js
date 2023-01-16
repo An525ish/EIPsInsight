@@ -148,7 +148,6 @@ const AppSidebar = (props) => {
     data = Object.values(data[0])
     data.shift()
 
-    console.log(data)
     setPastData(data)
 
     // fetchAllYears
@@ -156,7 +155,7 @@ const AppSidebar = (props) => {
     allYears.shift()
     allYears.shift()
     allYears.reverse()
-    console.log({ allYears })
+
     setPastYears(allYears)
 
     //
@@ -224,7 +223,6 @@ const AppSidebar = (props) => {
       return ele !== props.Year && !isNaN(ele)
     })
 
-    console.log(allYears)
     // past years
     for (let j = 0; j < allYears.length; j++) {
       const objYear = {}
@@ -236,49 +234,15 @@ const AppSidebar = (props) => {
       objYear.exact = true
       objYear.subRoutes = []
 
-      if (allYears[j] >= 2021) {
-        for (let i = 11; i >= 0; i--) {
-          objYear.subRoutes.push({
-            path: `/${months[i].toLowerCase()}-${allYears[j]}`,
-            name: `${months[i]}`,
-            focus: false,
-            id: uuid(),
-          })
-        }
-      } else {
-        if (allYears[j] === 2021) {
-          for (let i = 11; i >= 7; i--) {
-            objYear.subRoutes.push({
-              path: `/${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-              focus: false,
-              id: uuid(),
-            })
-          }
-          for (let i = 6; i >= 0; i--) {
-            objYear.subRoutes.push({
-              path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-              focus: false,
-              id: uuid(),
-            })
-          }
-        } else {
-          for (let i = 11; i >= 0; i--) {
-            objYear.subRoutes.push({
-              path: `/old-${months[i].toLowerCase()}-${allYears[j]}`,
-              name: `${months[i]}`,
-              focus: false,
-              id: uuid(),
-            })
-          }
-        }
+      for (let i = 11; i >= 0; i--) {
+        objYear.subRoutes.push({
+          path: `/${months[i].toLowerCase()}-${allYears[j]}`,
+          name: `${months[i]}`,
+        })
       }
 
-      console.log({ objYear })
       routes.push(objYear)
     }
-    console.log({ routes })
 
     const _nav = completeList
     setData(_nav)
@@ -295,14 +259,11 @@ const AppSidebar = (props) => {
     fetchPastMonthData()
 
     if (param['*'] === 'autoCharts' || param['*'] === '') {
-      console.log('hello')
       setClick1Function(false)
       setClick2Function(false)
       setClick3Function(false)
       setClick4Function(false)
-      console.log(click4)
     }
-    console.log({ param })
   }, [])
 
   // const [isOpen, setIsOpen] = useState(false)

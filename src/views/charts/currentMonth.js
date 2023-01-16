@@ -61,7 +61,6 @@ const CurrentMonth = () => {
     useUserAuth()
   let [data, setData] = useState() // i set the data here
   let [currentMonthData, setCurrentMonthData] = useState()
-  console.log(param)
 
   const monthNum = {
     january: 1,
@@ -78,14 +77,24 @@ const CurrentMonth = () => {
     december: 12,
   }
 
+  const [eip, setEip] = useState()
+
+  const API2 = `${ip}/allInfo`
+  const fetchAllEIps = async (ignore) => {
+    const data = await fetch(API2)
+    const post = await data.json()
+
+    if (!ignore) {
+      setEip(post)
+    }
+  }
+
   const fetchCurrentMonthData = async () => {
-    console.log('api fetch')
     const monthName = param['*'].split('-')[0][0].toUpperCase() + param['*'].split('-')[0].slice(1)
     const response = await fetch(`${ip}/currentMonth/${param['*'].split('-')[1]}/${monthName}`)
 
     let data = await response.json()
 
-    console.log(data)
     setCurrentMonthData(data)
     setLoading(true)
   }
@@ -99,7 +108,6 @@ const CurrentMonth = () => {
     let f = 0
     let arr = []
 
-    console.log(data)
     a = parseInt(fetchStatusCategorySum(data, name, 'Core'))
     b = parseInt(fetchStatusCategorySum(data, name, 'ERC'))
     c = parseInt(fetchStatusCategorySum(data, name, 'Networking'))
@@ -361,11 +369,11 @@ const CurrentMonth = () => {
 
   const fetchStatusCategorySum = (monthData, status, category) => {
     let arr = []
-    console.log(status, category)
+
     let statusArr = monthData.filter((elem) => {
       return elem.Status === status
     })
-    console.log(statusArr)
+
     if (statusArr.length === 0) return 0
     for (let i = 0; i < statusArr[0][category][0]; i++) {
       arr.push(statusArr[0][category][i + 1])
@@ -380,9 +388,6 @@ const CurrentMonth = () => {
         }
       }
     }
-
-    console.log(arr)
-    console.log(arr.length)
 
     return arr.length
   }
@@ -718,7 +723,8 @@ const CurrentMonth = () => {
                   textDecoration: 'none',
                   color: `${getBadgeColor(name)}`,
                   backgroundColor: `${getBadge(name)}`,
-                  fontFamily: 'Helvetica',
+                  fontFamily: 'Big Shoulders Display',
+                  eips: eip === undefined ? eip : eip[3]['Last_Call'],
                 }}
                 className={`githubIcon h-7
             shadow-md font-extrabold rounded-[8px]  text-[1rem] flex justify-center items-center min-w-max px-2 drop-shadow-sm cursor-pointer tracking-wider`}
@@ -768,6 +774,7 @@ const CurrentMonth = () => {
             month: `${month}`,
             year: `${year}`,
             name: `${currentMonthData[0].Month}_${currentMonthData[0].Year}_${name}`,
+            eips: eip === undefined ? eip : eip[3]['Last_Call'],
           }}
         >
           {header(name)}
@@ -819,6 +826,7 @@ const CurrentMonth = () => {
       setClick2Function(false)
       setClick3Function(false)
     }
+    fetchAllEIps()
     for (let i = 0; i < 2; i++) fetchCurrentMonthData()
     // setInfo(localStorage.getItem('count'))
   }, [param['*']])

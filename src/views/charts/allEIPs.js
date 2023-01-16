@@ -7,6 +7,7 @@ import { CSVLink } from 'react-csv'
 import downloadIcon from 'src/assets/download.png'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import './allEIPs.css'
+import { ip } from 'src/constants'
 import { MotionConfig } from 'framer-motion'
 const statusArr = ['Final', 'Draft', 'Review', 'Last_Call', 'Stagnant', 'Withdrawn', 'Living']
 
@@ -18,84 +19,74 @@ const AllEIPs = () => {
 
   const navigate = useNavigate()
   const { allEIPs } = useUserAuth()
-  const API2 = 'https://eipsinsight.com/api/allinfo'
-  const APII = 'https://eipsinsight.com/api/typePage'
-  const fetchPost = () => {
-    fetch(APII)
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res)
-      })
+
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
   }
-  const fetchAllEIPs = () => {
-    fetch(API2)
-      .then((res) => res.json())
-      .then((res) => {
-        setEips(res)
-        setLoading(true)
-      })
+
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      setEips(factorOutDuplicate(Object.values(post[0])))
+      setLoading(true)
+    }
   }
 
   const eipData = (eips) => {
     let arr = []
-    if (eips[0] !== undefined) {
-      let inc = 1
 
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (statusArr[j] === 'Final') {
-            arr.push({
-              id: inc++,
-              Number: eips[j][statusArr[j]][i].eip,
-              Title: eips[j][statusArr[j]][i].title,
-              Type: eips[j][statusArr[j]][i].type,
-              Category:
-                eips[j][statusArr[j]][i].type === 'Standards Track'
-                  ? eips[j][statusArr[j]][i].category
-                  : `Type - ${eips[j][statusArr[j]][i].type}`,
-              'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-              status: eips[j][statusArr[j]][i].status,
-              Author: eips[j][statusArr[j]][i].author,
-              'PR No.': 0,
-            })
-          } else if (statusArr[j] === 'Last_Call') {
-            arr.push({
-              id: inc++,
-              Number: eips[j][statusArr[j]][i].eip,
-              Title: eips[j][statusArr[j]][i].title,
-              Type: eips[j][statusArr[j]][i].type,
-              Category:
-                eips[j][statusArr[j]][i].type === 'Standards Track'
-                  ? eips[j][statusArr[j]][i].category
-                  : `Type - ${eips[j][statusArr[j]][i].type}`,
-              'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-              'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(0, 10),
-              status: eips[j][statusArr[j]][i].status,
-              Author: eips[j][statusArr[j]][i].author,
-              'PR No.': 0,
-            })
-          } else {
-            arr.push({
-              id: inc++,
-              Number: eips[j][statusArr[j]][i].eip,
-              Title: eips[j][statusArr[j]][i].title,
-              Type: eips[j][statusArr[j]][i].type,
-              Category:
-                eips[j][statusArr[j]][i].type === 'Standards Track'
-                  ? eips[j][statusArr[j]][i].category
-                  : `Type - ${eips[j][statusArr[j]][i].type}`,
-              'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
+    let inc = 0
 
-              status: eips[j][statusArr[j]][i].status,
-              Author: eips[j][statusArr[j]][i].author,
-              'PR No.': 0,
-            })
-          }
+    for (let i = 0; i < eips.length; i++) {
+      if (eips[i]['merge_date'] === undefined) {
+      }
+    }
+    for (let i = 0; i < eips.length; i++) {
+      const temp = eips[i].eip.split('.md')[0].split('eip-')
+      if (temp.length === 2) {
+        if (temp[0] === '' && !isNaN(temp[1])) {
+          arr.push({
+            id: inc++,
+            Number: parseInt(temp[1]),
+            Title: eips[i].title,
+            Type: eips[i].type,
+            Category:
+              eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
+            'Draft Date': eips[i].created,
+            'Final Date':
+              eips[i]['merge_date'] === undefined ? eips[i].date : eips[i]['merge_date'],
+            status: eips[i].status,
+            Author: eips[i].author,
+            'PR No.': eips[i].pull,
+          })
         }
       }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
+
+    arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
+
     return arr
   }
 
@@ -103,14 +94,14 @@ const AllEIPs = () => {
   const columns = [
     {
       key: 'Number',
-      _style: { width: '5%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
+      _style: { width: '7%', color: '#1c7ed6', backgroundColor: '#e7f5ff' },
       _props: { className: 'fw-semibold' },
       sorter: true,
     },
     {
       key: 'Title',
       _style: {
-        width: '30%',
+        width: '28%',
         color: '#1c7ed6',
       },
     },
@@ -228,7 +219,11 @@ const AllEIPs = () => {
         <div className="flex">
           {text}{' '}
           <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
-            {allEIPs}
+            {eips !== undefined ? (
+              eips.length
+            ) : (
+              <div className="flex rounded-full justify-center items-center h-[0.4rem] w-[0.4rem] relative bg-blue-500 animate-pulse"></div>
+            )}
           </div>
         </div>
 
@@ -241,13 +236,13 @@ const AllEIPs = () => {
 
   const factorAuthor = (data) => {
     let ans
-    // console.log({ data })
+    //
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -301,9 +296,8 @@ const AllEIPs = () => {
     data: eipData(eips === undefined ? [] : eips),
   }
   useEffect(() => {
-    fetchAllEIPs()
+    fetchAllData()
     fetchDate()
-    fetchPost()
   }, [])
   return (
     <>
@@ -433,7 +427,7 @@ const AllEIPs = () => {
                               className="hoverAuthor text-[10px]"
                               style={{ '--author-color': `${getBadgeColor(it.status)}` }}
                             >
-                              {getString(item)}
+                              {item}
                             </a>
                           </CBadge>
                         )

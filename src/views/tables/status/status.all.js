@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   CTable,
   CTableHeaderCell,
@@ -17,7 +17,7 @@ import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react-pro'
 import { Column } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import useMediaQuery from 'src/scss/useMediaQuery'
-
+import { ip } from 'src/constants'
 import '../type/type.css'
 import './status.css'
 import Loading from 'src/views/theme/loading/loading'
@@ -27,8 +27,54 @@ function statusAll(props) {
   const [post, getPost] = useState()
   const [date, setDate] = useState()
   const [loading, setLoading] = useState(false)
-
+  const [eips, setEips] = useState([])
   const matches = useMediaQuery('(max-width: 767px)')
+
+  const [eip, setEip] = useState()
+
+  const API2 = `${ip}/allInfo`
+  const fetchAllEIps = async (ignore) => {
+    const data = await fetch(API2)
+    const post = await data.json()
+
+    if (!ignore) {
+      setEip(post)
+    }
+  }
+
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
+  }
+
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      setEips(factorOutDuplicate(Object.values(post[0])))
+      setLoading(true)
+    }
+  }
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
@@ -36,7 +82,6 @@ function statusAll(props) {
       .then((res) => res.json())
       .then((res) => {
         getPost(res)
-        setLoading(true)
       })
   }
   const fetchAnnotations = (d, data) => {
@@ -63,38 +108,84 @@ function statusAll(props) {
     setDate(date)
   }
 
+  function factorStatus(name) {
+    let StatusData
+    if (name === 'Living') {
+      StatusData = allData[6].data
+    }
+    if (name === 'Final') {
+      StatusData = allData[7].data
+    }
+    if (name === 'Last_Call') {
+      StatusData = allData[8].data
+    }
+    if (name === 'Review') {
+      StatusData = allData[9].data
+    }
+    if (name === 'Draft') {
+      StatusData = allData[10].data
+    }
+    if (name === 'Stagnant') {
+      StatusData = allData[11].data
+    }
+    if (name === 'Withdrawn') {
+      StatusData = allData[12].data
+    }
+
+    let arr = []
+    arr.push(
+      StatusData.filter((item) => item.type === 'Standards Track' && item.category === 'Core')
+        .length,
+    )
+    arr.push(
+      StatusData.filter((item) => item.type === 'Standards Track' && item.category === 'ERC')
+        .length,
+    )
+    arr.push(
+      StatusData.filter((item) => item.type === 'Standards Track' && item.category === 'Networking')
+        .length,
+    )
+    arr.push(
+      StatusData.filter((item) => item.type === 'Standards Track' && item.category === 'Interface')
+        .length,
+    )
+    arr.push(StatusData.filter((item) => item.type === 'Meta').length)
+    arr.push(StatusData.filter((item) => item.type === 'Informational').length)
+    return arr
+  }
+
   const fetchData = (data, name) => {
     let arr = []
-
+    let StatusData = factorStatus(name)
     arr.push(
       {
         name: 'Core',
-        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Core'],
+        value: StatusData[0],
         type: 'Standard Track',
       },
       {
         name: 'ERC',
-        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['ERC'],
+        value: StatusData[1],
         type: 'Standard Track',
       },
       {
         name: 'Networking',
-        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Networking'],
+        value: StatusData[2],
         type: 'Standard Track',
       },
       {
         name: 'Interface',
-        value: data[name] === undefined ? 0 : data[name]['Standard_Track']['Interface'],
+        value: StatusData[3],
         type: 'Standard Track',
       },
       {
         name: 'Meta',
-        value: data[name] === undefined ? 0 : data[name]['Meta'],
+        value: StatusData[4],
         type: 'Meta',
       },
       {
         name: 'Informational',
-        value: data[name] === undefined ? 0 : data[name]['Informational'],
+        value: StatusData[5],
         type: 'Informational',
       },
     )
@@ -165,6 +256,90 @@ function statusAll(props) {
     }
   }
 
+  function distributeData(data) {
+    let arr = []
+    // Types
+    let coreData = data.filter(
+      (item) => item.category === 'Core' && item.type === 'Standards Track',
+    )
+    let ercData = data.filter((item) => item.category === 'ERC' && item.type === 'Standards Track')
+    let networkingData = data.filter(
+      (item) => item.category === 'Networking' && item.type === 'Standards Track',
+    )
+    let interfaceData = data.filter(
+      (item) => item.category === 'Interface' && item.type === 'Standards Track',
+    )
+    let metaData = data.filter((item) => item.type === 'Meta')
+    let informationalData = data.filter((item) => item.type === 'Informational')
+
+    // statuses
+    let livingData = data.filter((item) => item.status === 'Living')
+    let finalData = data.filter((item) => item.status === 'Final')
+    let lastCallData = data.filter((item) => item.status === 'Last Call')
+    let reviewData = data.filter((item) => item.status === 'Review')
+    let draftData = data.filter((item) => item.status === 'Draft')
+    let stagnantData = data.filter((item) => item.status === 'Stagnant')
+    let withdrawnData = data.filter((item) => item.status === 'Withdrawn')
+
+    arr.push({
+      total: coreData.length,
+      data: coreData,
+    })
+    arr.push({
+      total: ercData.length,
+      data: ercData,
+    })
+    arr.push({
+      total: networkingData.length,
+      data: networkingData,
+    })
+    arr.push({
+      total: interfaceData.length,
+      data: interfaceData,
+    })
+    arr.push({
+      total: metaData.length,
+      data: metaData,
+    })
+    arr.push({
+      total: informationalData.length,
+      data: informationalData,
+    })
+
+    arr.push({
+      total: livingData.length,
+      data: livingData,
+    })
+    arr.push({
+      total: finalData.length,
+      data: finalData,
+    })
+    arr.push({
+      total: lastCallData.length,
+      data: lastCallData,
+    })
+    arr.push({
+      total: reviewData.length,
+      data: reviewData,
+    })
+    arr.push({
+      total: draftData.length,
+      data: draftData,
+    })
+    arr.push({
+      total: stagnantData.length,
+      data: stagnantData,
+    })
+    arr.push({
+      total: withdrawnData.length,
+      data: withdrawnData,
+    })
+
+    return arr
+  }
+
+  const allData = useMemo(() => distributeData(eips), [eips])
+
   // get standard Track data
   const getStandardTrackData = (name, dataName) => {
     return post === undefined
@@ -179,16 +354,24 @@ function statusAll(props) {
   }
 
   const totalData = (name) => {
-    return post === undefined
-      ? 0
-      : post[name] === undefined
-      ? 0
-      : post[name]['Standard_Track']['Core'] +
-        post[name]['Standard_Track']['ERC'] +
-        post[name]['Standard_Track']['Networking'] +
-        post[name]['Standard_Track']['Interface'] +
-        post[name]['Meta'] +
-        post[name]['Informational']
+    switch (name) {
+      case 'Living':
+        return 6
+      case 'Final':
+        return 7
+      case 'Last_Call':
+        return 8
+      case 'Review':
+        return 9
+      case 'Draft':
+        return 10
+      case 'Stagnant':
+        return 11
+      case 'Withdrawn':
+        return 12
+      default:
+        return 0
+    }
   }
 
   const customTableChart = (name, title) => {
@@ -205,7 +388,14 @@ function statusAll(props) {
             <Link
               to="/chartTable"
               style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{ type: '', status: title, category: '', name: `${title}` }}
+              state={{
+                type: '',
+                status: title,
+                category: '',
+                name: `${title}`,
+                data: allData[totalData(name)].data,
+                eips: eip[3]['Last_Call'],
+              }}
             >
               <div className="status-heading-number">{totalData(name)}</div>
             </Link>
@@ -262,6 +452,9 @@ function statusAll(props) {
                             status: name,
                             category: '',
                             name: `${title}_Standard_Track`,
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Standards Track',
+                            ),
                           }}
                         >
                           <label
@@ -280,6 +473,10 @@ function statusAll(props) {
                             status: name,
                             category: 'Core',
                             name: title + '_Standard_Track_Core',
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Standards Track' && e.category === 'Core',
+                            ),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -290,12 +487,15 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
-                      <CTableDataCell>{getStandardTrackData(name, 'Core')}</CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[0]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {((getStandardTrackData(name, 'Core') / totalData(name)) * 100).toFixed(2)}%
+                        {((factorStatus(name)[0] / allData[totalData(name)].total) * 100).toFixed(
+                          2,
+                        )}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -308,6 +508,10 @@ function statusAll(props) {
                             status: name === 'Last_Call' ? 'Last Call' : name,
                             category: 'ERC',
                             name: title + '_Standard_Track_ERC',
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Standards Track' && e.category === 'ERC',
+                            ),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -318,12 +522,15 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
-                      <CTableDataCell>{getStandardTrackData(name, 'ERC')}</CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[1]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {((getStandardTrackData(name, 'ERC') / totalData(name)) * 100).toFixed(2)}%
+                        {((factorStatus(name)[1] / allData[totalData(name)].total) * 100).toFixed(
+                          2,
+                        )}
+                        %
                       </CTableDataCell>
                     </CTableRow>
                     <CTableRow>
@@ -336,6 +543,10 @@ function statusAll(props) {
                             status: name,
                             category: 'Networking',
                             name: title + '_Standard_Track_Networking',
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Standards Track' && e.category === 'Networking',
+                            ),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -346,15 +557,14 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
-                      <CTableDataCell>{getStandardTrackData(name, 'Networking')}</CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[2]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {(
-                          (getStandardTrackData(name, 'Networking') / totalData(name)) *
-                          100
-                        ).toFixed(2)}
+                        {((factorStatus(name)[2] / allData[totalData(name)].total) * 100).toFixed(
+                          2,
+                        )}
                         %
                       </CTableDataCell>
                     </CTableRow>
@@ -368,6 +578,10 @@ function statusAll(props) {
                             status: name,
                             category: 'Interface',
                             name: title + '_Standard_Track_Interface',
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Standards Track' && e.category === 'Interface',
+                            ),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -378,15 +592,14 @@ function statusAll(props) {
                           </label>
                         </NavLink>
                       </CTableDataCell>
-                      <CTableDataCell>{getStandardTrackData(name, 'Interface')}</CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[3]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {(
-                          (getStandardTrackData(name, 'Interface') / totalData(name)) *
-                          100
-                        ).toFixed(2)}
+                        {((factorStatus(name)[3] / allData[totalData(name)].total) * 100).toFixed(
+                          2,
+                        )}
                         %
                       </CTableDataCell>
                     </CTableRow>
@@ -399,6 +612,8 @@ function statusAll(props) {
                             status: name,
                             category: '',
                             name: title + '_Meta',
+                            data: allData[totalData(name)].data.filter((e) => e.type === 'Meta'),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -410,12 +625,12 @@ function statusAll(props) {
                         </NavLink>
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
-                      <CTableDataCell>{getMetaAndInformational(name, 'Meta')}</CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[4]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {((getMetaAndInformational(name, 'Meta') / totalData(name)) * 100).toFixed(
+                        {((factorStatus(name)[4] / allData[totalData(name)].total) * 100).toFixed(
                           2,
                         )}
                         %
@@ -430,6 +645,10 @@ function statusAll(props) {
                             status: name,
                             category: '',
                             name: title + '_Informational',
+                            data: allData[totalData(name)].data.filter(
+                              (e) => e.type === 'Informational',
+                            ),
+                            eips: eip[3]['Last_Call'],
                           }}
                         >
                           <label
@@ -441,17 +660,14 @@ function statusAll(props) {
                         </NavLink>
                       </CTableHeaderCell>
                       <CTableDataCell></CTableDataCell>
-                      <CTableDataCell>
-                        {getMetaAndInformational(name, 'Informational')}
-                      </CTableDataCell>
+                      <CTableDataCell>{factorStatus(name)[5]}</CTableDataCell>
                       <CTableDataCell
                         style={{ fontFamily: 'Big Shoulders Display' }}
                         className="tracking-wider text-[0.8rem]"
                       >
-                        {(
-                          (getMetaAndInformational(name, 'Informational') / totalData(name)) *
-                          100
-                        ).toFixed(2)}
+                        {((factorStatus(name)[5] / allData[totalData(name)].total) * 100).toFixed(
+                          2,
+                        )}
                         %
                       </CTableDataCell>
                     </CTableRow>
@@ -466,7 +682,14 @@ function statusAll(props) {
                       <CTableDataCell>
                         <Link
                           to="/chartTable"
-                          state={{ type: '', status: title, category: '', name: `${title}` }}
+                          state={{
+                            type: '',
+                            status: title,
+                            category: '',
+                            name: `${title}`,
+                            data: allData[totalData(name)].data,
+                            eips: eip[3]['Last_Call'],
+                          }}
                         >
                           <label
                             style={{
@@ -479,7 +702,7 @@ function statusAll(props) {
                             }}
                             className="p-1.5 shadow-md tracking-wider cursor-pointer"
                           >
-                            {totalData(name)}
+                            {allData[totalData(name)].total}
                           </label>
                         </Link>
                       </CTableDataCell>
@@ -513,6 +736,8 @@ function statusAll(props) {
   useEffect(() => {
     fetchPost()
     fetchDate()
+    fetchAllEIps()
+    fetchAllData()
   }, [])
 
   return (
@@ -558,13 +783,13 @@ function statusAll(props) {
                       fontFamily: 'Big Shoulders Display',
                     }}
                   >
-                    {totalData('Living') +
-                      totalData('Final') +
-                      totalData('Last_Call') +
-                      totalData('Review') +
-                      totalData('Draft') +
-                      totalData('Stagnant') +
-                      totalData('Withdrawn')}
+                    {allData[6].total +
+                      allData[7].total +
+                      allData[8].total +
+                      allData[9].total +
+                      allData[10].total +
+                      allData[11].total +
+                      allData[12].total}
                   </div>
                 </Link>
               </label>

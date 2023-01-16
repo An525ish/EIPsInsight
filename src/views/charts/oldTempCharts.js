@@ -106,7 +106,6 @@ const oldCharts = (props) => {
       const dataValue = Object.values(data[0])
 
       dataValue.splice(0, 2)
-      console.log(dataValue)
 
       const list = param.id.split('-')
       const att = list[0]
@@ -116,7 +115,7 @@ const oldCharts = (props) => {
 
       let filterData = dataValue.filter((element) => {
         if (element.created !== undefined) {
-          //   console.log(element)
+          //
           let elementCreatedDate = element.created.split(',')
 
           if (elementCreatedDate.length === 1) {
@@ -134,14 +133,13 @@ const oldCharts = (props) => {
               elementCreatedDate[0] === '2019'
             ) {
               let elementMergedDate = element.date.split(' ')
-              //   console.log(elementMergedDate)
+              //
               return (
                 elementMergedDate[1] ===
                   (att.charAt(0).toUpperCase() + att.slice(1)).substring(0, 3) &&
                 elementMergedDate[3] === y
               )
             } else {
-              console.log('hello')
               return (
                 parseInt(elementCreatedDate[1].trim()) === monthNum[att] &&
                 elementCreatedDate[0] === y
@@ -151,15 +149,12 @@ const oldCharts = (props) => {
         }
       })
 
-      console.log(filterData)
       filterData = factorOutDuplicate(filterData)
-      console.log(filterData)
-      // console.log(dataValue)
+
+      //
       setAllData(filterData)
       setLoading(true)
-    } catch (e) {
-      console.log("Can't access " + allDataAPI + ' response. ' + e)
-    }
+    } catch (e) {}
   }
 
   const allData = async () => {
@@ -177,7 +172,6 @@ const oldCharts = (props) => {
       const att = list[0]
       const y = list[1]
 
-      console.log({ att, y })
       setMonthName(list[0])
       setMonth(monthNum[list[0]])
       setYear(y)
@@ -219,7 +213,6 @@ const oldCharts = (props) => {
               return e.name.toLowerCase() === att.toLowerCase() && e.year === y
             }) // we filter from here
 
-      console.log({ filterData })
       setData(filterData)
       //   setLoading(true)
 
@@ -494,8 +487,6 @@ const oldCharts = (props) => {
     let metaData = statusData.filter((item) => item.type === 'Meta')
     let informationalData = statusData.filter((item) => item.type === 'Informational')
 
-    console.log({ statusData })
-
     let findArr = [
       statusData.length,
       coreData.length,
@@ -508,8 +499,7 @@ const oldCharts = (props) => {
     let res = []
     res.push(statusData)
     res.push(findArr)
-    console.log(res)
-    console.log(statusName + ' ' + findArr)
+
     return res
   }
 
@@ -725,7 +715,7 @@ const oldCharts = (props) => {
   }
 
   //   const findTotalValueZero = (data, name) => {
-  //     console.log({ data })
+  //
   //     if (data.length !== 0) {
   //       return (
   //         parseInt(data === undefined ? 0 : data[0][name].Core) +

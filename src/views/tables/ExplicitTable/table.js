@@ -5,7 +5,7 @@ import { CSVLink } from 'react-csv'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
-
+import { ip } from 'src/constants'
 const statusArr = ['Final', 'Draft', 'Review', 'Last_Call', 'Stagnant', 'Withdrawn', 'Living']
 
 function table() {
@@ -18,18 +18,10 @@ function table() {
   const [year, setYear] = useState()
   const [date, setDate] = useState()
   const [name, setName] = useState()
-  const [data, setData] = useState()
-  const API2 = 'https://eipsinsight.com/api/allinfo'
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const fetchAllEIPs = () => {
-    fetch(API2)
-      .then((res) => res.json())
-      .then((res) => {
-        setEips(res)
-      })
-  }
   const fetchColumn = (status) => {
-    console.log(status)
     const columns =
       status === 'Last_Call' || status === 'Last Call'
         ? [
@@ -96,6 +88,73 @@ function table() {
               _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
           ]
+        : status === 'Final'
+        ? [
+            {
+              key: 'id',
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Number',
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+              _props: { className: 'fw-semibold' },
+              sorter: true,
+            },
+            {
+              key: 'Title',
+              _style: {
+                width: '30%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Author',
+              _style: {
+                width: '15%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Draft Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'Final Date',
+              _style: {
+                width: '10%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+
+            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            {
+              key: 'Category',
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+            {
+              key: 'status',
+              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+            },
+            {
+              key: 'PR No.',
+
+              _style: {
+                width: '5%',
+                color: `${getBadgeColor(status)}`,
+              },
+            },
+          ]
         : [
             {
               key: 'id',
@@ -115,7 +174,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '35%',
+                width: '40%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -127,9 +186,9 @@ function table() {
               },
             },
             {
-              key: status === 'Final' ? 'Final Date' : 'Draft Date',
+              key: 'Draft Date',
               _style: {
-                width: '15%',
+                width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -226,428 +285,74 @@ function table() {
         return 'shadow-[#1c7ed6]'
     }
   }
-  const eipData = (eips, status, type) => {
-    let arr = []
-    console.log('eipData')
-    if (eips[0] !== undefined) {
-      let inc = 1
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (
-            eips[j][statusArr[j]][i].status === status &&
-            eips[j][statusArr[j]][i].type === type
-          ) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
 
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
-        }
+  function getLastCallDate(eipId) {
+    if (eips === undefined) return 'N/A'
+    for (let i = 0; i < eips.length; i++) {
+      if (eips[i].eip === parseInt(eipId)) {
+        return eips[i]['last-call-deadline'].substring(0, 10)
       }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
-    return arr
+    return 'N/A'
   }
-  const eipDataCategory = (eips, type, status, category) => {
-    console.log('eipDataCategory')
-
+  const eipData = (data) => {
     let arr = []
-    if (eips[0] !== undefined) {
-      let inc = 1
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (
-            eips[j][statusArr[j]][i].status === status &&
-            eips[j][statusArr[j]][i].type === type &&
-            eips[j][statusArr[j]][i].category === category
-          ) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
 
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
+    if (data !== undefined) {
+      let inc = 1
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status === 'Final') {
+          arr.push({
+            id: inc++,
+            Number: data[i].eip.split('.md')[0].split('-')[1],
+            Title: data[i].title,
+            Type: data[i].type,
+            Category:
+              data[i].type === 'Standards Track' ? data[i].category : `Type - ${data[i].type}`,
+            'Final Date': data[i].merge_date === undefined ? data[i].date : data[i].merge_date,
+            'Draft Date': data[i].created,
+            status: data[i].status,
+            Author: data[i].author,
+            'PR No.': data[i].pull,
+          })
+        } else if (data[i].status === 'Last Call') {
+          arr.push({
+            id: inc++,
+            Number: data[i].eip.split('.md')[0].split('-')[1],
+            Title: data[i].title,
+            Type: data[i].type,
+            Category:
+              data[i].type === 'Standards Track' ? data[i].category : `Type - ${data[i].type}`,
+            'Draft Date': data[i].created,
+            'Last-Call Deadline':
+              getLastCallDate(data[i].eip.split('.md')[0].split('-')[1]) !== 'N/A'
+                ? getLastCallDate(data[i].eip.split('.md')[0].split('-')[1])
+                : data[i].merge_date === undefined
+                ? data[i].date
+                : data[i].merge_date,
+            status: data[i].status,
+            Author: data[i].author,
+            'PR No.': data[i].pull,
+          })
+        } else {
+          arr.push({
+            id: inc++,
+            Number: data[i].eip.split('.md')[0].split('-')[1],
+            Title: data[i].title,
+            Type: data[i].type,
+            Category:
+              data[i].type === 'Standards Track' ? data[i].category : `Type - ${data[i].type}`,
+            'Draft Date': data[i].created,
+            status: data[i].status,
+            Author: data[i].author,
+            'PR No.': data[i].pull,
+          })
         }
       }
 
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
+      // arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
     }
-    return arr
-  }
-  const eipDataStatus = (eips, status) => {
-    console.log('eipDataStatus')
-    let arr = []
-    status = status === 'Last_Call' ? 'Last Call' : status
-    console.log({ status })
-    if (eips[0] !== undefined) {
-      let inc = 1
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (eips[j][statusArr[j]][i].status === status) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
 
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
-        }
-      }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
-    }
-    return arr
-  }
-  const eipDataStatusExtra = (eips, status, month, year) => {
-    console.log('eipDataStatusExtra')
-    status = status === 'Last_Call' ? 'Last Call' : status
-    let arr = []
-
-    if (eips[0] !== undefined) {
-      let inc = 1
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (
-            eips[j][statusArr[j]][i].status === status &&
-            eips[j][statusArr[j]][i].created.substring(0, 4) === year &&
-            parseInt(eips[j][statusArr[j]][i].created.substring(5, 7)) === parseInt(month)
-          ) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
-        }
-      }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
-    }
-    return arr
-  }
-  const eipDataCategoryType = (eips, type, category) => {
-    console.log('eipDataCategoryType')
-    let arr = []
-    if (eips[0] !== undefined) {
-      let inc = 1
-
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (
-            eips[j][statusArr[j]][i].type === type &&
-            eips[j][statusArr[j]][i].category === category
-          ) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
-        }
-      }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
-    }
-    return arr
-  }
-  const eipDataMain = (eips, type) => {
-    console.log('main')
-    let arr = []
-    if (eips[0] !== undefined) {
-      let inc = 1
-
-      for (let j = 0; j < statusArr.length; j++) {
-        for (let i = 0; i < eips[j][statusArr[j]].length; i++) {
-          if (eips[j][statusArr[j]][i].type === type) {
-            if (statusArr[j] === 'Final') {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Final Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else if (statusArr[j] === 'Last_Call') {
-              // console.log(eips[j][statusArr[j]][i].created.substring(0, 10))
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-                'Last-Call Deadline': eips[j][statusArr[j]][i]['last-call-deadline'].substring(
-                  0,
-                  10,
-                ),
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            } else {
-              arr.push({
-                id: inc++,
-                Number: eips[j][statusArr[j]][i].eip,
-                Title: eips[j][statusArr[j]][i].title,
-                Type: eips[j][statusArr[j]][i].type,
-                Category:
-                  eips[j][statusArr[j]][i].type === 'Standards Track'
-                    ? eips[j][statusArr[j]][i].category
-                    : `Type - ${eips[j][statusArr[j]][i].type}`,
-                'Draft Date': eips[j][statusArr[j]][i].created.substring(0, 10),
-
-                status: eips[j][statusArr[j]][i].status,
-                Author: eips[j][statusArr[j]][i].author,
-                'PR No.': 0,
-              })
-            }
-          }
-        }
-      }
-
-      arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
-    }
     return arr
   }
 
@@ -675,8 +380,8 @@ function table() {
       key: 'Author',
     },
     {
-      label: 'Start Date',
-      key: 'Start Date',
+      label: 'Draft Date',
+      key: 'Draft Date',
     },
     {
       label: 'Final Date',
@@ -701,81 +406,20 @@ function table() {
     },
   ]
 
-  const getDataFromLocationData = (data) => {
-    let id = 1
-    let arr = []
-    for (let i = 0; i < data.length; i++) {
-      arr.push({
-        id: id++,
-        Number: data[i].eip.split('-')[1].split('.')[0],
-        Title: data[i].title,
-        Type: data[i].type,
-        Category: data[i].category,
-        status: data[i].status,
-        Author: data[i].author,
-        'PR No.': data[i].pull,
-      })
-    }
-
-    return arr
-  }
-
-  const whatData = (data) => {
-    let datafromData = getDataFromLocationData(data === undefined ? [] : data)
-    let getData =
-      datafromData.length !== 0
-        ? datafromData
-        : month === undefined && year === undefined
-        ? category === '' && status === ''
-          ? eipDataMain(eips === undefined ? [] : eips, type === undefined ? '' : type)
-          : category === '' && type === ''
-          ? eipDataStatus(eips === undefined ? [] : eips, status === undefined ? '' : status)
-          : category === ''
-          ? eipData(
-              eips === undefined ? [] : eips,
-              status === undefined ? '' : status,
-              type === undefined ? '' : type,
-            )
-          : status === ''
-          ? eipDataCategoryType(
-              eips === undefined ? [] : eips,
-              type === undefined ? '' : type,
-              category === undefined ? '' : category,
-            )
-          : eipDataCategory(
-              eips === undefined ? [] : eips,
-              type === undefined ? '' : type,
-              status === undefined ? '' : status,
-              category === undefined ? '' : category,
-            )
-        : category === '' && type === ''
-        ? eipDataStatusExtra(
-            eips === undefined ? [] : eips,
-            status === undefined ? '' : status,
-            month === undefined ? '' : month,
-            year === undefined ? '' : year,
-          )
-        : null
-
-    for (let i = 0; i < getData.length; i++) {
-      getData[i].id = i + 1
-    }
-    return getData
-  }
   const csvLink = {
     filename: name,
     headers: headers,
-    data: whatData(data === undefined ? [] : data),
+    data: eipData(data),
   }
 
   const factorAuthor = (data) => {
     // console.log({ data })
     let list = data.split(',')
-    // console.log({ list })
+    //
     for (let i = 0; i < list.length; i++) {
       list[i] = list[i].split(' ')
     }
-    // console.log({ list })
+    //
     if (list[list.length - 1][list[list.length - 1].length - 1] === 'al.') {
       list.pop()
     }
@@ -819,21 +463,12 @@ function table() {
   }
 
   useEffect(() => {
-    fetchAllEIPs()
-    setType(location.state.type)
-    setCategory(location.state.category)
-    setStatus(location.state.status)
-    setMonth(location.state.month)
-    setYear(location.state.year)
-    setName(location.state.name)
     setData(location.state.data)
+    setStatus(location.state.status)
+    setName(location.state.name)
+    setEips(location.state.eips)
     fetchDate()
   }, [])
-
-  console.log({ year })
-  console.log({ month })
-  console.log({ status })
-  console.log({ data })
 
   return (
     <>
@@ -859,7 +494,7 @@ function table() {
           className="scrollbarDesign"
         >
           <CSmartTable
-            items={whatData(data === undefined ? [] : data)}
+            items={eipData(data)}
             activePage={1}
             clickableRows
             columns={fetchColumn(status)}
@@ -968,7 +603,7 @@ function table() {
                             className="hoverAuthor text-[10px]"
                             style={{ '--author-color': `${getBadgeColor(it.status)}` }}
                           >
-                            {getString(item)}
+                            {item}
                           </a>
                         </CBadge>
                       )
@@ -1070,7 +705,7 @@ function table() {
               ),
             }}
             // onRowClick={(item) => {
-            //   console.log(item)
+            //
             //   navigate('/EIP-' + item.Number)
             // }}
             sorterValue={{ column: 'name', state: 'asc' }}
