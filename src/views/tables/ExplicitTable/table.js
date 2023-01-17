@@ -413,7 +413,7 @@ function table() {
   }
 
   const factorAuthor = (data) => {
-    // console.log({ data })
+    //
     let list = data.split(',')
     //
     for (let i = 0; i < list.length; i++) {

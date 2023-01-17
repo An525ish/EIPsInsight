@@ -490,42 +490,42 @@ function typeAll() {
               </label>
             </div>
           </div>
-          <div
-            style={{
-              marginTop:"30px"
+          <Link
+            to="/chartTable"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+            state={{
+              type: 'Standards Track',
+              status: '',
+              category: '',
+              name: 'Standard_Track',
+              data: eips.filter((eip) => eip.type === 'Standards Track'),
+              eips: eip[3]['Last_Call'],
             }}
-            className="type-heading"
           >
-            Standard Track{' '}
-            <label
+            <div
               style={{
-                fontSize: '1.5rem',
-                fontWeight: '800',
+                marginTop: '30px',
               }}
+              className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer"
             >
-              <Link
-                to="/chartTable"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                state={{
-                  type: 'Standards Track',
-                  status: '',
-                  category: '',
-                  name: 'Standard_Track',
-                  data: eips.filter((eip) => eip.type === 'Standards Track'),
-                  eips: eip[3]['Last_Call'],
+              Standard Track{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
                 }}
               >
                 <div
                   // className='type-heading-number'
                   className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {allData[0].total + allData[1].total + allData[2].total + allData[3].total}
                 </div>
-              </Link>
-            </label>
-          </div>
+              </label>
+            </div>
+          </Link>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
               <CCard className="type-card-container">
@@ -553,7 +553,7 @@ function typeAll() {
                   style={{
                     overflowX: 'auto',
                     overflowY: 'auto',
-                    height: '300px',
+                    height: '312px',
                     fontFamily: 'Roboto',
                     fontSize: '12px',
                     borderRight: '2px solid #74c0fc',
@@ -844,10 +844,8 @@ function typeAll() {
           </CRow>
           <div className="flex justify-between">
             <div
-              style={{
-                
-              }}
-              className="type-heading"
+              style={{}}
+              className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer"
             >
               Meta{' '}
               <label
@@ -870,7 +868,7 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {allData[4].total}
@@ -878,9 +876,7 @@ function typeAll() {
                 </Link>
               </label>
             </div>
-            <div
-              className="type-heading"
-            >
+            <div className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer">
               Informational{' '}
               <label
                 style={{
@@ -902,7 +898,7 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] px-3 text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {allData[5].total}

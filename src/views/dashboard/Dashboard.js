@@ -3,15 +3,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
-import {
-  CBadge,
-  CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
-  CCol,
-  CRow,
-} from '@coreui/react'
+import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CRow } from '@coreui/react'
 
 import { Link, useParams } from 'react-router-dom'
 import { ip, TypeColors } from 'src/constants'
@@ -161,7 +153,6 @@ const Dashboard = () => {
       Stagnant: allData[11].data,
       Withdrawn: allData[12].data,
     }
-    console.log(statusNum[name])
 
     for (let i = 0; i < yearList.length; i++) {
       let sumCore = StandardsTrackYearsCollection(statusNum[name], yearList, i, 'Core').length
@@ -447,13 +438,11 @@ const Dashboard = () => {
       Stagnant: allData[11].data,
       Withdrawn: allData[12].data,
     }
-    // console.log(duplicateData)
-    // console.log(name)
-    console.log(statusNum)
-    console.log(statusNum[name])
-    console.log(name)
+    //
+    //
+
     let filterDataStatusUpdate = statusUpdateFirstTime(duplicateData, statusNum[name])
-    // console.log(filterDataStatusUpdate)
+    //
 
     const allMonths = [...new Set(AllMonthsGetAllAPI())]
 
@@ -1012,7 +1001,6 @@ const Dashboard = () => {
   }, [])
 
   // temparary
-  console.log({ AllData })
 
   const [insight, setInsight] = useState(1)
 

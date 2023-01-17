@@ -377,30 +377,45 @@ function statusAll(props) {
   const customTableChart = (name, title) => {
     return (
       <>
-        <div className="status-heading">
-          {title}{' '}
-          <label
+        <Link
+          to="/chartTable"
+          className="cursor-pointer"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+          state={{
+            type: '',
+            status: title,
+            category: '',
+            name: `${title}`,
+            data: allData[totalData(name)].data,
+            eips: eip[3]['Last_Call'],
+          }}
+        >
+          <div
+            className="status-heading hover:scale-105 transition-all ease-in-out cursor-pointer border-t-2"
             style={{
-              fontSize: '1.5rem',
-              fontWeight: '800',
+              borderColor: `${getBadgeColor(name)}`,
             }}
           >
-            <Link
-              to="/chartTable"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              state={{
-                type: '',
-                status: title,
-                category: '',
-                name: `${title}`,
-                data: allData[totalData(name)].data,
-                eips: eip[3]['Last_Call'],
+            <label className="tracking-wide font-semibold mr-3 cursor-pointer">{title} </label>
+            <label
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: '800',
               }}
+              className="cursor-pointer"
             >
-              <div className="status-heading-number">{totalData(name)}</div>
-            </Link>
-          </label>
-        </div>
+              <div
+                className="status-heading-number px-3 shadow-md"
+                style={{
+                  color: `${getBadgeColor(name)}`,
+                  backgroundColor: `${getBadgeColor(name)}1a`,
+                }}
+              >
+                {totalData(name)}
+              </div>
+            </label>
+          </div>
+        </Link>
         <CRow>
           <CCol xs={matches ? 12 : 6}>
             <CCard className="status-card-container">

@@ -108,7 +108,6 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes })
     }
   }, [isOpen])
 
-  console.log({ allRoutes })
   return (
     <>
       <motion.nav
