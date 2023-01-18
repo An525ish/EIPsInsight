@@ -520,7 +520,7 @@ const AllEIPs = () => {
               tableHeadProps={{}}
               tableProps={{
                 // borderless: true,
-                striped: true,
+                // striped: true,
                 hover: true,
                 responsive: true,
               }}
@@ -534,7 +534,12 @@ const AllEIPs = () => {
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <label style={{ color: '#000000', fontSize: '15px', fontWeight: 'bold' }}></label>
-          <label style={{ color: '#000000', fontSize: '12px', fontWeight: '500' }}>{date}</label>
+          <label
+            style={{ color: '#000000', fontSize: '12px', fontWeight: '500' }}
+            className="tracking-wider"
+          >
+            {date}
+          </label>
         </CCardFooter>
       </CCard>
     </>

@@ -594,13 +594,18 @@ const autoCharts = (props) => {
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
         {text !== 'GeneralStats' && (
-          <div className="ml-2 bg-[#e7f5ff] rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
+          <div className="ml-2  rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
             {text === 'GeneralStats' ? (
               ''
             ) : (
               <label
-                style={{ fontWeight: '700', fontFamily: 'Big Shoulders Display' }}
-                className="tracking-wider text-[1rem]"
+                style={{
+                  fontWeight: '700',
+                  fontFamily: 'Big Shoulders Display',
+                  color: getBadgeColor(text),
+                  backgroundColor: getBadge(text),
+                }}
+                className="tracking-wider text-[1rem] px-3 py-1 rounded-md"
               >
                 {allDatas[statusIndex(text)].total}
               </label>
@@ -665,9 +670,12 @@ const autoCharts = (props) => {
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
     return (
-      <CCard style={{
-        borderTop: `2px solid ${getBadgeColor(status)}`,
-      }} className="auto-card-container">
+      <CCard
+        style={{
+          borderTop: `2px solid ${getBadgeColor(status)}`,
+        }}
+        className="auto-card-container"
+      >
         <Link
           to="/chartTable"
           style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
@@ -995,7 +1003,10 @@ const autoCharts = (props) => {
                       className="cardFooter bg-[#ffffff] text-[black]"
                       style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
-                      <label style={{ color: 'black', fontSize: '15px', fontWeight: 'bold' }}>
+                      <label
+                        style={{ color: 'black', fontSize: '15px', fontWeight: 'bold' }}
+                        className="tracking-wider"
+                      >
                         * Click to see more
                       </label>
                       <label
@@ -1159,15 +1170,17 @@ const autoCharts = (props) => {
 
               {/* Final vs Draft */}
               <CCol xs={matches ? 12 : 6}>
-                <CCard style={{
-                  borderTop: '2px solid #74c0fc',
-                }} 
-                className="auto-card-container">
+                <CCard
+                  style={{
+                    borderTop: '2px solid #74c0fc',
+                  }}
+                  className="auto-card-container"
+                >
                   <CCardHeader
                     className="cardHeader flex tracking-widest text-[1.4rem] font-bold"
                     style={{
                       color: 'black',
-                      backgroundColor:'white'
+                      backgroundColor: 'white',
                     }}
                   >
                     Final vs Draft

@@ -137,8 +137,9 @@ const AppHeader = (props) => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem
-            className={`navbar-items ${click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-              }`}
+            className={`navbar-items ${
+              click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
           >
             <Link
               to="/EIPS"
@@ -163,8 +164,9 @@ const AppHeader = (props) => {
             </Link>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-              }`}
+            className={`navbar-items ${
+              click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
           >
             <CNavLink style={{ padding: '0px' }} to="/typeAll" component={NavLink}>
               Type
@@ -172,8 +174,9 @@ const AppHeader = (props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-              }`}
+            className={`navbar-items ${
+              click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
           >
             <CNavLink style={{ padding: '0px' }} to="/statusAll" component={NavLink}>
               Status
@@ -181,8 +184,9 @@ const AppHeader = (props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem
-            className={`navbar-items ${click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
-              }`}
+            className={`navbar-items ${
+              click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
           >
             <Link
               to={`/${props.Month.toLowerCase()}-${props.Year}`}
@@ -272,15 +276,30 @@ const AppHeader = (props) => {
         {par?.length === 0 || matches ? (
           ''
         ) : (
-          <div
-            style={{ zIndex: '999',
-            cursor: "pointer",
-            borderRadius: "5px",
-            border: "2px solid black",
-            padding: "5px 10px", backgroundColor: "rgb(240,240,240)" }}
-            onClick={() => navigate(-1)}
-          >
-            Go back
+          <div className="flex justify-center items-center">
+            <div
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: '10px solid transparent',
+                borderRight: '10px solid transparent',
+                borderBottom: '20px solid #339af0',
+              }}
+              className="rotate-[270deg]"
+            ></div>
+            <div
+              style={{
+                zIndex: '999',
+                cursor: 'pointer',
+                color: '#339af0',
+                padding: '2px 10px',
+                backgroundColor: '#e7f5ff',
+              }}
+              className="cursor-pointer px-3 py-2 flex justify-center items-center animateButton rounded-[0.4rem]"
+              onClick={() => navigate(-1)}
+            >
+              <div className=""> back</div>
+            </div>
           </div>
         )}
         {/* <motion.div
