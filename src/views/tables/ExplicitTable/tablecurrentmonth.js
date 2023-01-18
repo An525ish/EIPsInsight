@@ -2,7 +2,7 @@
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CSmartTable } from '@coreui/react-pro'
 import React, { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Loading from 'src/views/theme/loading/loading'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
@@ -30,7 +30,6 @@ function tableCurrent() {
   const [eips, setEips] = useState()
   const [date, setDate] = useState()
   const [currentMonth, setCurrentMonth] = useState()
-  const navigate = useNavigate()
   const API2 = 'https://eipsinsight.com/api/rawData'
 
   const [loading, setLoading] = useState(true)
@@ -426,7 +425,6 @@ function tableCurrent() {
   }
 
   const factorAuthor = (data) => {
-    let ans
     //
     let list = data.split(',')
     //
@@ -456,9 +454,9 @@ function tableCurrent() {
         style={{
           fontFamily: 'Roboto',
           fontWeight: '800',
-          fontSize: '14px',
-          color: `${getBadgeColor(status)}`,
-          background: `${getBadge(status)}`,
+          fontSize: '16px',
+          color: `black`,
+          background: `white`,
           borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
@@ -746,16 +744,12 @@ function tableCurrent() {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            color: `${getBadgeColor(status)}`,
-            backgroundColor: `${getBadge(status)}`,
+            color: `black`,
+            backgroundColor: `white`,
           }}
         >
-          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
-          <label
-            style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
-          >
-            {date}
-          </label>
+          <label style={{ color: 'black', fontSize: '17px', fontWeight: 'bold' }}></label>
+          <label style={{ fontSize: '14px', fontWeight: 'regular', color: `black` }}>{date}</label>
         </CCardFooter>
       </CCard>
     </>

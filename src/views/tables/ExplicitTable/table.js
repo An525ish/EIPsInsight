@@ -19,7 +19,6 @@ function table() {
   const [date, setDate] = useState()
   const [name, setName] = useState()
   const [data, setData] = useState([])
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
   const fetchColumn = (status) => {
@@ -414,7 +413,6 @@ function table() {
   }
 
   const factorAuthor = (data) => {
-    let ans
     //
     let list = data.split(',')
     //

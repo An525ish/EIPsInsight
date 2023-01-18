@@ -5,7 +5,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import React, { useEffect, useState } from 'react'
-import github from '../../assets/grey_logo.png'
 import { ip } from './../../constants'
 import {
   CCard,
@@ -13,7 +12,6 @@ import {
   CCol,
   CCardHeader,
   CRow,
-  CContainer,
   CTable,
   CTableHead,
   CTableRow,
@@ -21,27 +19,13 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import {
-  CChartBar,
-  CChartDoughnut,
-  CChartLine,
-  CChartPie,
-  CChartPolarArea,
-  CChartRadar,
-} from '@coreui/react-chartjs'
-import 'chartjs-plugin-datalabels'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { DocsCallout } from 'src/components'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { element } from 'prop-types'
-import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
-import { cilBold } from '@coreui/icons'
-import { CBadge, CCardFooter } from '@coreui/react-pro'
+import { CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 
@@ -51,7 +35,6 @@ const oldCharts = (props) => {
   const [month, setMonth] = useState()
   const [year, setYear] = useState()
   const [date, setDate] = useState()
-  const navigate = useNavigate()
   const param = useParams()
   const [loading, setLoading] = useState(false)
   const monthNum = {
@@ -87,7 +70,7 @@ const oldCharts = (props) => {
   const G = G2.getEngine('canvas')
   let location = useLocation()
   const matches = useMediaQuery('(max-width: 767px)')
-  const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
+  const { setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
   let [data, setData] = useState() // i set the data here
   const [AllData, setAllData] = useState() // all data

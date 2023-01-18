@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import GitHubButton from 'react-github-button'
-import Github from '../../../assets/images/github.png'
-import Google from '../../../assets/images/google.png'
 import {
   CButton,
   CCard,
@@ -19,27 +16,17 @@ import {
   CToast,
   CToastBody,
   CToaster,
-  CToastHeader,
   CToastClose,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilUser } from '@coreui/icons'
 import './login.styles.css'
-import { GoogleButton } from 'react-google-button'
 import { useUserAuth } from 'src/Context/AuthContext'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
-  const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const {
-    user,
-    logIn,
-    googleSignIn,
-    setImageFunction,
-    setImageFunction1,
-    githubSignIn,
     forgotPassword,
   } = useUserAuth()
   const [toast, addToast] = useState(0)

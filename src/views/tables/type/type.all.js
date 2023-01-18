@@ -417,7 +417,7 @@ function typeAll() {
       case 'text':
         return '#1c7ed6'
       case 'back':
-        return '#e7f5ff'
+        return '#ffffff'
       default:
         return '#e7f5ff'
     }
@@ -490,60 +490,46 @@ function typeAll() {
               </label>
             </div>
           </div>
-          <div
-            style={{
-              fontSize: '30px',
-              fontWeight: '400',
-              marginBottom: '00px',
-              backgroundColor: 'white',
-              border: 'none',
-              width: '18rem',
-              padding: '10px',
-              borderRadius: '5px',
-              borderLeft: '4px solid #339af0',
-              borderBottom: '2px solid #339af0',
+          <Link
+            to="/chartTable"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+            state={{
+              type: 'Standards Track',
+              status: '',
+              category: '',
+              name: 'Standard_Track',
+              data: eips.filter((eip) => eip.type === 'Standards Track'),
+              eips: eip[3]['Last Call'],
             }}
-            className="shadow-md"
           >
-            Standard Track{' '}
-            <label
+            <div
               style={{
-                fontSize: '1.5rem',
-                fontWeight: '800',
+                marginTop: '30px',
               }}
+              className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer"
             >
-              <Link
-                to="/chartTable"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                state={{
-                  type: 'Standards Track',
-                  status: '',
-                  category: '',
-                  name: 'Standard_Track',
-                  data: eips.filter((eip) => eip.type === 'Standards Track'),
-                  eips: eip[3]['Last_Call'],
+              Standard Track{' '}
+              <label
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
                 }}
               >
                 <div
+                  // className='type-heading-number'
                   className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
                   {allData[0].total + allData[1].total + allData[2].total + allData[3].total}
                 </div>
-              </Link>
-            </label>
-          </div>
+              </label>
+            </div>
+          </Link>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
-                <CCardBody
-                  style={{
-                    height: '300px',
-
-                    borderLeft: '2px solid #74c0fc',
-                  }}
-                >
+              <CCard className="type-card-container">
+                <CCardBody>
                   <Pie
                     {...getChartInfo(post === undefined ? [] : post, 'Standard_Track')}
                     style={{ height: '280px' }}
@@ -554,22 +540,20 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderLeft: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
             <CCol xs={matches ? 12 : 6}>
-              <CCard>
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     overflowX: 'auto',
                     overflowY: 'auto',
-                    height: '300px',
+                    height: '312px',
                     fontFamily: 'Roboto',
                     fontSize: '12px',
                     borderRight: '2px solid #74c0fc',
@@ -581,9 +565,15 @@ function typeAll() {
                   <CTable align="middle" responsive>
                     <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
                       <CTableRow>
-                        <CTableHeaderCell scope="col">Type-Category</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">no. of EIPs</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">%</CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          Type-Category
+                        </CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          no. of EIPs
+                        </CTableHeaderCell>
+                        <CTableHeaderCell style={{ fontSize: '16px' }} scope="col">
+                          %
+                        </CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -605,7 +595,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Core
                             </div>
@@ -639,7 +629,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - ERC
                             </div>
@@ -674,7 +664,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Networking
                             </div>
@@ -709,7 +699,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Standard - Interface
                             </div>
@@ -741,7 +731,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Meta
                             </div>
@@ -773,7 +763,7 @@ function typeAll() {
                           >
                             <div
                               className='className="h-7
-            shadow-2xl font-extrabold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
+            shadow-2xl font-bold rounded-[8px] hover:bg-[#e7f5ff] hover:text-[#1c7ed6] text-[14px] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out'
                             >
                               Informational
                             </div>
@@ -844,32 +834,18 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderRight: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
           </CRow>
           <div className="flex justify-between">
             <div
-              style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-                display: 'inline-block',
-                padding: '12px',
-                borderRadius: '5px',
-                borderLeft: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
-              }}
-              className="shadow-md"
+              style={{}}
+              className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer"
             >
               Meta{' '}
               <label
@@ -892,7 +868,7 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {allData[4].total}
@@ -900,23 +876,7 @@ function typeAll() {
                 </Link>
               </label>
             </div>
-            <div
-              style={{
-                fontSize: '30px',
-                fontWeight: '400',
-                marginBottom: '00px',
-                backgroundColor: 'white',
-                border: 'none',
-
-                padding: '12px',
-                display: 'inline-block',
-                borderRadius: '5px',
-                borderRight: '4px solid #339af0',
-                borderBottom: '2px solid #339af0',
-                marginTop: '2rem',
-              }}
-              className="shadow-md"
-            >
+            <div className="type-heading border-t-2 border-[#1c7ed6] hover:scale-105 ease-in-out transition-all duration-300 cursor-pointer">
               Informational{' '}
               <label
                 style={{
@@ -938,7 +898,7 @@ function typeAll() {
                 >
                   <div
                     className='className="h-7
-            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
+            shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] px-3 text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
                     {allData[5].total}
@@ -949,11 +909,10 @@ function typeAll() {
           </div>
           <CRow>
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     height: '300px',
-                    borderLeft: '2px solid #74c0fc',
                   }}
                 >
                   <Pie
@@ -967,22 +926,19 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderLeft: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>
 
             <CCol xs={matches ? 12 : 6}>
-              <CCard className="shadow-sm">
+              <CCard className="type-card-container">
                 <CCardBody
                   style={{
                     height: '300px',
-                    borderRight: '2px solid #74c0fc',
                   }}
                 >
                   <Pie
@@ -996,12 +952,10 @@ function typeAll() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    borderRight: '2px solid #74c0fc',
-                    borderBottom: '2px solid #74c0fc',
                     background: `${coloring('back')}`,
                   }}
                 >
-                  <label style={{ fontSize: '10px', color: `${coloring('text')}` }}>{date}</label>
+                  <label style={{ fontSize: '12px', color: `black` }}>{date}</label>
                 </CCardFooter>
               </CCard>
             </CCol>

@@ -209,10 +209,10 @@ const AllEIPs = () => {
         className="cardHeader flex justify-between items-center"
         style={{
           fontFamily: 'Roboto',
-          fontWeight: '800',
-          fontSize: '14px',
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
+          fontWeight: '500',
+          fontSize: '18px',
+          color: `black`,
+          background: `white`,
           borderBottom: `2px solid ${getBadgeColor(text)}`,
         }}
       >
@@ -301,7 +301,7 @@ const AllEIPs = () => {
   }, [])
   return (
     <>
-      <CCard style={{ border: '2px solid #a5d8ff' }}>
+      <CCard className="alleip-card-container">
         {header('All EIPs')}
         <CCardBody
           style={{
@@ -530,11 +530,11 @@ const AllEIPs = () => {
           )}
         </CCardBody>
         <CCardFooter
-          className="cardFooter bg-[#e7f5ff] text-[#1c7ed6] border-b-[#1c7ed6] border-b-[2px]"
+          className="cardFooter bg-[#ffffff] text-[#000000]"
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
-          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
-          <label style={{ color: '#1c7ed6', fontSize: '10px', fontWeight: 'bold' }}>{date}</label>
+          <label style={{ color: '#000000', fontSize: '15px', fontWeight: 'bold' }}></label>
+          <label style={{ color: '#000000', fontSize: '12px', fontWeight: '500' }}>{date}</label>
         </CCardFooter>
       </CCard>
     </>
