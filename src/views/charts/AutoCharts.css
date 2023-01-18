@@ -1,0 +1,13 @@
+.auto-card-container {
+  border: none;
+  margin-bottom: 30px;
+  padding: 8px 5px 0px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.15s linear;
+}
+
+.auto-card-container:hover {
+  transform: scale(1.008);
+  box-shadow: rgba(100, 100, 111, 0.35) 0px 7px 29px 0px;
+}

@@ -18,6 +18,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 
+import './EIPs.css'
+
 const EIPs = () => {
   const params = useParams()
   const [data, setData] = useState()
@@ -79,11 +81,11 @@ const EIPs = () => {
     <div>
       {loading ? (
         <div>
-          <div
+          <div className='eips-heading'
             style={{
               fontSize: '30px',
               fontWeight: '400',
-              marginBottom: '00px',
+              marginBottom: '10px',
               backgroundColor: 'white',
               border: 'none',
 
@@ -101,17 +103,8 @@ const EIPs = () => {
             </label>{' '}
             {allData === undefined ? 0 : allData[0]?.data?.title}
           </div>
-          <CCard>
-            <CCardBody
-              style={{
-                overflowX: 'auto',
-                overflowY: 'auto',
-                width: '100%',
-                fontFamily: 'Roboto',
-                fontSize: '15px',
-                borderBottom: '2px solid #74c0fc',
-              }}
-            >
+          <CCard className='eips-card-container'>
+            <CCardBody>
               <CTable align="middle" responsive bordered stripedColumns>
                 <CTableBody>
                   <CTableRow>

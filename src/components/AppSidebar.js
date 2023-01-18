@@ -310,7 +310,7 @@ const AppSidebar = (props) => {
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
-      style={{ backgroundColor: '#ffff', width: '16%' }}
+      style={{ backgroundColor: '#ffff' }}
       className="scrollbarDesign"
     >
       <CSidebarBrand style={{ backgroundColor: 'black' }} className="" to="/">
