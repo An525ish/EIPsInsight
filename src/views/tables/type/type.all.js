@@ -499,7 +499,7 @@ function typeAll() {
               category: '',
               name: 'Standard_Track',
               data: eips.filter((eip) => eip.type === 'Standards Track'),
-              eips: eip[3]['Last_Call'],
+              eips: eip[3]['Last Call'],
             }}
           >
             <div

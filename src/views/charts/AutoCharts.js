@@ -21,15 +21,6 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import {
-  CChartBar,
-  CChartDoughnut,
-  CChartLine,
-  CChartPie,
-  CChartPolarArea,
-  CChartRadar,
-} from '@coreui/react-chartjs'
-import { DocsCallout } from 'src/components'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { element } from 'prop-types'
@@ -43,6 +34,8 @@ import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
 import Page404 from '../pages/page404/Page404'
+
+import './AutoCharts.css'
 
 const autoCharts = (props) => {
   // const [info, setInfo] = useState()
@@ -596,15 +589,12 @@ const autoCharts = (props) => {
       <CCardHeader
         className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
         style={{
-          color: `${getBadgeColor(text)}`,
-          background: `${getBadge(text)}`,
-          borderBottom: `2px solid ${getBadgeColor(text)}`,
-          fontFamily: 'Big Shoulders Display',
+          background: `white`,
         }}
       >
         {text === 'GeneralStats' ? 'General Stats' : text === 'LastCall' ? 'Last Call' : text}{' '}
         {text !== 'GeneralStats' && (
-          <div className="ml-2 bg-white rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
+          <div className="ml-2 bg-[#e7f5ff] rounded-[0.6rem] shadow-2xl text-[10px] flex justify-center items-center px-2">
             {text === 'GeneralStats' ? (
               ''
             ) : (
@@ -675,7 +665,9 @@ const autoCharts = (props) => {
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
     return (
-      <CCard className="mb-4 cardBorder shadow-md">
+      <CCard style={{
+        borderTop: `2px solid ${getBadgeColor(status)}`,
+      }} className="auto-card-container">
         <Link
           to="/chartTable"
           style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
@@ -943,7 +935,7 @@ const autoCharts = (props) => {
             <CRow>
               <CCol xs={matches ? 12 : 6}>
                 <div className="p-2">
-                  <CCard className="shadow-md">
+                  <CCard className="auto-card-container">
                     <CCardBody
                       style={{
                         overflowX: 'auto',
@@ -1000,19 +992,19 @@ const autoCharts = (props) => {
                       </CTable>
                     </CCardBody>
                     <CCardFooter
-                      className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
+                      className="cardFooter bg-[#ffffff] text-[black]"
                       style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
-                      <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}>
+                      <label style={{ color: 'black', fontSize: '15px', fontWeight: 'bold' }}>
                         * Click to see more
                       </label>
                       <label
                         style={{
-                          color: '#1c7ed6',
+                          color: 'black',
                           fontSize: '10px',
                           fontFamily: 'Big Shoulders Display',
                         }}
-                        className="tracking-widest text-[0.8rem]"
+                        className="tracking-widest text-[1.0rem]"
                       >
                         {date}
                       </label>
@@ -1167,14 +1159,15 @@ const autoCharts = (props) => {
 
               {/* Final vs Draft */}
               <CCol xs={matches ? 12 : 6}>
-                <CCard className="mb-4 cardBorder">
+                <CCard style={{
+                  borderTop: '2px solid #74c0fc',
+                }} 
+                className="auto-card-container">
                   <CCardHeader
-                    className="cardHeader flex tracking-widest text-[1.3rem] font-bold"
+                    className="cardHeader flex tracking-widest text-[1.4rem] font-bold"
                     style={{
-                      color: `${coloring('text')}`,
-                      background: `${coloring('back')}`,
-                      borderBottom: '2px solid #74c0fc',
-                      fontFamily: 'Big Shoulders Display',
+                      color: 'black',
+                      backgroundColor:'white'
                     }}
                   >
                     Final vs Draft
