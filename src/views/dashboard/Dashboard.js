@@ -1312,7 +1312,7 @@ const Dashboard = () => {
               <CCol xs={12} className="mb-4"></CCol>
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Living')}
+                  <Link to="/statusAll">{header('Living')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1332,7 +1332,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Final')}
+                  <Link to="/statusAll">{header('Final')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1351,7 +1351,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Last Call')}
+                  <Link to="/statusAll">{header('Last Call')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1370,7 +1370,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Review')}
+                  <Link to="/statusAll">{header('Review')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1389,7 +1389,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Draft')}
+                  <Link to="/statusAll">{header('Draft')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1408,7 +1408,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Stagnant')}
+                  <Link to="/statusAll">{header('Stagnant')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1427,7 +1427,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Withdrawn')}
+                  <Link to="/statusAll">{header('Withdrawn')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',

@@ -669,6 +669,7 @@ const autoCharts = (props) => {
 
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
+    console.log(status)
     return (
       <CCard
         style={{

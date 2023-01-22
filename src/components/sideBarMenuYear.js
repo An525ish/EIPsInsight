@@ -82,6 +82,8 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes })
   }
 
   function handleFocus(id) {
+    console.log(id)
+    console.log(allRoutes)
     for (let i = 0; i < allRoutes.length; i++) {
       for (let j = 0; j < allRoutes[i].subRoutes.length; j++) {
         if (allRoutes[i].subRoutes[j].id === id) {
@@ -184,8 +186,8 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes })
                       <div
                         className={`${
                           !subRoute.focus
-                            ? 'bg-[#e9ecef] hover:bg-[#dee2e6]'
-                            : 'bg-[#ced4da] scale-105 hover:bg-[#ced4da]'
+                            ? 'bg-[#e9ecef] hover:bg-[#ced4da]'
+                            : 'bg-black text-white scale-110    hover:scale-110 transition-all ease-in-out'
                         }  w-[15rem] px-2 h-[3rem] flex items-center rounded-[0.6rem] font-bold tracking-wider hover:scale-105 hover:transition-all `}
                         onClick={() => handleFocus(subRoute.id)}
                       >

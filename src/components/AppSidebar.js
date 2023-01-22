@@ -111,6 +111,7 @@ const AppSidebar = (props) => {
   const [navii, setNavii] = useState()
   const [routeDashboard, setRouteDashboard] = useState()
   const [routesPastYears, setRoutesPastYears] = useState()
+
   const [pastData, setPastData] = useState()
   const [pastYears, setPastYears] = useState([])
   const months = [
@@ -134,8 +135,8 @@ const AppSidebar = (props) => {
     let years = []
     data.forEach((element) => {
       if (element['created'] !== undefined) {
-        if (!years.includes(parseInt(element['created'].substring(0, 4)))) {
-          years.push(parseInt(element.created.substring(0, 4)))
+        if (!years.includes(parseInt(element['created'].trim().substring(0, 4)))) {
+          years.push(parseInt(element.created.trim().substring(0, 4)))
         }
       }
     })
@@ -238,6 +239,7 @@ const AppSidebar = (props) => {
         objYear.subRoutes.push({
           path: `/${months[i].toLowerCase()}-${allYears[j]}`,
           name: `${months[i]}`,
+          id: uuid(),
         })
       }
 
@@ -387,7 +389,7 @@ const AppSidebar = (props) => {
               : routes.map((route, index) => {
                   if (route.subRoutes) {
                     return (
-                      <SidebarMenuYear
+                      <SidebarMenu
                         setIsOpen={setIsOpen}
                         route={route}
                         showAnimation={showAnimation}

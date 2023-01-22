@@ -43,14 +43,6 @@ const Validation = React.lazy(() => import('./views/forms/validation/Validation'
 const autoCharts = React.lazy(() => import('./views/charts/AutoCharts'))
 const oldCharts = React.lazy(() => import('./views/charts/oldTempCharts'))
 
-const draftStatusChart = React.lazy(() => import('./views/charts/draftStatus'))
-const finalStatusChart = React.lazy(() => import('./views/charts/finalStatus'))
-const reviewStatusChart = React.lazy(() => import('./views/charts/reviewStatus'))
-const lastCallStatusChart = React.lazy(() => import('./views/charts/lastCallStatus'))
-const stagnantStatusChart = React.lazy(() => import('./views/charts/stagnantStatus'))
-const withdrawnStatusChart = React.lazy(() => import('./views/charts/withdrawnStatus'))
-const livingStatusChart = React.lazy(() => import('./views/charts/livingStatus'))
-
 // Tables
 
 const statusAll = React.lazy(() => import('./views/tables/status/status.all'))
@@ -80,8 +72,6 @@ const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
 const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
-
-const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // mainForm
 const MForm = React.lazy(() => import('./views/pages/ManualForm/mForm'))
@@ -159,7 +149,6 @@ const routes = [
   { path: '/notifications/badges', name: 'Badges', element: Badges },
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets },
 
   { path: '/statusAll', name: 'Status', element: statusAll },
   { path: '/statusDraft', name: 'Status Draft', element: statusDraft },
@@ -173,14 +162,6 @@ const routes = [
   { path: '/typeAll', name: 'Type', element: typeAll },
 
   { path: '/contactUs', name: 'Contact Us', element: contactUs },
-
-  { path: '/draftStatusChart', name: 'Draft status', element: draftStatusChart },
-  { path: '/finalStatusChart', name: 'Final status', element: finalStatusChart },
-  { path: '/reviewStatusChart', name: 'Review status', element: reviewStatusChart },
-  { path: '/lastCallStatusChart', name: 'Review status', element: lastCallStatusChart },
-  { path: '/stagnantStatusChart', name: 'Stagnant status', element: stagnantStatusChart },
-  { path: '/withdrawnStatusChart', name: 'Withdrawn status', element: withdrawnStatusChart },
-  { path: '/livingStatusChart', name: 'Living status', element: draftStatusChart },
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
   { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },

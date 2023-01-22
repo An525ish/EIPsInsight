@@ -204,6 +204,7 @@ const AllEIPs = () => {
 
   // header
   const header = (text) => {
+    console.log(text)
     return (
       <CCardHeader
         className="cardHeader flex justify-between items-center"
