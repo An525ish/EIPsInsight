@@ -5,7 +5,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import github from '../../assets/grey_logo.png'
+
 import { ip, TypeColors } from './../../constants'
 import {
   CCard,
@@ -23,13 +23,10 @@ import {
 } from '@coreui/react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { element } from 'prop-types'
-import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
-import { cilBold } from '@coreui/icons'
 import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
@@ -669,7 +666,6 @@ const autoCharts = (props) => {
 
   // status charts
   const statusChartsTemplate = (status, ChartType, configChartType) => {
-    console.log(status)
     return (
       <CCard
         style={{

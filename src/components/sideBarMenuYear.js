@@ -82,8 +82,6 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes })
   }
 
   function handleFocus(id) {
-    console.log(id)
-    console.log(allRoutes)
     for (let i = 0; i < allRoutes.length; i++) {
       for (let j = 0; j < allRoutes[i].subRoutes.length; j++) {
         if (allRoutes[i].subRoutes[j].id === id) {
