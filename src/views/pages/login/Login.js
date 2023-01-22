@@ -32,14 +32,8 @@ const Login = () => {
   const [error, setError] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
-  const {
-    user,
-    logIn,
-    googleSignIn,
-    setImageFunction,
-    setImageFunction1,
-    githubSignIn,
-  } = useUserAuth()
+  const { user, logIn, googleSignIn, setImageFunction, setImageFunction1, githubSignIn } =
+    useUserAuth()
 
   const [toast, addToast] = useState(0)
   const toaster = useRef()
