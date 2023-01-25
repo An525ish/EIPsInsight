@@ -13,6 +13,7 @@ import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 
 import Loading from '../theme/loading/loading'
+import { defaults } from 'chart.js'
 
 const Dashboard = () => {
   const [data, setData] = useState()
@@ -728,6 +729,23 @@ const Dashboard = () => {
   const eipData = (eips) => {
     let arr = []
 
+    let defaultStatus = {
+      Draft: 'Draft',
+      'Last Call': 'Last Call',
+      Review: 'Review',
+      Final: 'Final',
+      Stagnant: 'Stagnant',
+      Withdrawn: 'Withdrawn',
+      Living: 'Living',
+    }
+    let changeStatus = {
+      Active: 'Living',
+      Accepted: 'Final',
+      Abandoned: 'Withdrawn',
+      Deferred: 'Stagnant',
+      Superseded: 'Final',
+    }
+
     let inc = 0
 
     for (let i = 0; i < eips.length; i++) {
@@ -736,6 +754,7 @@ const Dashboard = () => {
     }
     for (let i = 0; i < eips.length; i++) {
       const temp = eips[i].eip.split('.md')[0].split('eip-')
+      console.log(temp[1] + ' ' + eips[i].status)
       if (temp.length === 2) {
         if (temp[0] === '' && !isNaN(temp[1])) {
           arr.push({
@@ -745,7 +764,11 @@ const Dashboard = () => {
             Type: eips[i].type,
             Category:
               eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
-            status: eips[i].status,
+            status:
+              defaultStatus[eips[i].status] === undefined
+                ? changeStatus[eips[i].status.trim()]
+                : defaultStatus[eips[i].status],
+
             Author: eips[i].author,
             'PR No.': eips[i].pull,
           })

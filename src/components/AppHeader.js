@@ -47,7 +47,8 @@ const AppHeader = (props) => {
     setAllEIPsFunction,
   } = useUserAuth()
   const param = useParams()
-
+  console.log(param)
+  console.log(param['*'].split('-')[0])
   const matches = useMediaQuery('(max-width: 767px)')
 
   const dispatch = useDispatch()
@@ -185,7 +186,9 @@ const AppHeader = (props) => {
           </CNavItem>
           <CNavItem
             className={`navbar-items ${
-              click3 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+              props.Month.toLowerCase() === param['*'].split('-')[0]
+                ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]'
+                : ''
             }`}
           >
             <Link

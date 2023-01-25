@@ -347,10 +347,10 @@ const AppSidebar = (props) => {
                     <motion.div
                       key={index}
                       className={`flex p-2 pl-4 items-center w-full 
-                      ${param['*'] === '' ? 'border-black border-b-2 ' : ''}
+                      ${param['*'] === '' ? 'border-black border-r-4 ' : ''}
                          ${
-                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-                         } rounded-[13px] cursor-pointer `}
+                           param['*'] !== '' ? ' hover:border-r-[#c4c5c5] hover:border-r-4' : ' '
+                         } py-3 transition-all ease-in-out cursor-pointer `}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => setMainOpen(true)}
                     >

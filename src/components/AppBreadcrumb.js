@@ -8,7 +8,7 @@ import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
-
+  console.log(currentLocation)
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname)
     return currentRoute ? currentRoute.name : false
@@ -42,6 +42,16 @@ const AppBreadcrumb = () => {
           Home
         </label>
       </CBreadcrumbItem>
+      {breadcrumbs.length === 0 && (
+        <CBreadcrumbItem href={currentLocation}>
+          <label
+            style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}
+            className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wide cursor-pointer"
+          >
+            {currentLocation.substring(1).toUpperCase()}
+          </label>
+        </CBreadcrumbItem>
+      )}
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem
@@ -50,7 +60,7 @@ const AppBreadcrumb = () => {
           >
             <label
               style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}
-              className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px]"
+              className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wider uppercase"
             >
               {breadcrumb.name}
             </label>

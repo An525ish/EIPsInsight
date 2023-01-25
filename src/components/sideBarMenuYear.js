@@ -111,11 +111,11 @@ const SidebarMenuYear = ({ route, showAnimation, isOpen, setIsOpen, allRoutes })
   return (
     <>
       <motion.nav
-        className={`flex p-2 pl-4 items-center w-full ${
-          isMenuOpen ? 'border-b-black border-b-2 ' : ''
+        className={`flex p-2 py-3 pl-4 items-center w-full ${
+          isMenuOpen ? 'border-r-black border-r-4' : ''
         } ${
-          !isMenuOpen ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-        } rounded-[13px] cursor-pointer `}
+          !isMenuOpen ? ' hover:border-b-[#c4c5c5] hover:border-r-4' : ' '
+        }  transition-all ease-in-out cursor-pointer `}
         onClick={toggleMenu}
         animate={isMenuOpen ? 'open' : 'closed'}
         whileTap={{ scale: 0.97 }}
