@@ -339,7 +339,7 @@ const Dashboard = () => {
       style: {
         textAlign: 'center',
         fontSize: 12,
-        fill: 'rgba(0,0,0,0.1)',
+        fill: 'rgba(0,0,0,0.4)',
       },
       offsetY: -10,
     })
@@ -754,7 +754,7 @@ const Dashboard = () => {
     }
     for (let i = 0; i < eips.length; i++) {
       const temp = eips[i].eip.split('.md')[0].split('eip-')
-      console.log(temp[1] + ' ' + eips[i].status)
+
       if (temp.length === 2) {
         if (temp[0] === '' && !isNaN(temp[1])) {
           arr.push({
@@ -1286,7 +1286,7 @@ const Dashboard = () => {
                     tableHeadProps={{}}
                     tableProps={{
                       // borderless: true,
-                      striped: true,
+                      // striped: true,
                       hover: true,
                       responsive: true,
                     }}

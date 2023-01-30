@@ -220,8 +220,9 @@ const AppSidebar = (props) => {
 
     routes.push(currentMonthsObjects)
 
+    // only years after 2018...we can change this later.
     allYears = allYears.filter((ele) => {
-      return ele !== props.Year && !isNaN(ele)
+      return ele !== props.Year && !isNaN(ele) && ele >= 2018
     })
 
     // past years
@@ -315,7 +316,7 @@ const AppSidebar = (props) => {
       style={{ backgroundColor: '#ffff' }}
       className="scrollbarDesign"
     >
-      <CSidebarBrand style={{ backgroundColor: 'black' }} className="" to="/">
+      <CSidebarBrand style={{ backgroundColor: 'black' }} to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <video autoPlay loop controls>
             <source src={eiplogo} />

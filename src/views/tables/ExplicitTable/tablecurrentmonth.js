@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import Loading from 'src/views/theme/loading/loading'
 import { motion } from 'framer-motion'
 import downloadIcon from 'src/assets/download.png'
+import { ip } from 'src/constants'
 
 const currentDate = new Date()
 
@@ -31,7 +32,7 @@ function tableCurrent() {
   const [date, setDate] = useState()
   const [currentMonth, setCurrentMonth] = useState()
   const API2 = 'https://eipsinsight.com/api/rawData'
-
+  const [getEips, setGetEips] = useState()
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState()
   const [eip, setEip] = useState()
@@ -44,6 +45,40 @@ function tableCurrent() {
         setLoading(false)
       })
   }
+
+  const factorOutDuplicate = (data) => {
+    data.shift()
+    for (let i = 0; i < data.length; i++) {
+      if (Object.keys(data[i]).length !== 0) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (Object.keys(data[j]).length !== 0 && data[j].eip === data[i].eip) {
+            data[j] = {}
+          }
+        }
+      }
+    }
+
+    let res = data.filter((el) => {
+      if (Object.keys(el).length !== 0) {
+        return true
+      }
+
+      return false
+    })
+
+    return res
+  }
+
+  const API4 = `${ip}/getAll`
+  const fetchAllData = async (ignore) => {
+    const data = await fetch(API4)
+    const post = await data.json()
+
+    if (!ignore) {
+      setGetEips(factorOutDuplicate(Object.values(post[0])))
+    }
+  }
+
   const fetchCurrentMonthEIPs = () => {
     const API3 = `https://eipsinsight.com/api/currentMonth/${currentDate.getFullYear()}/${
       months[currentDate.getMonth()]
@@ -272,10 +307,12 @@ function tableCurrent() {
     }
     return 'N/A'
   }
-  const findAllEIPs = (eips, data, status) => {
+  const findAllEIPs = (eips, data, status, getEips) => {
+    //
+
     let arr = []
     let inc = 1
-    if (data.length !== 0 && eips.length !== 0) {
+    if (data.length !== 0 && eips.length !== 0 && getEips !== undefined) {
       let filterData = data?.filter((item) => item.Status === status)
 
       let ans = []
@@ -305,7 +342,28 @@ function tableCurrent() {
       for (let i = 0; i < ans.length; i++) {
         let findEip = eips.filter((item) => item.data.eip === ans[i])
 
+        let getEip = getEips.filter((item) => parseInt(item.eip.split('-')[1]) === ans[i])
+
+        findEip[0].data.status =
+          getEip !== undefined && getEip.length !== 0 ? getEip[0].status : findEip[0].data.status
+
+        let prNo =
+          getEip !== undefined && getEip.length !== 0 && getEip[0].pull !== undefined
+            ? getEip[0].pull
+            : findEip[0].data.eip
+
+        let draftDate =
+          getEip !== undefined && getEip.length !== 0 && getEip[0].created !== undefined
+            ? getEip[0].created
+            : findEip[0].data.created.substring(0, 10)
+        let finalDate =
+          getEip !== undefined && getEip.length !== 0 && getEip[0].merge_date !== undefined
+            ? getEip[0].merge_date
+            : findEip[0].data.created.substring(0, 10)
+
         if (status === 'Last_Call') {
+          //
+
           arr.push({
             id: inc++,
             Number: findEip[0].data.eip,
@@ -319,10 +377,10 @@ function tableCurrent() {
               getLastCallDate(findEip[0].data.eip) !== 'N/A'
                 ? getLastCallDate(findEip[0].data.eip)
                 : findEip[0].data.created.substring(0, 10),
-            'Draft Date': findEip[0].data.created.substring(0, 10),
+            'Draft Date': draftDate,
             status: findEip[0].data.status,
             Author: findEip[0].data.author,
-            'PR No.': '#' + findEip[0].data.eip,
+            'PR No.': '#' + prNo,
           })
         } else {
           if (status === 'Final') {
@@ -336,10 +394,10 @@ function tableCurrent() {
                   ? findEip[0].data.category
                   : `Type - ${findEip[0].data.type}`,
 
-              'Final Date': findEip[0].data.created.substring(0, 10),
+              'Final Date': finalDate,
               status: findEip[0].data.status,
               Author: findEip[0].data.author,
-              'PR No.': '#' + findEip[0].data.eip,
+              'PR No.': '#' + prNo,
             })
           } else {
             arr.push({
@@ -352,10 +410,10 @@ function tableCurrent() {
                   ? findEip[0].data.category
                   : `Type - ${findEip[0].data.type}`,
 
-              'Draft Date': findEip[0].data.created.substring(0, 10),
+              'Draft Date': draftDate,
               status: findEip[0].data.status,
               Author: findEip[0].data.author,
-              'PR No.': '#' + findEip[0].data.eip,
+              'PR No.': '#' + prNo,
             })
           }
         }
@@ -421,6 +479,7 @@ function tableCurrent() {
       eips === undefined ? [] : eips,
       currentMonth === undefined ? [] : currentMonth,
       status,
+      getEips === undefined ? [] : getEips,
     ),
   }
 
@@ -455,12 +514,12 @@ function tableCurrent() {
           fontFamily: 'Roboto',
           fontWeight: '800',
           fontSize: '16px',
-          color: `black`,
-          background: `white`,
+          color: `${getBadgeColor(status)}`,
+          backgroundColor: 'white',
           borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
-        <div>{text}</div>
+        <div className="tracking-wider">{text}</div>
 
         <CSVLink {...csvLink}>
           <motion.img
@@ -479,13 +538,15 @@ function tableCurrent() {
     setName(location.state.name)
     setEip(location.state.eips)
     fetchDate()
-    fetchAllEIPs()
+
+    fetchAllData()
     fetchCurrentMonthEIPs()
+    fetchAllEIPs()
   }, [])
 
   return (
     <>
-      <CCard>
+      <CCard className="card-container">
         {header(
           `${name
             ?.split('_')
@@ -512,6 +573,7 @@ function tableCurrent() {
                 eips === undefined ? [] : eips,
                 currentMonth === undefined ? [] : currentMonth,
                 status,
+                getEips === undefined ? [] : getEips,
               )}
               activePage={1}
               clickableRows
@@ -730,7 +792,7 @@ function tableCurrent() {
               tableHeadProps={{}}
               tableProps={{
                 // borderless: true,
-                striped: true,
+                // striped: true,
                 hover: true,
                 responsive: true,
               }}
@@ -744,12 +806,17 @@ function tableCurrent() {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            color: `black`,
-            backgroundColor: `white`,
+            color: `${getBadgeColor(status)}`,
+            backgroundColor: 'white',
           }}
         >
-          <label style={{ color: 'black', fontSize: '17px', fontWeight: 'bold' }}></label>
-          <label style={{ fontSize: '14px', fontWeight: 'regular', color: `black` }}>{date}</label>
+          <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
+          <label
+            style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
+            className="tracking-wider"
+          >
+            {date}
+          </label>
         </CCardFooter>
       </CCard>
     </>

@@ -1,6 +1,6 @@
 import React from 'react'
 import AllEIPs from './views/charts/allEIPs'
-// import CurrentMonth from './views/charts/currentMonth'
+import CurrentMonth from './views/charts/currentMonth'
 import EIPs from './views/charts/EIPs'
 import mForm from './views/pages/ManualForm/mForm'
 import mForm2 from './views/pages/ManualForm/mForm2'
@@ -76,7 +76,22 @@ const contactUs = React.lazy(() => import('./views/pages/contactUs'))
 // mainForm
 // const MForm = React.lazy(() => import('./views/pages/ManualForm/mForm'))
 
-// const date = new Date()
+const date = new Date()
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
 
 // errors
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
@@ -108,12 +123,12 @@ const routes = [
   // { path: '/Insight', name: 'Charts', element: autoCharts },
   // { path: '/currentMonth', name: 'Current Month', element: CurrentMonth },
   { path: '/:id', name: 'Month', element: autoCharts },
-  { path: '/old-:id', name: 'Month', element: oldCharts },
-  // {
-  //   path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
-  //   name: `${months[date.getMonth()]} ${date.getFullYear()}`,
-  //   element: CurrentMonth,
-  // },
+  // { path: '/old-:id', name: 'Month', element: oldCharts },
+  {
+    path: `/${months[date.getMonth()].toLowerCase()}-${date.getFullYear()}`,
+    name: `${months[date.getMonth()]} ${date.getFullYear()}`,
+    element: CurrentMonth,
+  },
 
   // { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   // { path: '/forms/form-control', name: 'Form Control', element: FormControl },

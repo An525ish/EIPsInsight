@@ -47,8 +47,7 @@ const AppHeader = (props) => {
     setAllEIPsFunction,
   } = useUserAuth()
   const param = useParams()
-  console.log(param)
-  console.log(param['*'].split('-')[0])
+
   const matches = useMediaQuery('(max-width: 767px)')
 
   const dispatch = useDispatch()
