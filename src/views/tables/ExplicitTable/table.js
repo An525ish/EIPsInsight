@@ -442,13 +442,13 @@ function table() {
         style={{
           fontFamily: 'Roboto',
           fontWeight: '800',
-          fontSize: '14px',
+          fontSize: '16px',
           color: `${getBadgeColor(status)}`,
-          background: `${getBadge(status)}`,
+          backgroundColor: 'white',
           borderBottom: `2px solid ${getBadgeColor(status)}`,
         }}
       >
-        <div>{text}</div>
+        <div className="tracking-wider">{text}</div>
 
         <CSVLink {...csvLink}>
           <motion.img
@@ -472,7 +472,7 @@ function table() {
 
   return (
     <>
-      <CCard>
+      <CCard className="card-container">
         {header(
           `${name
             ?.split('_')
@@ -712,7 +712,7 @@ function table() {
             tableHeadProps={{}}
             tableProps={{
               // borderless: true,
-              striped: true,
+              // striped: true,
               hover: true,
               responsive: true,
             }}
@@ -724,12 +724,13 @@ function table() {
             display: 'flex',
             justifyContent: 'space-between',
             color: `${getBadgeColor(status)}`,
-            backgroundColor: `${getBadge(status)}`,
+            backgroundColor: 'white',
           }}
         >
           <label style={{ color: '#1c7ed6', fontSize: '15px', fontWeight: 'bold' }}></label>
           <label
             style={{ fontSize: '10px', fontWeight: 'bold', color: `${getBadgeColor(status)}` }}
+            className="tracking-wider"
           >
             {date}
           </label>

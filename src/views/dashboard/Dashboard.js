@@ -13,6 +13,7 @@ import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 
 import Loading from '../theme/loading/loading'
+import { defaults } from 'chart.js'
 
 const Dashboard = () => {
   const [data, setData] = useState()
@@ -338,7 +339,7 @@ const Dashboard = () => {
       style: {
         textAlign: 'center',
         fontSize: 12,
-        fill: 'rgba(0,0,0,0.1)',
+        fill: 'rgba(0,0,0,0.4)',
       },
       offsetY: -10,
     })
@@ -728,6 +729,23 @@ const Dashboard = () => {
   const eipData = (eips) => {
     let arr = []
 
+    let defaultStatus = {
+      Draft: 'Draft',
+      'Last Call': 'Last Call',
+      Review: 'Review',
+      Final: 'Final',
+      Stagnant: 'Stagnant',
+      Withdrawn: 'Withdrawn',
+      Living: 'Living',
+    }
+    let changeStatus = {
+      Active: 'Living',
+      Accepted: 'Final',
+      Abandoned: 'Withdrawn',
+      Deferred: 'Stagnant',
+      Superseded: 'Final',
+    }
+
     let inc = 0
 
     for (let i = 0; i < eips.length; i++) {
@@ -736,6 +754,7 @@ const Dashboard = () => {
     }
     for (let i = 0; i < eips.length; i++) {
       const temp = eips[i].eip.split('.md')[0].split('eip-')
+
       if (temp.length === 2) {
         if (temp[0] === '' && !isNaN(temp[1])) {
           arr.push({
@@ -745,7 +764,11 @@ const Dashboard = () => {
             Type: eips[i].type,
             Category:
               eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
-            status: eips[i].status,
+            status:
+              defaultStatus[eips[i].status] === undefined
+                ? changeStatus[eips[i].status.trim()]
+                : defaultStatus[eips[i].status],
+
             Author: eips[i].author,
             'PR No.': eips[i].pull,
           })
@@ -1263,7 +1286,7 @@ const Dashboard = () => {
                     tableHeadProps={{}}
                     tableProps={{
                       // borderless: true,
-                      striped: true,
+                      // striped: true,
                       hover: true,
                       responsive: true,
                     }}
@@ -1312,7 +1335,7 @@ const Dashboard = () => {
               <CCol xs={12} className="mb-4"></CCol>
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Living')}
+                  <Link to="/statusAll">{header('Living')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1332,7 +1355,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Final')}
+                  <Link to="/statusAll">{header('Final')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1351,7 +1374,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Last Call')}
+                  <Link to="/statusAll">{header('Last Call')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1370,7 +1393,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Review')}
+                  <Link to="/statusAll">{header('Review')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1389,7 +1412,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Draft')}
+                  <Link to="/statusAll">{header('Draft')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1408,7 +1431,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Stagnant')}
+                  <Link to="/statusAll">{header('Stagnant')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1427,7 +1450,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {header('Withdrawn')}
+                  <Link to="/statusAll">{header('Withdrawn')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',

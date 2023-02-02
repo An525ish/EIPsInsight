@@ -94,6 +94,7 @@ const AppSidebar = (props) => {
   const [navii, setNavii] = useState()
   const [routeDashboard, setRouteDashboard] = useState()
   const [routesPastYears, setRoutesPastYears] = useState()
+
   const [pastData, setPastData] = useState()
   const [pastYears, setPastYears] = useState([])
   const months = [
@@ -117,8 +118,8 @@ const AppSidebar = (props) => {
     let years = []
     data.forEach((element) => {
       if (element['created'] !== undefined) {
-        if (!years.includes(parseInt(element['created'].substring(0, 4)))) {
-          years.push(parseInt(element.created.substring(0, 4)))
+        if (!years.includes(parseInt(element['created'].trim().substring(0, 4)))) {
+          years.push(parseInt(element.created.trim().substring(0, 4)))
         }
       }
     })
@@ -202,8 +203,9 @@ const AppSidebar = (props) => {
 
     routes.push(currentMonthsObjects)
 
+    // only years after 2018...we can change this later.
     allYears = allYears.filter((ele) => {
-      return ele !== props.Year && !isNaN(ele)
+      return ele !== props.Year && !isNaN(ele) && ele >= 2018
     })
 
     // past years
@@ -221,6 +223,7 @@ const AppSidebar = (props) => {
         objYear.subRoutes.push({
           path: `/${months[i].toLowerCase()}-${allYears[j]}`,
           name: `${months[i]}`,
+          id: uuid(),
         })
       }
 
@@ -328,10 +331,10 @@ const AppSidebar = (props) => {
                     <motion.div
                       key={index}
                       className={`flex p-2 pl-4 items-center w-full 
-                      ${param['*'] === '' ? 'border-black border-b-2 ' : ''}
+                      ${param['*'] === '' ? 'border-black border-r-4 ' : ''}
                          ${
-                           param['*'] !== '' ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-                         } rounded-[13px] cursor-pointer `}
+                           param['*'] !== '' ? ' hover:border-r-[#c4c5c5] hover:border-r-4' : ' '
+                         } py-3 transition-all ease-in-out cursor-pointer `}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => setMainOpen(true)}
                     >
@@ -370,7 +373,7 @@ const AppSidebar = (props) => {
               : routes.map((route, index) => {
                   if (route.subRoutes) {
                     return (
-                      <SidebarMenuYear
+                      <SidebarMenu
                         setIsOpen={setIsOpen}
                         route={route}
                         showAnimation={showAnimation}

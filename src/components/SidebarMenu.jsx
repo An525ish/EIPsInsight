@@ -4,8 +4,8 @@ import { cilSpeedometer } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState, useEffect } from 'react'
-
-import { NavLink } from 'react-router-dom'
+import './AppSidebar.css'
+import { Link, NavLink } from 'react-router-dom'
 
 const menuAnimation = {
   hidden: {
@@ -66,18 +66,31 @@ const menuItemAnimation = {
     },
   }),
   show: (i) => ({
-    x: 0,
+    x: '10%',
     transition: {
       duration: (i + 1) * 0.1,
     },
   }),
 }
 
-const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
+const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen, allRoutes }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
     setIsOpen(true)
+  }
+
+  function handleFocus(id) {
+    for (let i = 0; i < allRoutes.length; i++) {
+      for (let j = 0; j < allRoutes[i].subRoutes.length; j++) {
+        if (allRoutes[i].subRoutes[j].id === id) {
+          allRoutes[i].subRoutes[j].focus = true
+        } else {
+          allRoutes[i].subRoutes[j].focus = false
+        }
+      }
+    }
   }
 
   const itemVariants = {
@@ -94,21 +107,22 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
       setIsMenuOpen(false)
     }
   }, [isOpen])
+
   return (
     <>
       <motion.nav
         className={`flex p-2 pl-4 items-center w-full ${
-          isMenuOpen ? 'border-b-[#339af0] border-b-2 ' : ''
+          isMenuOpen ? 'border-r-black border-r-4 ' : ''
         } ${
-          !isMenuOpen ? ' hover:border-b-[#abd5bd] hover:border-b-2' : ' '
-        } rounded-[13px] cursor-pointer `}
+          !isMenuOpen ? ' hover:border-r-[#c4c5c5] hover:border-r-4' : ' '
+        } py-3 transition-all ease-in-out cursor-pointer `}
         onClick={toggleMenu}
         animate={isMenuOpen ? 'open' : 'closed'}
         whileTap={{ scale: 0.97 }}
       >
         <CIcon
           icon={route.icon}
-          style={{ color: `${isMenuOpen ? '#339af0' : '#adb5bd'}` }}
+          style={{ color: `${isMenuOpen ? 'black' : '#adb5bd'}` }}
           customClassName="nav-icon"
         />
         <div className="menu_item">
@@ -118,7 +132,7 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
               initial="hidden"
               animate="show"
               exit="hidden"
-              className={`text-[17px] ${isMenuOpen ? 'text-[#339af0]' : 'text-[#adb5bd]'} pr-10`}
+              className={`text-[17px] ${isMenuOpen ? 'text-black' : 'text-[#adb5bd]'} pr-10`}
             >
               {route.name}
             </motion.div>
@@ -138,7 +152,7 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
             width="13"
             height="12"
             viewBox="0 0 20 20"
-            className={`${isMenuOpen ? 'fill-[#339af0]' : 'fill-[#adb5bd]'}`}
+            className={`${isMenuOpen ? 'fill-black' : 'fill-[#adb5bd]'}`}
           >
             <path d="M0 7 L 20 7 L 10 16" />
           </svg>
@@ -147,23 +161,34 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.ul
-            variants={menuAnimation}
+            // variants={menuAnimation}
             initial="hidden"
             animate="show"
             exit="hidden"
             className="flex flex-col gap-[10px]"
           >
             {route.subRoutes.map((subRoute, i) => (
-              <motion.li
-                variants={menuItemAnimation}
-                key={i}
-                custom={i}
-                className="px-5 pl-10 pt-2 block text-[17px] hover:text-white text-[#adb5bd]  cursor-pointer hover:transition-all hover:duration-100  hover:scale-105 hover:opacity-90 duration-500"
-              >
-                <a href={subRoute.path} target="_blank" rel="noreferrer">
-                  <motion.div className="text-[17px] hover:text-white">{subRoute.name}</motion.div>
-                </a>
-              </motion.li>
+              <a href={subRoute.path} key={i} target="_blank" rel="noreferrer">
+                <motion.li
+                  variants={menuItemAnimation}
+                  key={i}
+                  custom={i}
+                  className="px-5 ml-auto pt-2 flex text-[17px] hover:text-black text-[#868e96]  cursor-pointer hover:transition-all hover:duration-100  hover:opacity-90 duration-500 "
+                >
+                  <motion.div className="text-[17px]  ">
+                    <div
+                      className={`${
+                        !subRoute.focus
+                          ? 'bg-[#e9ecef] hover:bg-[#dee2e6]'
+                          : 'bg-[#ced4da] scale-105 hover:bg-[#ced4da]'
+                      }  w-[15rem] px-2 h-[3rem] flex items-center rounded-[0.6rem] font-bold tracking-wider hover:scale-105 hover:transition-all `}
+                      onClick={() => handleFocus(subRoute.id)}
+                    >
+                      {subRoute.name}
+                    </div>
+                  </motion.div>
+                </motion.li>
+              </a>
             ))}
           </motion.ul>
         )}{' '}

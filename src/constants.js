@@ -1,7 +1,16 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
 export const ip = 'https://eipsinsight.com/api'
-export const TypeColors = ['#eebefa', '#da77f2', '#ae3ec9', '#862e9c', '#c2255c', '#f06595']
+// export const TypeColors = ['#E8E8A6', '#F2F5C8', '#C1DEAE', '#219F94', '#B185A7', '#8D6B94']
+
+// export const TypeColors = ['#E1F5FE', '#B3E5FC', '#81D4FA', '#4FC3F7', '#15aabf', '#00BCD4']
+
+// export const TypeColors = ['#F5F5F5', '#E0E0E0', '#BDBDBD', '#9E9E9E', '#7C6B62', '#2B3045']
+// export const TypeColors = ['#E1F5FE', '#B3E5FC', '#81D4FA', '#4FC3F7', '#E6CCCC', '#D9B3B3']
+// export const TypeColors = ['#E8F5E9', '#C8E6C9', '#A5D6A7', '#81C784', '#66BB6A', '#4CAF50']
+// export const TypeColors = ['#F5F5DC', '#F5DEB3', '#F5A9A9', '#F08080', '#CD5C5C', '#8B0000'] 1st
+// export const TypeColors = ['#F1E9E9', '#E5D5D5', '#D9C2C2', '#CDACAC', '#9B8C8C', '#6B6D6D']
+export const TypeColors = ['#F1F2B5', '#E9D660', '#E2B40A', '#D9A90E', '#7C6B62', '#2B3045']
 
 export const StatusColors = [
   '#3bc9db',
