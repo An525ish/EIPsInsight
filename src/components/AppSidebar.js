@@ -8,41 +8,24 @@ import SidebarMenu from './SidebarMenu'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { ip } from 'src/constants'
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
+import { CSidebar, CSidebarBrand, CSidebarNav } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
-import { AppSidebarNav } from './AppSidebarNav'
-
-import { sygnet } from 'src/assets/brand/sygnet'
 import eiplogo from '../assets/logo2.webm'
 
-import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 import './AppSidebar.css'
 
 import {
   cilBell,
-  cilCalculator,
-  cilChartPie,
-  cilCursor,
-  cilDrop,
-  cilNotes,
-  cilPencil,
-  cilPuzzle,
   cilSpeedometer,
-  cisSpeedometer,
-  cidSpeedometer,
   cilStar,
   cilChart,
-  cilExpandLeft,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { CNavItem} from '@coreui/react'
 import { Link, NavLink, useParams } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
-import { object } from 'prop-types'
 import SidebarMenuYear from './sideBarMenuYear'
 import { v4 as uuid } from 'uuid'
 
@@ -313,9 +296,9 @@ const AppSidebar = (props) => {
       style={{ backgroundColor: '#ffff' }}
       className="scrollbarDesign"
     >
-      <CSidebarBrand style={{ backgroundColor: 'black' }} className="" to="/">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <video autoPlay loop controls>
+      <CSidebarBrand style={{ backgroundColor: 'black' }} to="/">
+        <Link to="/" className="logocontainer" style={{ textDecoration: 'none' }}>
+          <video className='logo' autoPlay muted loop>
             <source src={eiplogo} />
           </video>
         </Link>
