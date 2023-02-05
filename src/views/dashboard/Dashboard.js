@@ -1076,7 +1076,7 @@ const Dashboard = () => {
                   style={{
                     overflowX: 'auto',
                     overflowY: 'auto',
-                    height: '300px',
+                    height: '540px',
                     fontFamily: 'Roboto',
                     fontSize: '12px',
                     '--main-color': `#1c7ed6`,
@@ -1092,7 +1092,7 @@ const Dashboard = () => {
                     columns={columns}
                     columnFilter
                     columnSorter
-                    itemsPerPage={50}
+                    itemsPerPage={7}
                     pagination
                     onRowClick={(t) => {}}
                     scopedColumns={{

@@ -318,7 +318,7 @@ const AppSidebar = (props) => {
     >
       <CSidebarBrand style={{ backgroundColor: 'black' }} to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <video autoPlay loop controls>
+          <video controls='' autoPlay loop muted>
             <source src={eiplogo} />
           </video>
         </Link>
