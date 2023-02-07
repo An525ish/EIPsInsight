@@ -342,7 +342,7 @@ const AllEIPs = () => {
               columns={columns}
               columnFilter
               columnSorter
-              itemsPerPage={15}
+              itemsPerPage={7}
               pagination
               onRowClick={(t) => {}}
               scopedColumns={{
