@@ -760,13 +760,12 @@ function statusAll(props) {
       {loading ? (
         <div>
           <div className="flex justify-center items-center">
-            <div
+            {/* <div
               style={{
                 fontSize: '3rem',
                 marginBottom: '00px',
                 backgroundColor: 'white',
                 border: 'none',
-
                 padding: '20px',
                 borderRadius: '5px',
 
@@ -808,7 +807,7 @@ function statusAll(props) {
                   </div>
                 </Link>
               </label>
-            </div>
+            </div> */}
           </div>
           {customTableChart('Living', 'Living')}
           {customTableChart('Final', 'Final')}

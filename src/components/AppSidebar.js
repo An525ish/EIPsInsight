@@ -16,7 +16,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { AppSidebarNav } from './AppSidebarNav'
 
 import { sygnet } from 'src/assets/brand/sygnet'
-import eiplogo from '../assets/logo2.webm'
+import eiplogo from '../assets/logo3.gif'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -222,7 +222,7 @@ const AppSidebar = (props) => {
 
     // only years after 2018...we can change this later.
     allYears = allYears.filter((ele) => {
-      return ele !== props.Year && !isNaN(ele) && ele >= 2018
+      return ele !== props.Year && !isNaN(ele) && ele >= 2015
     })
 
     // past years
@@ -316,11 +316,12 @@ const AppSidebar = (props) => {
       style={{ backgroundColor: '#ffff' }}
       className="scrollbarDesign"
     >
-      <CSidebarBrand style={{ backgroundColor: 'black' }} to="/">
+      <CSidebarBrand style={{ backgroundColor: 'white' }} to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <video controls='' autoPlay loop muted>
+          {/* <video controls='' autoPlay loop muted>
             <source src={eiplogo} />
-          </video>
+          </video> */}
+          <img src={eiplogo}/>
         </Link>
       </CSidebarBrand>
       <CSidebarNav className="scrollbarDesign z-20">
