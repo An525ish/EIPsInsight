@@ -48,7 +48,7 @@ const AppBreadcrumb = () => {
             style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}
             className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wide cursor-pointer"
           >
-            {currentLocation.substring(1).toUpperCase()}
+            {currentLocation.substring(1).toLowerCase()}
           </label>
         </CBreadcrumbItem>
       )}
@@ -60,7 +60,7 @@ const AppBreadcrumb = () => {
           >
             <label
               style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}
-              className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wider uppercase"
+              className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wider capitalise"
             >
               {breadcrumb.name}
             </label>

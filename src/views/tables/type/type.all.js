@@ -440,7 +440,7 @@ function typeAll() {
       {loading ? (
         <div>
           <div className="flex justify-center items-center">
-            <div
+            {/* <div
               style={{
                 fontSize: '3rem',
                 marginBottom: '00px',
@@ -488,7 +488,7 @@ function typeAll() {
                   </div>
                 </Link>
               </label>
-            </div>
+            </div> */}
           </div>
           <Link
             to="/chartTable"
