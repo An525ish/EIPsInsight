@@ -961,7 +961,7 @@ const Dashboard = () => {
     return (
       <CCol xs={matches ? 12 : col}>
         <CCard className="card-container">
-          {header(title)}
+          <Link to="/statusAll">{header(title)}</Link>
           <CCardBody
             style={{
               // backgroundColor: '#fff9db',
