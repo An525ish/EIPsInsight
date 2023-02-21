@@ -1,0 +1,57 @@
+{
+  node: {
+    fs: "empty",
+  },
+  entry: ["./src/index.tsx"],
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".jsx", ".css"],
+  },
+  output: {
+    filename: "[name].[hash].js",
+    chunkFilename: "[name].[hash].js",
+    publicPath: "/",
+  },
+  mode: "production",
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "public/index-prod.html",
+    }),
+    new CompressionPlugin({
+      test: /\.js(\?.*)?$/i,
+      filename: "[path][query]",
+      algorithm: "gzip",
+      deleteOriginalAssets: false,
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
+  ],
+}

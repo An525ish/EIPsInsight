@@ -1,0 +1,109 @@
+.advertise-heading-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.advertise-heading-container div{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.advertise-heading-container button{
+    border: 1px solid black;
+    background-color: black;
+    color: white;
+    width: 20%;
+    padding: 6px;
+    border-radius: 5px;
+    transition: all 0.08s linear;
+}
+
+.advertise-heading-container button:hover{
+    background-color: white;
+    color: black;
+}
+
+.advertise-heading-info h1{
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 10px 0px;
+}
+
+.advertise-heading-container div img{
+    width: 100%;
+}
+
+.advertise-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.advertise-info h1{
+    font-size: 30px;
+}
+
+.advertise-info p{
+    font-size: 20px;
+    width: 60%;
+    text-align: center;
+    margin: 10px 0px 30px;
+}
+
+.advertise-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px 0px;
+}
+
+.advertise-form h1{
+    font-size: 30px;
+}
+
+.advertise-form p{
+    font-size: 18px;
+    width: 50%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.advertise-form-first-row{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.advertise-form input, .advertise-form textarea{
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.advertise-form-first-row input{
+    width: 49%;
+}
+
+.advertise-form button{
+    border: 1px solid black;
+    background-color: black;
+    color: white;
+    width: 12%;
+    padding: 6px;
+    border-radius: 5px;
+    transition: all 0.08s linear;
+}
+
+.advertise-form button:hover{
+    background-color: white;
+    color: black;
+}

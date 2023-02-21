@@ -55,6 +55,8 @@ const statusWithdrawn = React.lazy(() => import('./views/tables/status/statusWit
 const statusLiving = React.lazy(() => import('./views/tables/status/statusLiving'))
 
 const typeAll = React.lazy(() => import('./views/tables/type/type.all'))
+const advertise = React.lazy(() => import('./components/Advertise-page.js'))
+const resources = React.lazy(() => import('./components/resource-page.js'))
 const table = React.lazy(() => import('./views/tables/ExplicitTable/table'))
 const currentTable = React.lazy(() => import('./views/tables/ExplicitTable/tablecurrentmonth'))
 
@@ -159,8 +161,11 @@ const routes = [
   { path: '/statusLiving', name: 'Status Living', element: statusLiving },
 
   { path: '/typeAll', name: 'Type', element: typeAll },
-
+  
+  { path: '/resources', name: 'Resources', element: resources },
+  
   { path: '/contactUs', name: 'Contact Us', element: contactUs },
+  { path: '/advertise', name: 'Advertise', element: advertise },
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
   { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },
