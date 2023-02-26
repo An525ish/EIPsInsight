@@ -481,7 +481,7 @@ const Dashboard = () => {
 
     const allMonths = [...new Set(AllMonthsGetAllAPI())]
 
-    allMonths.reverse()
+    // allMonths.reverse()
 
     let arr = []
     for (let i = 0; i < allMonths.length; i++) {
@@ -877,7 +877,8 @@ const Dashboard = () => {
         {text === 'Last_Call' ? 'Last Call' : text}
         {text === 'EIPs Type & Categories' || text === 'EIPs Status' || text === 'Search an EIP' ? (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
-            {AllData.length}
+            {/* {AllData.length} */}
+            {allData[0].total + allData[1].total + allData[2].total + allData[3].total + allData[4].total + allData[5].total}
           </div>
         ) : (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">

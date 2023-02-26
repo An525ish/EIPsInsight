@@ -48,7 +48,8 @@ const AppBreadcrumb = () => {
             style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}
             className="bg-[#e7f5ff] text-[#1c7ed6] px-5 py-1 rounded-[15px] tracking-wide cursor-pointer"
           >
-            {currentLocation.substring(1).toLowerCase()}
+            {/* {currentLocation.substring(1).toUpperCase()} */}
+            {currentLocation.substring(1).charAt(0).toUpperCase() + currentLocation.substring(1).slice(1)}
           </label>
         </CBreadcrumbItem>
       )}

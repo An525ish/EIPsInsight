@@ -25,6 +25,7 @@ import midIcon from 'src/assets/mid.png'
 import discordIcon from 'src/assets/discord.svg'
 import githubIcon from 'src/assets/github.svg'
 import emailIcon from 'src/assets/email.png'
+import backbtn from 'src/assets/back-btn.png'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
@@ -280,7 +281,7 @@ const AppHeader = (props) => {
           ''
         ) : (
           <div className="flex justify-center items-center">
-            <div
+            {/* <div
               style={{
                 width: 0,
                 height: 0,
@@ -289,7 +290,7 @@ const AppHeader = (props) => {
                 borderBottom: '20px solid #339af0',
               }}
               className="rotate-[270deg]"
-            ></div>
+            ></div> */}
             <div
               style={{
                 zIndex: '999',
@@ -301,7 +302,9 @@ const AppHeader = (props) => {
               className="cursor-pointer px-3 py-2 flex justify-center items-center animateButton rounded-[0.4rem]"
               onClick={() => navigate(-1)}
             >
-              <div className=""> back</div>
+              <div className=""> 
+              <img className="backbtn" loading="lazy" src={backbtn} alt="Back Icon" />
+              </div>
             </div>
           </div>
         )}
