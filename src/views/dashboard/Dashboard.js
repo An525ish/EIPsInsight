@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CRow } from '@coreui/react'
 
@@ -26,19 +26,6 @@ const Dashboard = () => {
 
   const matches = useMediaQuery('(max-width: 767px)')
   const matches1 = useMediaQuery('(max-width: 950px)')
-
-  const [eips, setEips] = useState([])
-  const [eip, setEip] = useState()
-
-  const API2 = `${ip}/allInfo`
-  const fetchAllEIps = async (ignore) => {
-    const data = await fetch(API2)
-    const post = await data.json()
-
-    if (!ignore) {
-      setEip(post)
-    }
-  }
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -73,7 +60,6 @@ const Dashboard = () => {
       arr.shift()
       setDuplicateData(arr)
       setAllData(factorOutDuplicate(Object.values(post[0])))
-      setEips(factorOutDuplicate(Object.values(post[0])))
       setLoading(true)
     }
   }
@@ -102,9 +88,11 @@ const Dashboard = () => {
   }
   function AllYearsGetAllAPI() {
     let allYears = []
+    //
     for (let i = 0; i < AllData.length; i++) {
       if (AllData[i].merge_date !== undefined) {
         let splitIt = AllData[i].merge_date.split(',')
+        //
         allYears.push(splitIt[1].trim())
       } else {
         if (AllData[i].date !== undefined) {
@@ -219,7 +207,7 @@ const Dashboard = () => {
         },
       )
     }
-    // arr.reverse()
+    arr.reverse()
 
     return arr
   }
@@ -307,28 +295,6 @@ const Dashboard = () => {
     return arr
   }
 
-  const allData = useMemo(() => distributeData(eips), [eips])
-
-  const totalData = (name) => {
-    switch (name) {
-      case 'Living':
-        return 6
-      case 'Final':
-        return 7
-      case 'Last_Call':
-        return 8
-      case 'Review':
-        return 9
-      case 'Draft':
-        return 10
-      case 'Stagnant':
-        return 11
-      case 'Withdrawn':
-        return 12
-      default:
-        return 0
-    }
-  }
   const annotations = []
 
   const d1 = [
@@ -995,22 +961,7 @@ const Dashboard = () => {
     return (
       <CCol xs={matches ? 12 : col}>
         <CCard className="card-container">
-          {/* <Link to="/statusAll">{header(title)}</Link>
-           */}
-           <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: title,
-            category: '',
-            name: `${title}`,
-            data: allData[totalData(title)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header(title)}
-        </Link>
+          <Link to="/statusAll">{header(title)}</Link>
           <CCardBody
             style={{
               // backgroundColor: '#fff9db',
@@ -1066,7 +1017,6 @@ const Dashboard = () => {
     let ignore = false
     fetchDate(ignore)
     fetchAllData(ignore)
-    fetchAllEIps()
 
     return () => {
       ignore = true
@@ -1385,21 +1335,7 @@ const Dashboard = () => {
               <CCol xs={12} className="mb-4"></CCol>
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Living')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Living',
-            category: '',
-            name: 'Living',
-            data: allData[totalData(`Living`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Living')}
-        </Link>
+                  <Link to="/statusAll">{header('Living')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1419,20 +1355,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Final',
-            category: '',
-            name: 'Final',
-            data: allData[totalData(`Final`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Final')}
-        </Link>
+                  <Link to="/statusAll">{header('Final')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1451,21 +1374,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Last Call')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Last Call',
-            category: '',
-            name: 'Last Call',
-            data: allData[totalData(`Last_Call`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Last Call')}
-        </Link>
+                  <Link to="/statusAll">{header('Last Call')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1484,21 +1393,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Review')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Review',
-            category: '',
-            name: 'Review',
-            data: allData[totalData(`Review`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Review')}
-        </Link>
+                  <Link to="/statusAll">{header('Review')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1517,21 +1412,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Draft')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Draft',
-            category: '',
-            name: 'Draft',
-            data: allData[totalData(`Draft`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Draft')}
-        </Link>
+                  <Link to="/statusAll">{header('Draft')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1550,21 +1431,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Stagnant')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Stagnant',
-            category: '',
-            name: 'Stagnant',
-            data: allData[totalData(`Stagnant`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Stagnant')}
-        </Link>
+                  <Link to="/statusAll">{header('Stagnant')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1583,21 +1450,7 @@ const Dashboard = () => {
 
               <CCol xs={12}>
                 <CCard className="card-container">
-                  {/* <Link to="/statusAll">{header('Withdrawn')}</Link> */}
-                  <Link
-          to="/chartTable"
-          className="cursor-pointer"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          state={{
-            type: '',
-            status: 'Withdrawn',
-            category: '',
-            name: 'Withdrawn',
-            data: allData[totalData(`Withdrawn`)].data,
-            eips: eip[3]['Last_Call'],
-          }}
-        >{header('Withdrawn')}
-        </Link>
+                  <Link to="/statusAll">{header('Withdrawn')}</Link>
                   <CCardBody
                     style={{
                       // backgroundColor: '#fff9db',
@@ -1630,7 +1483,6 @@ const Dashboard = () => {
       ) : (
         <Loading />
       )}
-      
     </div>
   )
 }
