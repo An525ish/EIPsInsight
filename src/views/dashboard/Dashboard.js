@@ -220,7 +220,6 @@ const Dashboard = () => {
       )
     }
     // arr.reverse()
-
     return arr
   }
 
@@ -999,7 +998,7 @@ const Dashboard = () => {
           {/* <Link to="/statusAll">{header(title)}</Link>
            */}
            <Link
-          to="/chartTable"
+          to={`/${title}`}
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1388,7 +1387,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Living')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/living"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1421,7 +1420,7 @@ const Dashboard = () => {
               <CCol xs={12}>
                 <CCard className="card-container">
                 <Link
-          to="/chartTable"
+          to="/final"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1454,7 +1453,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Last Call')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/lastCall"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1487,7 +1486,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Review')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/review"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1520,7 +1519,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Draft')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/draft"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1553,7 +1552,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Stagnant')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/stagnant"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -1586,7 +1585,7 @@ const Dashboard = () => {
                 <CCard className="card-container">
                   {/* <Link to="/statusAll">{header('Withdrawn')}</Link> */}
                   <Link
-          to="/chartTable"
+          to="/withdrawn"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{

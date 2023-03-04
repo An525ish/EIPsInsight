@@ -740,7 +740,7 @@ const CurrentMonth = () => {
           <label className="relative cursor-pointer">
             <div>
               <Link
-                to="/currentMonthTable"
+                to={`/current-${name}`}
                 style={{
                   textDecoration: 'none',
                   color: `${getBadgeColor(name)}`,
@@ -792,7 +792,7 @@ const CurrentMonth = () => {
         }}
       >
         <Link
-          to="/currentMonthTable"
+          to={`/current-${status}`}
           style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
           state={{
             type: '',
@@ -866,7 +866,7 @@ const CurrentMonth = () => {
           <Page404 />
         ) : (
           <div>
-            <div className="flex justify-center items-center mb-[4rem]">
+            {/* <div className="flex justify-center items-center mb-[4rem]">
               <div className="flex justify-center items-center flex-wrap">
                 <div
                   className={`${
@@ -884,7 +884,7 @@ const CurrentMonth = () => {
                     param['*'].split('-')[0].substring(1)}{' '}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <CRow>
               <CCol xs={matches ? 12 : 6}>

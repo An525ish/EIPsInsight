@@ -391,8 +391,8 @@ function statusAll(props) {
     return (
       <>
         <Link
-          // to={`/${title}`}
-          to="/chartTable"
+          to={`/${title}`}
+          // to="/chartTable"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
           state={{
@@ -475,7 +475,7 @@ function statusAll(props) {
                     <CTableRow>
                       <CTableHeaderCell scope="row">
                         <NavLink
-                          to="/chartTable"
+                          to="/StandardsTrack"
                           state={{
                             type: 'Standards Track',
                             status: name,
@@ -496,7 +496,7 @@ function statusAll(props) {
                       </CTableHeaderCell>{' '}
                       <CTableDataCell>
                         <NavLink
-                          to="/chartTable"
+                          to="/Standard-Core"
                           state={{
                             type: 'Standards Track',
                             status: name,
@@ -531,7 +531,7 @@ function statusAll(props) {
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
                       <CTableDataCell>
                         <NavLink
-                          to="/chartTable"
+                          to="/Standard-ERC"
                           state={{
                             type: 'Standards Track',
                             status: name === 'Last_Call' ? 'Last Call' : name,
@@ -566,7 +566,7 @@ function statusAll(props) {
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
                       <CTableDataCell>
                         <NavLink
-                          to="/chartTable"
+                          to="/Standard-Networking"
                           state={{
                             type: 'Standards Track',
                             status: name,
@@ -601,7 +601,7 @@ function statusAll(props) {
                       <CTableHeaderCell scope="row"></CTableHeaderCell>
                       <CTableDataCell>
                         <NavLink
-                          to="/chartTable"
+                          to="/Standard-Interface"
                           state={{
                             type: 'Standard_Track',
                             status: name,
