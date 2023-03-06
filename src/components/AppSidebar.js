@@ -314,14 +314,14 @@ const AppSidebar = (props) => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
       style={{ backgroundColor: '#ffff' }}
-      className="scrollbarDesign md:hidden"
+      className="scrollbarDesign"
     >
       <CSidebarBrand style={{ backgroundColor: 'white' }} to="/">
         <Link to="/" style={{ textDecoration: 'none' }}>
           {/* <video controls='' autoPlay loop muted>
             <source src={eiplogo} />
           </video> */}
-          <img src={eiplogo} alt='logo'/>
+          <img src={eiplogo}/>
         </Link>
       </CSidebarBrand>
       <CSidebarNav className="scrollbarDesign z-20">

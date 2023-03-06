@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSmartTable } from '@coreui/react-pro'
 import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CRow } from '@coreui/react'
 
@@ -26,19 +26,6 @@ const Dashboard = () => {
 
   const matches = useMediaQuery('(max-width: 767px)')
   const matches1 = useMediaQuery('(max-width: 950px)')
-
-  const [eips, setEips] = useState([])
-  const [eip, setEip] = useState()
-
-  const API2 = `${ip}/allInfo`
-  const fetchAllEIps = async (ignore) => {
-    const data = await fetch(API2)
-    const post = await data.json()
-
-    if (!ignore) {
-      setEip(post)
-    }
-  }
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -73,7 +60,6 @@ const Dashboard = () => {
       arr.shift()
       setDuplicateData(arr)
       setAllData(factorOutDuplicate(Object.values(post[0])))
-      setEips(factorOutDuplicate(Object.values(post[0])))
       setLoading(true)
     }
   }
@@ -102,9 +88,11 @@ const Dashboard = () => {
   }
   function AllYearsGetAllAPI() {
     let allYears = []
+    //
     for (let i = 0; i < AllData.length; i++) {
       if (AllData[i].merge_date !== undefined) {
         let splitIt = AllData[i].merge_date.split(',')
+        //
         allYears.push(splitIt[1].trim())
       } else {
         if (AllData[i].date !== undefined) {
@@ -306,28 +294,6 @@ const Dashboard = () => {
     return arr
   }
 
-  const allData = useMemo(() => distributeData(eips), [eips])
-
-  const totalData = (name) => {
-    switch (name) {
-      case 'Living':
-        return 6
-      case 'Final':
-        return 7
-      case 'Last_Call':
-        return 8
-      case 'Review':
-        return 9
-      case 'Draft':
-        return 10
-      case 'Stagnant':
-        return 11
-      case 'Withdrawn':
-        return 12
-      default:
-        return 0
-    }
-  }
   const annotations = []
 
   const d1 = [
@@ -1066,7 +1032,6 @@ const Dashboard = () => {
     let ignore = false
     fetchDate(ignore)
     fetchAllData(ignore)
-    fetchAllEIps()
 
     return () => {
       ignore = true
@@ -1630,7 +1595,6 @@ const Dashboard = () => {
       ) : (
         <Loading />
       )}
-      
     </div>
   )
 }

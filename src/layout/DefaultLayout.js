@@ -37,7 +37,7 @@ const DefaultLayout = () => {
     'December',
   ]
 
-  const matches = useMediaQuery('(max-width: 967px)')
+  const matches = useMediaQuery('(max-width: 767px)')
   const param = useParams()
   const navigate = useNavigate()
   const [par, isPar] = useState()
@@ -78,7 +78,7 @@ const DefaultLayout = () => {
 
   return (
     <div>
-      {matches && (<AppSidebar Year={date.getFullYear()} Month={months[date.getMonth()]} />)}
+      <AppSidebar Year={date.getFullYear()} Month={months[date.getMonth()]} />
       <div style={{backgroundColor:"#FAFAFA"}} className="wrapper d-flex flex-column min-vh-100">
         <AppHeader Year={date.getFullYear()} Month={months[date.getMonth()]} />
         <div className="body flex flex-grow-1 px-3">
