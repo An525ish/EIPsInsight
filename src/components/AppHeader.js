@@ -17,7 +17,7 @@ import CIcon from '@coreui/icons-react'
 
 import { AppBreadcrumb } from './index'
 import { ip } from 'src/constants'
-import logo from 'src/assets/logo2.gif'
+import logo from 'src/assets/logo3.gif'
 import logoAndroid from 'src/assets/logo3.gif'
 import leftIcon from 'src/assets/left.svg'
 import rightIcon from 'src/assets/right.svg'
@@ -115,6 +115,7 @@ const AppHeader = (props) => {
             dispatch({ type: 'set', sidebarShow: !sidebarShow })
             changeIconSet()
           }}
+          className="md:hidden"
         >
           <svg
             className="svg-file"
@@ -128,15 +129,15 @@ const AppHeader = (props) => {
             )}
           </svg>
         </CHeaderToggler>
-        <CHeaderBrand className="mx-auto d-md-none">
+        <CHeaderBrand className="">
           <img
             src={matches ? logoAndroid : logo}
-            height={48}
+            // height={48}
             alt="Logo"
-            style={{ width: '87px', height: '100%' }}
+            style={{ width: '8rem', height : '4rem' }}
           />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto">
+        <CHeaderNav className="d-none d-md-flex m-auto items-center">
           <CNavItem
             className={`navbar-items ${
               click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
