@@ -1,7 +1,21 @@
 {
-  node: {
-    fs: "empty",
-  },
+  resolve: {
+  modules: [...],
+  fallback: {
+    "fs": false,
+    "tls": false,
+    "net": false,
+    "path": false,
+    "zlib": false,
+    "http": false,
+    "https": false,
+    "stream": false,
+    "url": require.resolve("url/"),
+    "util": require.resolve("util/"),
+    "assert": require.resolve("assert/"),
+    "crypto-browserify": require.resolve('crypto-browserify'),
+  } 
+},
   entry: ["./src/index.tsx"],
   module: {
     rules: [
@@ -31,6 +45,23 @@
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx", ".css"],
+    modules: [...],
+    fallback: {
+      "fs": false,
+      "tls": false,
+      "net": false,
+      "path": false,
+      "zlib": false,
+      "http": false,
+      "https": false,
+      "crypto": require.resolve("crypto-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        "assert": require.resolve("assert"),
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "os": require.resolve("os-browserify/browser"),
+        "url": require.resolve("url"),
+    } 
   },
   output: {
     filename: "[name].[hash].js",

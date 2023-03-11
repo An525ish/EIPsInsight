@@ -56,6 +56,7 @@ const statusLiving = React.lazy(() => import('./views/tables/status/statusLiving
 
 const typeAll = React.lazy(() => import('./views/tables/type/type.all'))
 const advertise = React.lazy(() => import('./components/Advertise-page.js'))
+const payment = React.lazy(() => import('./components/payment.js'))
 const resources = React.lazy(() => import('./components/resource-page.js'))
 const table = React.lazy(() => import('./views/tables/ExplicitTable/table'))
 const currentTable = React.lazy(() => import('./views/tables/ExplicitTable/tablecurrentmonth'))
@@ -166,6 +167,7 @@ const routes = [
   
   { path: '/contactUs', name: 'Contact Us', element: contactUs },
   { path: '/advertise', name: 'Advertise', element: advertise },
+  { path: '/payment', name: 'Payment', element: payment },
 
   { path: '/ChartTable', name: 'Chart Table', element: table },
   { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },

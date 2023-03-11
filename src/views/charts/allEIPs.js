@@ -20,6 +20,46 @@ const AllEIPs = () => {
   const navigate = useNavigate()
   const { allEIPs } = useUserAuth()
 
+  const removeduplicate = (array) => {
+    let filterarr = []
+    let distinctarr = []
+    // console.log(array)
+
+    for (let i = 0; i < array.length; i++) {
+      if (filterarr[0] == undefined) {
+        filterarr.push(array[i].status)
+        distinctarr.push(array[i])
+      }
+      else {
+        let flag = 0;
+        for (let j = 0; j < filterarr.length; j++) {
+          if (filterarr[j] === array[i].status) {
+            flag = 1;
+            break;
+          }
+        }
+        if (flag == 0) {
+          filterarr.push(array[i].status)
+          distinctarr.push(array[i])
+        }
+      }
+    }
+    console.log("distinctarr",distinctarr)
+    return distinctarr;
+  }
+  const testfunc = (data) => {
+    data.shift()
+    let solution = []
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].eip === "eip-747") {
+        solution.push(data[i])
+      }
+    }
+    // console.log(solution)
+    let mainsol = removeduplicate(solution)
+    console.log(mainsol)
+  }
+
   const factorOutDuplicate = (data) => {
     data.shift()
     for (let i = 0; i < data.length; i++) {
@@ -40,6 +80,7 @@ const AllEIPs = () => {
       return false
     })
 
+    // console.log(res)
     return res
   }
 
@@ -49,6 +90,7 @@ const AllEIPs = () => {
     const post = await data.json()
 
     if (!ignore) {
+      testfunc(Object.values(post[0]))
       setEips(factorOutDuplicate(Object.values(post[0])))
       setLoading(true)
     }
@@ -76,10 +118,7 @@ const AllEIPs = () => {
 
     let inc = 0
 
-    for (let i = 0; i < eips.length; i++) {
-      if (eips[i]['merge_date'] === undefined) {
-      }
-    }
+    // console.log(eips)
     for (let i = 0; i < eips.length; i++) {
       const temp = eips[i].eip.split('.md')[0].split('eip-')
       if (temp.length === 2) {
@@ -93,7 +132,7 @@ const AllEIPs = () => {
               eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
             'Draft Date': eips[i].created,
             'Final Date':
-              eips[i]['merge_date'] === undefined ? eips[i].date : eips[i]['merge_date'],
+              eips[i]['merge_date'] === undefined ? (eips[i]['c_date'] === undefined ? eips[i].date : eips[i]['c_date']) : eips[i]['merge_date'],
             status:
               defaultStatus[eips[i].status] === undefined
                 ? changeStatus[eips[i].status.trim()]
@@ -105,8 +144,8 @@ const AllEIPs = () => {
       }
     }
 
+    // console.log(arr)
     arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
-
     return arr
   }
 
@@ -342,9 +381,9 @@ const AllEIPs = () => {
               columns={columns}
               columnFilter
               columnSorter
-              itemsPerPage={15}
+              itemsPerPage={7}
               pagination
-              onRowClick={(t) => {}}
+              onRowClick={(t) => { }}
               scopedColumns={{
                 id: (item) => (
                   <td>
@@ -435,13 +474,12 @@ const AllEIPs = () => {
                           >
                             <a
                               key={index}
-                              href={`${
-                                item[item.length - 1].substring(
-                                  item[item.length - 1].length - 1,
-                                ) === '>'
-                                  ? 'mailto:' + t
-                                  : 'https://github.com/' + t.substring(1)
-                              }`}
+                              href={`${item[item.length - 1].substring(
+                                item[item.length - 1].length - 1,
+                              ) === '>'
+                                ? 'mailto:' + t
+                                : 'https://github.com/' + t.substring(1)
+                                }`}
                               target="_blank"
                               rel="noreferrer"
                               className="hoverAuthor text-[10px]"
@@ -515,9 +553,8 @@ const AllEIPs = () => {
                 'PR No.': (item) => (
                   <td>
                     <a
-                      href={`https://github.com/ethereum/EIPs/pull/${
-                        item['PR No.'] === 0 ? item.Number : item['PR No.']
-                      }`}
+                      href={`https://github.com/ethereum/EIPs/pull/${item['PR No.'] === 0 ? item.Number : item['PR No.']
+                        }`}
                       target="_blank"
                       rel="noreferrer"
                     >

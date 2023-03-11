@@ -14,19 +14,59 @@ const advertise = () => {
           </div>
           <div>
             <img
-              src="https://images.unsplash.com/photo-1559445368-b8a993676d7a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1931&q=80"
+              src="https://www.coindesk.com/resizer/XZ-sCAQPWnlAclvdUY_-yaokpKA=/1200x600/center/top/cloudfront-us-east-1.images.arcpublishing.com/coindesk/72PSYBTMM5D2VD3WI745EU6NII"
               alt="Ad Image"
             />
           </div>
         </section>
         <section className={styles['advertise-info']}>
           <h1>Why Choose US?</h1>
-          <p>EIPs Insights is a leading EIPs analytical statistics dashboard, used by millions of people out there.</p>
-          <h1 style={{fontSize:"25px"}}>Types of Advertisements</h1>
+          <p>
+            EIPs Insights is a leading EIPs analytical statistics dashboard, used by millions of
+            people out there.
+          </p>
+          <div className={styles['advertise-milestones']}>
+            <div>
+              <h1>#1</h1>
+              <p>Eips Dashboard</p>
+            </div>
+            <div>
+              <h1>10K+</h1>
+              <p>Page Views per Month</p>
+            </div>
+            <div>
+              <h1>1K</h1>
+              <p>Unique Visitors per Month</p>
+            </div>
+          </div>
+          <h1 style={{ fontSize: '25px' }}>Types of Advertisements</h1>
           <p>
             Extend your reach to thousands of people related with the Blockchain Community. Your ads
             will be tailored in our site to provide a seamless experience.
           </p>
+
+          <div>
+            <div className={styles['advertise-banner-info']}>
+              <div className={styles['advertise-banner-content']}>
+                <h1>Prominent Banner Ad</h1>
+                <p>
+                  Create awareness and acquire users through our banner that ranges across the whole
+                  homepage. Let users pause and admire your brand through a creative display.
+                </p>
+              </div>
+              <img src="" alt="" />
+            </div>
+            <div className={styles['advertise-banner-info']}>
+              <div className={styles['advertise-banner-content']}>
+                <h1>Header Text Ad</h1>
+                <p>
+                  Your sponsored text will appear in a clean and easily digestible fashion at the
+                  top of the page. Transparent payment with a CPM model.
+                </p>
+              </div>
+              <img src="" alt="" />
+            </div>
+          </div>
         </section>
         <section>
           <form action="" className={styles['advertise-form']}>

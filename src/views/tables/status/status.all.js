@@ -92,7 +92,8 @@ function statusAll(props) {
       annotations.push({
         type: 'text',
         position: [k, value],
-        content: `${((value / data) * 100).toFixed(2) + '%'}`,
+        content: `${value}`,
+        // content: `${((value / data) * 100).toFixed(2) + '%'}`,
         style: {
           textAlign: 'center',
           fontSize: 12,
@@ -213,7 +214,6 @@ function statusAll(props) {
         max: data + 10,
         position: 'top',
       },
-
       annotations: fetchAnnotations(fetchData(post === undefined ? [] : post, name), data),
     }
     return config
@@ -282,55 +282,68 @@ function statusAll(props) {
     let withdrawnData = data.filter((item) => item.status === 'Withdrawn')
 
     arr.push({
+      key : 1,
       total: coreData.length,
       data: coreData,
     })
     arr.push({
+      key : 2,
       total: ercData.length,
       data: ercData,
     })
     arr.push({
+      key : 3,
       total: networkingData.length,
       data: networkingData,
     })
     arr.push({
+      key : 4,
       total: interfaceData.length,
       data: interfaceData,
     })
     arr.push({
+      key : 5,
       total: metaData.length,
       data: metaData,
     })
     arr.push({
+      key : 6,
       total: informationalData.length,
       data: informationalData,
     })
 
     arr.push({
+      key : 7,
       total: livingData.length,
-      data: livingData,
+      data: livingData
     })
     arr.push({
+      key : 8,
       total: finalData.length,
       data: finalData,
     })
     arr.push({
+      key : 9,
       total: lastCallData.length,
       data: lastCallData,
     })
     arr.push({
+      key : 10,
       total: reviewData.length,
       data: reviewData,
     })
     arr.push({
+      key : 11,
       total: draftData.length,
       data: draftData,
     })
     arr.push({
+      key : 12,
       total: stagnantData.length,
       data: stagnantData,
     })
     arr.push({
+      key : 13,
       total: withdrawnData.length,
       data: withdrawnData,
     })
@@ -378,6 +391,7 @@ function statusAll(props) {
     return (
       <>
         <Link
+          // to={`/${title}`}
           to="/chartTable"
           className="cursor-pointer"
           style={{ textDecoration: 'none', color: 'inherit' }}
@@ -411,7 +425,7 @@ function statusAll(props) {
                   backgroundColor: `${getBadgeColor(name)}1a`,
                 }}
               >
-                {totalData(name)}
+                {allData[totalData(name)].total}
               </div>
             </label>
           </div>
@@ -760,13 +774,12 @@ function statusAll(props) {
       {loading ? (
         <div>
           <div className="flex justify-center items-center">
-            <div
+            {/* <div
               style={{
                 fontSize: '3rem',
                 marginBottom: '00px',
                 backgroundColor: 'white',
                 border: 'none',
-
                 padding: '20px',
                 borderRadius: '5px',
 
@@ -808,7 +821,7 @@ function statusAll(props) {
                   </div>
                 </Link>
               </label>
-            </div>
+            </div> */}
           </div>
           {customTableChart('Living', 'Living')}
           {customTableChart('Final', 'Final')}

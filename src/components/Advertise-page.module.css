@@ -33,6 +33,30 @@
     margin: 10px 0px;
 }
 
+.advertise-milestones{
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.advertise-milestones > div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+
+.advertise-milestones > div >h1{
+    font-size: 30px;
+}
+
+.advertise-milestones > div >p{
+    font-size: 15px;
+    width: 100%;
+}
+
 .advertise-heading-container div img{
     width: 100%;
 }
