@@ -25,6 +25,7 @@ const EIPs = () => {
   const [data, setData] = useState()
   const [allData, setAllData] = useState()
   const [loading, setLoading] = useState(false)
+  const [pastStatus, setPastStatus] = useState()
 
   const fetchAllData = async () => {
     try {
@@ -41,13 +42,60 @@ const EIPs = () => {
 
       setData(datas)
 
+      fetchgetAll()
+
       const filterData = datas.filter(function (e) {
         return e.data.eip === parseInt(params.id)
       })
 
+      // console.log(`eip-${filterData[0].data.eip}`)
       setAllData(filterData)
       setLoading(true)
     } catch (err) {}
+  }
+
+  const fetchgetAll = async () => {
+    const res = await fetch(`${ip}/getAll`)
+    const getres = await res.json()
+
+    testfunc(Object.values(getres[0]))
+  }
+
+  const testfunc = (data) => {
+    data.shift()
+    let solution = []
+    for (let i = 0; i < data.length; i++) {
+      // console.log(`eip-${allData[0].data.eip}`)
+      if (data[i].eip == `eip-${allData[0].data.eip}`) {
+        solution.push(data[i])
+      }
+    }
+    removeduplicate(solution)
+  }
+
+  const removeduplicate = (array) => {
+    let filterarr = []
+    let distinctarr = []
+
+    for (let i = 0; i < array.length; i++) {
+      if (filterarr[0] == undefined) {
+        filterarr.push(array[i].status)
+        distinctarr.push(array[i])
+      } else {
+        let flag = 0
+        for (let j = 0; j < filterarr.length; j++) {
+          if (filterarr[j] === array[i].status) {
+            flag = 1
+            break
+          }
+        }
+        if (flag == 0) {
+          filterarr.push(array[i].status)
+          distinctarr.push(array[i])
+        }
+      }
+    }
+    setPastStatus(distinctarr)
   }
 
   const factorAuthor = (data) => {
@@ -77,11 +125,14 @@ const EIPs = () => {
     fetchAllData()
   }, [])
 
+  // console.log(pastStatus)
+
   return (
     <div>
       {loading ? (
         <div>
-          <div className='eips-heading'
+          <div
+            className="eips-heading"
             style={{
               fontSize: '30px',
               fontWeight: '400',
@@ -103,7 +154,7 @@ const EIPs = () => {
             </label>{' '}
             {allData === undefined ? 0 : allData[0]?.data?.title}
           </div>
-          <CCard className='eips-card-container'>
+          <CCard className="eips-card-container">
             <CCardBody>
               <CTable align="middle" responsive bordered stripedColumns>
                 <CTableBody>
@@ -144,23 +195,72 @@ const EIPs = () => {
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
-                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Status</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">
+                      Current Status
+                    </CTableDataCell>
                     <CTableDataCell className="bg-[#f1f3f5]">
                       {allData === undefined ? 0 : allData[0]?.data?.status}
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
-                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Type</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Category</CTableDataCell>
                     <CTableDataCell>
+                      {allData === undefined ? 0 : allData[0]?.data?.category}
+                    </CTableDataCell>
+                  </CTableRow>
+                  <CTableRow>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Type</CTableDataCell>
+                    <CTableDataCell className="bg-[#f1f3f5]">
                       {allData === undefined ? 0 : allData[0]?.data?.type}
                     </CTableDataCell>
                   </CTableRow>
                   <CTableRow>
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">Created</CTableDataCell>
-                    <CTableDataCell className="bg-[#f1f3f5]">
+                    <CTableDataCell>
                       {allData === undefined ? 0 : allData[0]?.data?.created.substring(0, 10)}
                     </CTableDataCell>
                   </CTableRow>
+                </CTableBody>
+              </CTable>
+
+              <CTable align="middle" responsive bordered stripedColumns>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Number</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Author</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Status</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">Merge Date</CTableDataCell>
+                    <CTableDataCell className="bg-[#e9ecef] font-[900]">
+                      Pull Request
+                    </CTableDataCell>
+                  </CTableRow>
+                  {pastStatus == undefined
+                    ? ''
+                    : pastStatus.map((item, index) => {
+                        return (
+                          <CTableRow key={index}>
+                            <CTableDataCell className="bg-[#e9ecef] font-[900]">
+                              {index + 1}
+                            </CTableDataCell>
+                            <CTableDataCell className="font-[900]">
+                              {item.author}
+                            </CTableDataCell>
+                            <CTableDataCell className="bg-[#f1f3f5] font-[900]">
+                              {item.status}
+                            </CTableDataCell>
+                            <CTableDataCell className="font-[900]">
+                              {item.merge_date == undefined
+                                ? item.c_date === undefined
+                                  ? 'Not Available'
+                                  : item.c_date
+                                : item.merge_date}
+                            </CTableDataCell>
+                            <CTableDataCell className="bg-[#e9ecef] font-[900]">
+                              {item.pull}
+                            </CTableDataCell>
+                          </CTableRow>
+                        )
+                      })}
                 </CTableBody>
               </CTable>
 

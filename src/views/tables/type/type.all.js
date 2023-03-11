@@ -23,6 +23,7 @@ import Loading from 'src/views/theme/loading/loading'
 import { StatusColors, TypeColors } from 'src/constants'
 import { ip } from 'src/constants'
 import AllEIPs from 'src/views/charts/allEIPs'
+import { useSelector } from 'react-redux'
 
 function typeAll() {
   const [post, getPost] = useState()
@@ -41,6 +42,7 @@ function typeAll() {
     const post = await data.json()
 
     if (!ignore) {
+      console.log(post)
       setEip(post)
     }
   }
@@ -65,10 +67,14 @@ function typeAll() {
       return false
     })
 
+    // console.log(res)
     return res
   }
 
   const API4 = `${ip}/getAll`
+  const reduxdata = useSelector((state) => state.getAll)
+  // console.log("typeall",reduxdata.dataStore)
+
   const fetchAllData = async (ignore) => {
     const data = await fetch(API4)
     const post = await data.json()
@@ -78,6 +84,7 @@ function typeAll() {
       setLoading(true)
     }
   }
+
 
   const API = 'https://eipsinsight.com/api/statusPage'
   const fetchPost = () => {
@@ -224,8 +231,8 @@ function typeAll() {
   useEffect(() => {
     fetchPost()
     fetchDate()
-    fetchAllEIps()
     fetchAllData()
+    fetchAllEIps()
   }, [])
 
   function renderStatistic(containerWidth, text, style) {
@@ -244,9 +251,8 @@ function typeAll() {
     }
 
     const textStyleStr = `width:${containerWidth}px;`
-    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
-      scale < 1 ? 1 : 'inherit'
-    };">${text}</div>`
+    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'
+      };">${text}</div>`
   }
 
   const fetchChartData = (post, name) => {
@@ -300,8 +306,8 @@ function typeAll() {
     return post.length === 0
       ? 0
       : post['Final']['Standard_Track'] === undefined
-      ? 0
-      : post['Final']['Standard_Track'][name] +
+        ? 0
+        : post['Final']['Standard_Track'][name] +
         post['Draft']['Standard_Track'][name] +
         post['Review']['Standard_Track'][name] +
         post['Last_Call']['Standard_Track'][name] +
@@ -315,12 +321,12 @@ function typeAll() {
     return post === undefined
       ? 0
       : fetchTableDataExtra(post === undefined ? [] : post, name, 'Living') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
-          fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Final') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Withdrawn') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Draft') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Review') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Last_Call') +
+      fetchTableDataExtra(post === undefined ? [] : post, name, 'Stagnant')
   }
   const fetchChartDataStandardTrack = (post) => {
     let arr = []
@@ -434,6 +440,8 @@ function typeAll() {
 
     return total
   }
+
+  console.log(eip)
 
   return (
     <>

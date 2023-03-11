@@ -1,0 +1,127 @@
+.video-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  overflow: hidden;
+  place-items: center;
+  grid-gap: 1.5%;
+  margin-bottom: 2%;
+  padding: 0px;
+}
+
+.single-video {
+  width: 100%;
+  height: 233px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px 2px #09090912;
+  margin: 2% 0px;
+}
+
+.resource-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2%;
+  width: 100%;
+}
+
+.resource-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 7%;
+  margin: 3% 0px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 0px 2px #09090912;
+  min-height: 50px;
+}
+
+.resource-image-container {
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 4%;
+  height: 200px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+}
+
+.resource-text-container h1 {
+  font-size: 25px;
+  font-weight: 500;
+  margin-top: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.resource-text-container p {
+  font-size: 17px;
+  margin: 3% 0px 5%;
+  text-align: center;
+}
+
+.resource-text-container a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resource-text-container button {
+  border: 1px solid black;
+  padding: 8px 35px;
+  border-radius: 10px;
+}
+
+.section-heading {
+  font-size: 45px;
+  font-weight: 500;
+  text-align: center;
+  margin: 5% 0px 2%;
+}
+
+.section-description {
+  text-align: justify;
+  margin-bottom: 4%;
+}
+
+@media only screen and (max-width: 768px) {
+  .video-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .resource-items-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .video-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .resource-items-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 1.5%;
+  }
+
+  .resource-container{
+    margin: 0px;
+  }
+  .resource-text-container p {
+    display: none;
+  }
+  .resource-text-container button {
+    margin-top: 5%;
+  }
+  .resource-text-container h1 {
+    font-size: 20px;
+  }
+  .resource-image-container {
+    height: 180px;
+  }
+  .section-description{
+    display: none;
+  }
+}
