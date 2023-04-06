@@ -93,7 +93,7 @@ const AllEIPs = () => {
               eips[i].type === 'Standards Track' ? eips[i].category : `Type - ${eips[i].type}`,
             'Draft Date': eips[i].created,
             'Final Date':
-              eips[i]['merge_date'] === undefined ? eips[i].date : eips[i]['merge_date'],
+              eips[i]['merge_date'] === undefined ? (eips[i]['c_date'] === undefined ? eips[i].date : eips[i]['c_date'].slice(4)) : eips[i]['merge_date'],
             status:
               defaultStatus[eips[i].status] === undefined
                 ? changeStatus[eips[i].status.trim()]
@@ -106,6 +106,7 @@ const AllEIPs = () => {
     }
 
     arr.sort((a, b) => (a.Number > b.Number ? 1 : -1))
+    console.log(arr)
 
     return arr
   }
@@ -238,7 +239,7 @@ const AllEIPs = () => {
       >
         <div className="flex">
           {text}{' '}
-          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2">
+          <div className="ml-2 bg-white rounded-[0.7rem] text-[10px] flex justify-center items-center px-2 font-bold text-base">
             {eips !== undefined ? (
               eips.length
             ) : (
@@ -315,10 +316,14 @@ const AllEIPs = () => {
     headers: headers,
     data: eipData(eips === undefined ? [] : eips),
   }
+
+  
   useEffect(() => {
     fetchAllData()
     fetchDate()
   }, [])
+
+
   return (
     <>
       <CCard className="alleip-card-container">
