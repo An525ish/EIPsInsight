@@ -1,5 +1,9 @@
 import React, { Component, Suspense } from 'react'
 import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom'
+
+import { Provider } from 'react-redux'
+import store from './redux/store'
+
 import ProtectedLogin from './components/protectedLogin'
 import ProtectedRoute from './components/ProtectedRoutes'
 import { UserAuthContextProvider } from './Context/AuthContext'
@@ -32,37 +36,39 @@ function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={loading}>
-        <UserAuthContextProvider>
-          <Routes>
-            <Route
-              exact
-              path="/login"
-              name="Login Page"
-              element={
-                <ProtectedLogin>
-                  <Login />
-                </ProtectedLogin>
-              }
-            />
-            <Route exact path="/register" name="Register Page" element={<Register />} />
-            <Route
-              exact
-              path="/forgotPassword"
-              name="Forgot Password"
-              element={<ForgotPassword />}
-            />
-            <Route exact path="/resetPassword" name="Reset Password" element={<ResetPassword />} />
-            <Route exact path="/404" name="Page 404" element={<Page404 />} />
-            <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
-            <Route exact path="*" name="Home" element={<DefaultLayout />} />
+        <Provider store={store}>
+          <UserAuthContextProvider>
+            <Routes>
+              <Route
+                exact
+                path="/login"
+                name="Login Page"
+                element={
+                  <ProtectedLogin>
+                    <Login />
+                  </ProtectedLogin>
+                }
+              />
+              <Route exact path="/register" name="Register Page" element={<Register />} />
+              <Route
+                exact
+                path="/forgotPassword"
+                name="Forgot Password"
+                element={<ForgotPassword />}
+              />
+              <Route exact path="/resetPassword" name="Reset Password" element={<ResetPassword />} />
+              <Route exact path="/404" name="Page 404" element={<Page404 />} />
+              <Route exact path="/500" name="Page 500" element={<Page500 />} />
+              {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
+              <Route exact path="*" name="Home" element={<DefaultLayout />} />
 
-            {/* <Route path="/insertForm" name="Form" element={<MForm />} />
+              {/* <Route path="/insertForm" name="Form" element={<MForm />} />
             <Route path="/updateForm" name="Update Form" element={<MForm2 />} /> */}
-            {/* route for each EIP */}
-            {/* <Route path="/EIPS/:EIPid" element={<EIPs />} /> */}
-          </Routes>
-        </UserAuthContextProvider>
+              {/* route for each EIP */}
+              {/* <Route path="/EIPS/:EIPid" element={<EIPs />} /> */}
+            </Routes>
+          </UserAuthContextProvider>
+        </Provider>
       </Suspense>
     </BrowserRouter>
   )

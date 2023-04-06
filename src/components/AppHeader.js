@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react'
+import Dropdown from 'react-multilevel-dropdown'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -13,15 +14,13 @@ import {
   CNavLink,
   CNavItem,
 } from '@coreui/react'
+import { cilBell, cilSpeedometer, cilStar, cilChart } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
+import { v4 as uuid } from 'uuid'
 import { AppBreadcrumb } from './index'
 import { ip } from 'src/constants'
 import logo from 'src/assets/logo3.gif'
 import logoAndroid from 'src/assets/logo3.gif'
-import leftIcon from 'src/assets/left.svg'
-import rightIcon from 'src/assets/right.svg'
-import midIcon from 'src/assets/mid.png'
 import discordIcon from 'src/assets/discord.svg'
 import githubIcon from 'src/assets/github.svg'
 import emailIcon from 'src/assets/email.png'
@@ -31,8 +30,63 @@ import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
 const AppHeaderDropdown = React.lazy(() => import('./header/AppHeaderDropdown'))
 
+const date = new Date()
+
 const AppHeader = (props) => {
+  //state defines
   const [changeIcon, setChangeIcon] = useState(0)
+  const [data, setData] = useState()
+  const [pastData, setPastData] = useState()
+  const [pastYears, setPastYears] = useState([])
+  const [routeDashboard, setRouteDashboard] = useState()
+  const [routesPastYears, setRoutesPastYears] = useState()
+
+  const yearref = useRef(null)
+  const monthref = useRef(null)
+
+  const resources = {
+    path: '/resources',
+    name: 'Resources',
+    icon: cilSpeedometer,
+    id: uuid(),
+    exact: true,
+    subRoutes: [
+      {
+        path: 'https://youtu.be/AyidVR6X6J8',
+        name: 'EIPs & Standardization Process',
+        focus: false,
+        id: uuid(),
+      },
+      {
+        path: 'https://medium.com/ethereum-cat-herders/shedding-light-on-the-ethereum-network-upgrade-process-4c6186ed442c',
+        name: 'Ethereum Network Upgrade Process',
+        focus: false,
+        id: uuid(),
+      },
+      {
+        path: 'https://youtu.be/fwxkbUaa92w',
+        name: 'EIP-20: Token Standard',
+        focus: false,
+        id: uuid(),
+      },
+    ],
+  }
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
   const {
     imageOpen,
     user,
@@ -98,11 +152,144 @@ const AppHeader = (props) => {
     }
   }
 
+  const fetchAllYears = (data) => {
+    let years = []
+    data.forEach((element) => {
+      if (element['created'] !== undefined) {
+        if (!years.includes(parseInt(element['created'].trim().substring(0, 4)))) {
+          years.push(parseInt(element.created.trim().substring(0, 4)))
+        }
+      }
+    })
+    return years
+  }
+
+  //years data
+  const fetchPastMonthData = async () => {
+    const response = await fetch(`${ip}/getAll`)
+    let data = await response.json()
+    data = Object.values(data[0])
+    data.shift()
+
+    setPastData(data)
+
+    // fetchAllYears
+    let allYears = fetchAllYears(data).sort()
+    allYears.shift()
+    allYears.shift()
+    allYears.reverse()
+
+    setPastYears(allYears)
+
+    //
+    let routes = []
+    let routes1 = []
+
+    const completeList = []
+    routes1.push({
+      path: '/',
+      name: 'Dashboard',
+      icon: cilSpeedometer,
+      id: uuid(),
+    })
+
+    // for app version
+    if (matches) {
+      completeList.push(
+        {
+          component: CNavItem,
+          name: 'Type',
+          to: '/typeAll',
+          icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+          // icon: <FontAwesomeIcon icon={faEnvelope} />,
+        },
+        {
+          component: CNavItem,
+          name: 'Status',
+          to: '/statusAll',
+          icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+          // icon: <FontAwesomeIcon icon={faEnvelope} />,
+        },
+      )
+    }
+
+    // currentMonth Data
+    const currentMonthsObjects = {}
+    currentMonthsObjects.path = `/${props.Year}`
+    currentMonthsObjects.name = props.Year
+    currentMonthsObjects.icon = cilChart
+    currentMonthsObjects.id = uuid()
+    currentMonthsObjects.exact = true
+    currentMonthsObjects.subRoutes = []
+
+    currentMonthsObjects.subRoutes.push({
+      path: `/${props.Month.toLowerCase()}-${props.Year}`,
+      name: `${props.Month}`,
+      focus: false,
+      id: uuid(),
+    })
+
+    let lastCurrentIndex = date.getMonth()
+
+    for (let i = lastCurrentIndex - 1; i >= 0; i--) {
+      currentMonthsObjects.subRoutes.push({
+        path: `/${months[i].toLowerCase()}-${props.Year}`,
+        name: `${months[i]}`,
+        focus: false,
+        id: uuid(),
+      })
+    }
+
+    routes.push(currentMonthsObjects)
+
+    // only years after 2018...we can change this later.
+    allYears = allYears.filter((ele) => {
+      return ele !== props.Year && !isNaN(ele) && ele >= 2018
+    })
+
+    // past years
+    for (let j = 0; j < allYears.length; j++) {
+      const objYear = {}
+
+      objYear.path = `/${allYears[j]}`
+      objYear.name = allYears[j]
+      objYear.icon = cilChart
+      objYear.id = uuid()
+      objYear.exact = true
+      objYear.subRoutes = []
+
+      for (let i = 11; i >= 0; i--) {
+        objYear.subRoutes.push({
+          path: `/${months[i].toLowerCase()}-${allYears[j]}`,
+          name: `${months[i]}`,
+          id: uuid(),
+        })
+      }
+
+      routes.push(objYear)
+    }
+
+    const _nav = completeList
+    setData(_nav)
+    setRouteDashboard(routes1)
+    setRoutesPastYears(routes)
+
+    if (!response.status === 200) {
+      const error = new Error(response.error)
+      throw error
+    }
+  }
+
   useEffect(() => {
     fetchAllData()
+    fetchPastMonthData()
   }, [])
 
   const navigate = useNavigate()
+
+  function location(path) {
+    window.location.href = `${path}`
+  }
 
   return (
     <CHeader
@@ -137,6 +324,7 @@ const AppHeader = (props) => {
             style={{ width: '8rem', height : '4rem' }}
           />
         </CHeaderBrand>
+
         <CHeaderNav className="d-none d-md-flex m-auto items-center">
           <CNavItem
             className={`navbar-items ${
@@ -170,7 +358,7 @@ const AppHeader = (props) => {
               click1 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <CNavLink style={{ padding: '0px' }} to="/typeAll" component={NavLink}>
+            <CNavLink to="/typeAll" component={NavLink}>
               Type
               {/* {totalEIPs()} */}
             </CNavLink>
@@ -180,7 +368,7 @@ const AppHeader = (props) => {
               click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
             }`}
           >
-            <CNavLink style={{ padding: '0px' }} to="/statusAll" component={NavLink}>
+            <CNavLink to="/statusAll" component={NavLink}>
               Status
               {/* {totalEIPs()} */}
             </CNavLink>
@@ -192,27 +380,78 @@ const AppHeader = (props) => {
                 : ''
             }`}
           >
-            <Link
-              to={`/${props.Month.toLowerCase()}-${props.Year}`}
-              state={{
-                from: `/october`,
-                year: 2022,
-              }}
-            >
-              <CNavLink style={{ padding: '0px' }} href="/Insight">
-                Insight{' '}
-                <label className="relative cursor-pointer">
-                  <div
-                    className=" h-7
+            <div style={{ position: 'relative' }}>
+              <div className="dropdown-container">
+                <Dropdown
+                  style={{
+                    opacity: '0',
+                    padding: '10px',
+                    margin: '0px',
+                  }}
+                  className="navbar-items"
+                  position="right"
+                  buttonVariant="tertiary"
+                  title={`Dropdownsection`}
+                >
+                  {routesPastYears === undefined
+                    ? ''
+                    : routesPastYears.map((route) => {
+                        return (
+                          <Dropdown.Item key={route.id}>
+                            {route.name}
+                            <Dropdown.Submenu position="right">
+                              {route.subRoutes.map((subRoute) => {
+                                return (
+                                  <Link key={subRoute.id} to={subRoute.path}>
+                                    <Dropdown.Item>{subRoute.name}</Dropdown.Item>
+                                  </Link>
+                                )
+                              })}
+                            </Dropdown.Submenu>
+                          </Dropdown.Item>
+                        )
+                      })}
+                </Dropdown>
+              </div>
+              <div>
+                <CNavLink href="/">
+                  Insight{' '}
+                  <label className="relative cursor-pointer">
+                    <div
+                      className=" h-7
             shadow-md font-extrabold rounded-[0.3rem] bg-[#e7f5ff] text-[#1c7ed6] text-[12px] inline-block p-[4px] drop-shadow-sm cursor-pointer"
-                  >
-                    {props.Month} <label className="text-[10px] cursor-pointer">{props.Year}</label>
-                  </div>
-                  <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
-                  <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>
-                </label>
-              </CNavLink>
-            </Link>
+                    >
+                      {props.Month}{' '}
+                      <label className="text-[10px] cursor-pointer">{props.Year}</label>
+                    </div>
+                    <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0] animate-ping"></div>
+                    <div className="absolute top-0 right-0 -mr-1 -mt-0 w-2 h-2 rounded-full bg-[#339af0]"></div>
+                  </label>
+                </CNavLink>
+              </div>
+            </div>
+          </CNavItem>
+          <CNavItem
+            className={`${click2 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''}`}
+          >
+            <CNavLink to="/" component={NavLink}>
+              <Dropdown
+                style={{ color: '#2c384aae' }}
+                className="navbar-items"
+                position="right"
+                buttonVariant="tertiary"
+                title={`Resources`}
+              >
+                {resources.subRoutes.map((resource) => {
+                  const link = resource.path
+                  return (
+                    <a key={resource.id} href={resource.path}>
+                      <Dropdown.Item onClick={() => location(link)}>{resource.name}</Dropdown.Item>
+                    </a>
+                  )
+                })}
+              </Dropdown>
+            </CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>

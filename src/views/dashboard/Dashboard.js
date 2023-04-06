@@ -12,10 +12,15 @@ import { Column, Pie, G2, Line } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 
+import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
+
 import Loading from '../theme/loading/loading'
 import { defaults } from 'chart.js'
 
-const Dashboard = () => {
+const Dashboard = ({ getAllData }) => {
+  const dispatch = useDispatch()
+
   const [data, setData] = useState()
   const [duplicateData, setDuplicateData] = useState()
   const [date, setDate] = useState()
@@ -67,6 +72,10 @@ const Dashboard = () => {
   const fetchAllData = async (ignore) => {
     const data = await fetch(API4)
     const post = await data.json()
+    console.log("data sent")
+    console.log(post)
+
+    dispatch({ type: 'FETCH_GETALL_SUCCESS', payload: post })
 
     if (!ignore) {
       let arr = Object.values(post[0])
@@ -913,60 +922,60 @@ const Dashboard = () => {
     radius: 0.75,
     legend: matches1
       ? {
-          layout: 'vertical',
-          position: 'right',
-        }
+        layout: 'vertical',
+        position: 'right',
+      }
       : false,
     color: ['#3bc9db', '#20c997', '#69db7c', '#339af0', '#fcc419', '#ffc078', '#ff6b6b'],
     label: matches1
       ? {
-          type: 'inner',
-          offset: '-30%',
-          content: (data) => `${data.value}`,
-          style: {
-            fontSize: 8,
-            textAlign: 'center',
-            fontWeight: 'bold',
-          },
-        }
-      : {
-          type: 'spider',
-          labelHeight: 40,
-          formatter: (data, mappingData) => {
-            const group = new G.Group({})
-            group.addShape({
-              type: 'circle',
-              attrs: {
-                x: 0,
-                y: 0,
-                width: 40,
-                height: 50,
-                r: 5,
-                fill: mappingData.color,
-              },
-            })
-            group.addShape({
-              type: 'text',
-              attrs: {
-                x: 10,
-                y: 8,
-                text: `${data.type}`,
-                fill: mappingData.color,
-              },
-            })
-            group.addShape({
-              type: 'text',
-              attrs: {
-                x: 0,
-                y: 25,
-                text: `${data.value}`,
-                fill: 'rgba(0, 0, 0, 0.65)',
-                fontWeight: 700,
-              },
-            })
-            return group
-          },
+        type: 'inner',
+        offset: '-30%',
+        content: (data) => `${data.value}`,
+        style: {
+          fontSize: 8,
+          textAlign: 'center',
+          fontWeight: 'bold',
         },
+      }
+      : {
+        type: 'spider',
+        labelHeight: 40,
+        formatter: (data, mappingData) => {
+          const group = new G.Group({})
+          group.addShape({
+            type: 'circle',
+            attrs: {
+              x: 0,
+              y: 0,
+              width: 40,
+              height: 50,
+              r: 5,
+              fill: mappingData.color,
+            },
+          })
+          group.addShape({
+            type: 'text',
+            attrs: {
+              x: 10,
+              y: 8,
+              text: `${data.type}`,
+              fill: mappingData.color,
+            },
+          })
+          group.addShape({
+            type: 'text',
+            attrs: {
+              x: 0,
+              y: 25,
+              text: `${data.value}`,
+              fill: 'rgba(0, 0, 0, 0.65)',
+              fontWeight: 700,
+            },
+          })
+          return group
+        },
+      },
     interactions: [
       {
         type: 'element-selected',
@@ -1065,14 +1074,16 @@ const Dashboard = () => {
     // fetchData()
     let ignore = false
     fetchDate(ignore)
+
     fetchAllData(ignore)
     fetchAllEIps()
-
     return () => {
       ignore = true
     }
   }, [])
 
+  //redux test
+  console.log(getAllData)
   // temparary
 
   const [insight, setInsight] = useState(1)
@@ -1144,7 +1155,7 @@ const Dashboard = () => {
                     columnSorter
                     itemsPerPage={7}
                     pagination
-                    onRowClick={(t) => {}}
+                    onRowClick={(t) => { }}
                     scopedColumns={{
                       id: (item) => (
                         <td>
@@ -1241,13 +1252,12 @@ const Dashboard = () => {
                                 >
                                   <a
                                     key={index}
-                                    href={`${
-                                      item[item.length - 1].substring(
-                                        item[item.length - 1].length - 1,
-                                      ) === '>'
+                                    href={`${item[item.length - 1].substring(
+                                      item[item.length - 1].length - 1,
+                                    ) === '>'
                                         ? 'mailto:' + t
                                         : 'https://github.com/' + t.substring(1)
-                                    }`}
+                                      }`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="hoverAuthor text-[10px]"
@@ -1311,9 +1321,8 @@ const Dashboard = () => {
                       'PR No.': (item) => (
                         <td>
                           <a
-                            href={`https://github.com/ethereum/EIPs/pull/${
-                              item['PR No.'] === 0 ? item.Number : item['PR No.']
-                            }`}
+                            href={`https://github.com/ethereum/EIPs/pull/${item['PR No.'] === 0 ? item.Number : item['PR No.']
+                              }`}
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -1635,4 +1644,13 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+
+const mapStateToProps = state => {
+  return {
+    getAllData: state.getAll
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(Dashboard)

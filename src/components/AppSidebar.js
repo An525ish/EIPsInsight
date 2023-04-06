@@ -8,41 +8,25 @@ import SidebarMenu from './SidebarMenu'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { ip } from 'src/constants'
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
+import { CSidebar, CSidebarBrand, CSidebarNav } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-
-import { AppSidebarNav } from './AppSidebarNav'
 
 import { sygnet } from 'src/assets/brand/sygnet'
 import eiplogo from '../assets/logo3.gif'
 
-import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 import './AppSidebar.css'
 
 import {
   cilBell,
-  cilCalculator,
-  cilChartPie,
-  cilCursor,
-  cilDrop,
-  cilNotes,
-  cilPencil,
-  cilPuzzle,
   cilSpeedometer,
-  cisSpeedometer,
-  cidSpeedometer,
   cilStar,
   cilChart,
-  cilExpandLeft,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { CNavItem} from '@coreui/react'
 import { Link, NavLink, useParams } from 'react-router-dom'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
-import { object } from 'prop-types'
 import SidebarMenuYear from './sideBarMenuYear'
 import { v4 as uuid } from 'uuid'
 
@@ -433,65 +417,7 @@ const AppSidebar = (props) => {
                 })}
           </section>
         </motion.div>
-
-        <motion.div>
-          <section className="flex flex-col gap-[6px]">
-            {routesPastYears === undefined
-              ? ''
-              : routesPastYears.map((route, index) => {
-                  if (route.subRoutes) {
-                    return (
-                      <SidebarMenuYear
-                        setIsOpen={setIsOpen}
-                        route={route}
-                        showAnimation={showAnimation}
-                        isOpen={isOpen}
-                        allRoutes={routesPastYears}
-                      />
-                    )
-                  }
-
-                  return (
-                    <motion.div
-                      key={index}
-                      className={`flex p-2 pl-4 items-center w-full ${
-                        param['*'] !== '' ? ' hover:text-[black]' : ' '
-                      } rounded-[13px] cursor-pointer `}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setMainOpen(true)}
-                    >
-                      <CIcon
-                        icon={cilSpeedometer}
-                        style={{ color: `${param['*'] === '' ? '#000000' : '#adb5bd'}` }}
-                        customClassName="nav-icon"
-                      />
-                      <NavLink to={route.path} key={index} activeClassName="active">
-                        <AnimatePresence>
-                          (
-                          <motion.div
-                            variants={showAnimation}
-                            initial="hidden"
-                            animate="show"
-                            exit="hidden"
-                            className={`text-[17px] ${
-                              param['*'] === '' ? 'text-[#000000]' : 'text-[#adb5bd]'
-                            }  pr-16`}
-                          >
-                            {route.name}
-                          </motion.div>
-                          )
-                        </AnimatePresence>
-                      </NavLink>
-                    </motion.div>
-                  )
-                })}
-          </section>
-        </motion.div>
       </CSidebarNav>
-      {/* <CSidebarToggler
-        className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-      /> */}
     </CSidebar>
   )
 }
