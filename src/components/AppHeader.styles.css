@@ -40,13 +40,13 @@
   transform: translateY(-5px) scale(0.7);
 }
 
-.nav-social{
+.nav-social, .backbtn{
   width: 28px;
   height: 28px;
   transition: all 0.1s linear;
 }
 
-.nav-social:hover{
+.nav-social:hover, .backbtn:hover{
   transform: scale(1.2);
 }
 

@@ -448,7 +448,7 @@ function typeAll() {
       {loading ? (
         <div>
           <div className="flex justify-center items-center">
-            {/* <div
+            <div
               style={{
                 fontSize: '3rem',
                 marginBottom: '00px',
@@ -496,10 +496,10 @@ function typeAll() {
                   </div>
                 </Link>
               </label>
-            </div> */}
+            </div>
           </div>
           <Link
-            to="/chartTable"
+            to="/StandardsTrack"
             style={{ textDecoration: 'none', color: 'inherit' }}
             state={{
               type: 'Standards Track',
@@ -588,7 +588,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Standard-Core"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -622,7 +622,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Standard-ERC"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -656,7 +656,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Standard-Networking"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -691,7 +691,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Standard-Interface"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -726,7 +726,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Meta"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -758,7 +758,7 @@ function typeAll() {
                       <CTableRow>
                         <CTableDataCell>
                           <Link
-                            to="/chartTable"
+                            to="/Informational"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                             state={{
                               type: 'Standards Track',
@@ -863,7 +863,7 @@ function typeAll() {
                 }}
               >
                 <Link
-                  to="/chartTable"
+                  to="/Meta"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: 'Meta',
@@ -893,7 +893,7 @@ function typeAll() {
                 }}
               >
                 <Link
-                  to="/chartTable"
+                  to="/Informational"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   state={{
                     type: 'Informational',

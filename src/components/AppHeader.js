@@ -19,11 +19,12 @@ import CIcon from '@coreui/icons-react'
 import { v4 as uuid } from 'uuid'
 import { AppBreadcrumb } from './index'
 import { ip } from 'src/constants'
-import logo from 'src/assets/logo2.gif'
+import logo from 'src/assets/logo3.gif'
 import logoAndroid from 'src/assets/logo3.gif'
 import discordIcon from 'src/assets/discord.svg'
 import githubIcon from 'src/assets/github.svg'
 import emailIcon from 'src/assets/email.png'
+import backbtn from 'src/assets/back-btn.png'
 import './AppHeader.styles.css'
 import { useUserAuth } from 'src/Context/AuthContext'
 import useMediaQuery from 'src/scss/useMediaQuery'
@@ -301,6 +302,7 @@ const AppHeader = (props) => {
             dispatch({ type: 'set', sidebarShow: !sidebarShow })
             changeIconSet()
           }}
+          className="md:hidden"
         >
           <svg
             className="svg-file"
@@ -314,16 +316,21 @@ const AppHeader = (props) => {
             )}
           </svg>
         </CHeaderToggler>
-        <CHeaderBrand className="mx-auto d-md-none">
+        <CHeaderBrand className="">
           <img
             src={matches ? logoAndroid : logo}
-            height={48}
+            // height={48}
             alt="Logo"
-            style={{ width: '87px', height: '100%' }}
+            style={{ width: '8rem', height : '4rem' }}
           />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem className={`navbar-items`}>
+
+        <CHeaderNav className="d-none d-md-flex m-auto items-center">
+          <CNavItem
+            className={`navbar-items ${
+              click4 ? 'border-b-[4px] border-b-[#1c7ed6] rounded-b-[4px]' : ''
+            }`}
+          >
             <Link
               to="/EIPS"
               style={{ textDecoration: 'none', color: 'inherit' }}
@@ -513,7 +520,7 @@ const AppHeader = (props) => {
           ''
         ) : (
           <div className="flex justify-center items-center">
-            <div
+            {/* <div
               style={{
                 width: 0,
                 height: 0,
@@ -522,7 +529,7 @@ const AppHeader = (props) => {
                 borderBottom: '20px solid #339af0',
               }}
               className="rotate-[270deg]"
-            ></div>
+            ></div> */}
             <div
               style={{
                 zIndex: '999',
@@ -534,7 +541,9 @@ const AppHeader = (props) => {
               className="cursor-pointer px-3 py-2 flex justify-center items-center animateButton rounded-[0.4rem]"
               onClick={() => navigate(-1)}
             >
-              <div className=""> back</div>
+              <div className=""> 
+              <img className="backbtn" loading="lazy" src={backbtn} alt="Back Icon" />
+              </div>
             </div>
           </div>
         )}

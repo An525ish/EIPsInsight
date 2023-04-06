@@ -169,7 +169,38 @@ const routes = [
   { path: '/advertise', name: 'Advertise', element: advertise },
   { path: '/payment', name: 'Payment', element: payment },
 
+  { path: '/living', name: 'Living', element: table },
+  { path: '/final', name: 'Final', element: table },
+  { path: '/lastcall', name: 'Last Call', element: table },
+  { path: '/Last%20Call', name: 'Last Call', element: table },
+  { path: '/review', name: 'Review', element: table },
+  { path: '/draft', name: 'Draft', element: table },
+  { path: '/stagnant', name: 'Stagnant', element: table },
+  { path: '/withdrawn', name: 'Withdrawn', element: table },
+
+
+  { path: '/StandardsTrack', name: 'Standard Track', element: table },
+  { path: '/Meta', name: 'Meta', element: table },
+  { path: '/Informational', name: 'Informational', element: table },
+
+  { path: '/Standard-Core', name: 'Standard - Core', element: table },
+  { path: '/Standard-ERC', name: 'Standard - ERC', element: table },
+  { path: '/Standard-Networking', name: 'Standard - Networking', element: table },
+  { path: '/Standard-Interface', name: 'Standard - Interface', element: table },
+  // { path: '/Standard-Core', name: 'Standard - Core', element: table },
+  // { path: '/Standard-Core', name: 'Standard - Core', element: table },
+
   { path: '/ChartTable', name: 'Chart Table', element: table },
+
+  { path: '/current-Living', name: 'Living', element: currentTable },
+  { path: '/current-Final', name: 'Final', element: currentTable },
+  { path: '/current-Last_Call', name: 'Last Call', element: currentTable },
+  { path: '/current-Review', name: 'Review', element: currentTable },
+  { path: '/current-Draft', name: 'Draft', element: currentTable },
+  { path: '/current-Stagnant', name: 'Stagnant', element: currentTable },
+  { path: '/current-Withdrawn', name: 'Withdrawn', element: currentTable },
+
+
   { path: '/currentMonthTable', name: 'Current Month Table', element: currentTable },
   { path: '/EIP-:id', name: 'EIPs', element: EIPs },
   { path: '/EIPS', name: 'EIPs', element: AllEIPs },
