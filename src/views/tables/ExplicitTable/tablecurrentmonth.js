@@ -150,11 +150,11 @@ function tableCurrent() {
                 color: `${getBadgeColor(status)}`,
               },
             },
-            {
-              key: 'PR No.',
+            // {
+            //   key: 'PR No.',
 
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
-            },
+            //   _style: { width: '5%', color: `${getBadgeColor(status)}` },
+            // },
           ]
         : [
             {
@@ -206,14 +206,14 @@ function tableCurrent() {
               key: 'status',
               _style: { width: '5%', color: `${getBadgeColor(status)}` },
             },
-            {
-              key: 'PR No.',
+            // {
+            //   key: 'PR No.',
 
-              _style: {
-                width: '5%',
-                color: `${getBadgeColor(status)}`,
-              },
-            },
+            //   _style: {
+            //     width: '5%',
+            //     color: `${getBadgeColor(status)}`,
+            //   },
+            // },
           ]
 
     return columns
