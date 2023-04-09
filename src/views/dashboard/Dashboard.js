@@ -697,7 +697,7 @@ const Dashboard = ({ getAllData }) => {
     { key: 'Type', _style: { width: '10%', color: '#1c7ed6' } },
     { key: 'Category', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
     { key: 'status', _style: { width: '10%', color: '#1c7ed6' } },
-    { key: 'PR No.', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
+    // { key: 'PR No.', _style: { width: '10%', color: '#1c7ed6', backgroundColor: '#e7f5ff' } },
   ]
 
   const getBadge = (status) => {
