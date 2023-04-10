@@ -110,6 +110,8 @@ const AppHeader = (props) => {
 
   const [eips, setEips] = useState([])
   const [par, isPar] = useState()
+  const [data2, setData2] = useState([]);
+
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -143,6 +145,15 @@ const AppHeader = (props) => {
       setEips(factorOutDuplicate(Object.values(post[0])))
     }
   }
+
+  const asyncFetch = () => {
+    fetch('https://eipsinsight.com/api/overallData')
+      .then((response) => response.json())
+      .then((json) => setData2(json))
+      .catch((error) => {
+        console.log('fetch data failed', error);
+      });
+  };
 
   const changeIconSet = () => {
     if (!sidebarShow) {
@@ -283,6 +294,8 @@ const AppHeader = (props) => {
   useEffect(() => {
     fetchAllData()
     fetchPastMonthData()
+    asyncFetch()
+
   }, [])
 
   const navigate = useNavigate()
@@ -347,7 +360,8 @@ const AppHeader = (props) => {
                   </div>
                   <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2 h-2"></div>
                   <div className="absolute top-0 right-0 -mr-0 -mt-1   w-2 h-2 text-[10px] text-[#1c7ed6] font-extrabold">
-                    {eips.length}
+                    {/* {eips.length-1} */}
+                    {data2.Standard_Track + data2.Meta + data2.Informational}
                   </div>
                 </label>
               </CNavLink>

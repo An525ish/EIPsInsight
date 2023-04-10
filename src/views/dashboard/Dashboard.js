@@ -34,6 +34,8 @@ const Dashboard = ({ getAllData }) => {
 
   const [eips, setEips] = useState([])
   const [eip, setEip] = useState()
+  const [data2, setData2] = useState([]);
+
 
   const API2 = `${ip}/allInfo`
   const fetchAllEIps = async (ignore) => {
@@ -44,6 +46,15 @@ const Dashboard = ({ getAllData }) => {
       setEip(post)
     }
   }
+
+  const asyncFetch = () => {
+    fetch('https://eipsinsight.com/api/overallData')
+      .then((response) => response.json())
+      .then((json) => setData2(json))
+      .catch((error) => {
+        console.log('fetch data failed', error);
+      });
+  };
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -228,6 +239,7 @@ const Dashboard = ({ getAllData }) => {
         },
       )
     }
+    arr = arr.sort((a, b) => parseInt(b.year) - parseInt(a.year))
     // arr.reverse()
     return arr
   }
@@ -371,7 +383,41 @@ const Dashboard = ({ getAllData }) => {
       type: 'Informational',
     },
   ]
-  each(groupBy(d1, 'year'), (values, k) => {
+
+  const d2 = [
+    {
+      year: 'Standard Track',
+      value: data2.Core,
+      type: 'Core',
+    },
+    {
+      year: 'Standard Track',
+      value: data2.ERC,
+      type: 'ERC',
+    },
+    {
+      year: 'Standard Track',
+      value: data2.Networking,
+      type: 'Networking',
+    },
+    {
+      year: 'Standard Track',
+      value: data2.Interface,
+      type: 'Interface',
+    },
+    {
+      year: 'Meta',
+      value: data2.Meta,
+      type: 'Meta',
+    },
+    {
+      year: 'Informational',
+      value: data2.Informational,
+      type: 'Informational',
+    },
+  ]
+
+  each(groupBy(d2, 'year'), (values, k) => {
     const value = values.reduce((a, b) => a + b.value, 0)
 
     annotations.push({
@@ -406,7 +452,7 @@ const Dashboard = ({ getAllData }) => {
     return annotations
   }
   const config = {
-    data: d1,
+    data: d2,
     color: TypeColors,
     isStack: true,
     xField: 'year',
@@ -415,6 +461,7 @@ const Dashboard = ({ getAllData }) => {
     label: false,
 
     annotations,
+
   }
 
   function StandardsTrackDataCollection(statusNum, allMonths, i, type) {
@@ -549,7 +596,20 @@ const Dashboard = ({ getAllData }) => {
       )
     }
 
+    arr = arr.sort((a, b) => {
+      const [aMonth, aYear] = a.year.split(' ');
+          const [bMonth, bYear] = b.year.split(' ');
+          if (aYear === bYear) {
+            return getMonthIndex(bMonth) - getMonthIndex(aMonth);
+          }
+          return parseInt(bYear) - parseInt(aYear);
+        });
     return arr
+  }
+
+  const getMonthIndex = (monthName) => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthNames.indexOf(monthName);
   }
 
   const monthlyStatusConfig = (name, data) => {
@@ -593,6 +653,7 @@ const Dashboard = ({ getAllData }) => {
     yField: 'value',
     seriesField: 'type',
     label: false,
+    // sorter: (a, b) => parseInt(b.year) - parseInt(a.year),
 
     annotations: fetchAnnotations(fetchArrayYearWise('Draft')),
   }
@@ -870,6 +931,7 @@ const Dashboard = ({ getAllData }) => {
       Withdrawn: allData[12].total,
     }
 
+    console.log(AllData)
     return (
       <CCardHeader
         className="cardHeader flex tracking-wider text-[1.3rem] font-bold "
@@ -885,8 +947,9 @@ const Dashboard = ({ getAllData }) => {
         {text === 'Last_Call' ? 'Last Call' : text}
         {text === 'EIPs Type & Categories' || text === 'EIPs Status' || text === 'Search an EIP' ? (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
-            {/* {AllData.length} */}
-            {allData[0].total + allData[1].total + allData[2].total + allData[3].total + allData[4].total + allData[5].total}
+            {/* {AllData.length -1} */}
+            {/* {allData[0].total + allData[1].total + allData[2].total + allData[3].total + allData[4].total + allData[5].total} */}
+            {data2.Standard_Track + data2.Meta + data2.Informational}
           </div>
         ) : (
           <div className="ml-2 bg-white rounded-[0.7rem] text-[1rem] flex justify-center items-center px-2 ">
@@ -1074,16 +1137,17 @@ const Dashboard = ({ getAllData }) => {
     // fetchData()
     let ignore = false
     fetchDate(ignore)
-
     fetchAllData(ignore)
     fetchAllEIps()
+    asyncFetch()
+
     return () => {
       ignore = true
     }
   }, [])
 
   //redux test
-  console.log(getAllData)
+  // console.log(getAllData)
   // temparary
 
   const [insight, setInsight] = useState(1)
