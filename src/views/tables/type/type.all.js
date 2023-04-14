@@ -35,6 +35,7 @@ function typeAll() {
   const matches = useMediaQuery('(max-width: 767px)')
 
   const [eip, setEip] = useState()
+  const [data2, setData2] = useState([]);
 
   const API2 = `${ip}/allInfo`
   const fetchAllEIps = async (ignore) => {
@@ -46,6 +47,15 @@ function typeAll() {
       setEip(post)
     }
   }
+
+  const asyncFetch = () => {
+    fetch('https://eipsinsight.com/api/overallData')
+      .then((response) => response.json())
+      .then((json) => setData2(json))
+      .catch((error) => {
+        console.log('fetch data failed', error);
+      });
+  };
 
   const factorOutDuplicate = (data) => {
     data.shift()
@@ -233,6 +243,7 @@ function typeAll() {
     fetchDate()
     fetchAllData()
     fetchAllEIps()
+    asyncFetch()
   }, [])
 
   function renderStatistic(containerWidth, text, style) {
@@ -351,12 +362,36 @@ function typeAll() {
     )
     return arr
   }
+
+  const d2 = [
+    {
+      value: data2.Core,
+      type: 'Core',
+    },
+    {
+      value: data2.ERC,
+      type: 'ERC',
+    },
+    {
+      value: data2.Networking,
+      type: 'Networking',
+    },
+    {
+      value: data2.Interface,
+      type: 'Interface',
+    },
+  ]
+
   const getChartInfo = (post, name) => {
     const config = {
       appendPadding: 10,
+      // data:
+      //   name === 'Standard_Track'
+      //     ? fetchChartDataStandardTrack(post.length === 0 ? [] : post)
+      //     : fetchChartData(post === undefined ? [] : post, name),
       data:
         name === 'Standard_Track'
-          ? fetchChartDataStandardTrack(post.length === 0 ? [] : post)
+          ? d2
           : fetchChartData(post === undefined ? [] : post, name),
       color: name === 'Standard_Track' ? TypeColors : StatusColors,
       angleField: 'value',
@@ -441,7 +476,7 @@ function typeAll() {
     return total
   }
 
-  console.log(eip)
+  console.log(allData)
 
   return (
     <>
@@ -487,12 +522,14 @@ function typeAll() {
                       fontFamily: 'Big Shoulders Display',
                     }}
                   >
-                    {allData[0].total +
+                    {/* {allData[0].total +
                       allData[1].total +
                       allData[2].total +
                       allData[3].total +
                       allData[4].total +
-                      allData[5].total}
+                      allData[5].total} */}
+                    {data2.Standard_Track + data2.Meta + data2.Informational}
+
                   </div>
                 </Link>
               </label>
@@ -529,7 +566,9 @@ function typeAll() {
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                   style={{ fontFamily: 'Big Shoulders Display' }}
                 >
-                  {allData[0].total + allData[1].total + allData[2].total + allData[3].total}
+                  {/* {allData[0].total + allData[1].total + allData[2].total + allData[3].total} */}
+                  {data2.Standard_Track}
+
                 </div>
               </label>
             </div>
@@ -879,7 +918,8 @@ function typeAll() {
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] text-[1.5rem] inline-block p-[4px] px-3 drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
-                    {allData[4].total}
+                    {/* {allData[4].total} */}
+                    {data2.Meta}
                   </div>
                 </Link>
               </label>
@@ -909,7 +949,8 @@ function typeAll() {
             shadow-md font-extrabold rounded-[8px] bg-[#e7f5ff] text-[#1c7ed6] px-3 text-[1.5rem] inline-block p-[4px] drop-shadow-sm cursor-pointer transition duration-700 ease-in-out tracking-wider ml-2'
                     style={{ fontFamily: 'Big Shoulders Display' }}
                   >
-                    {allData[5].total}
+                    {/* {allData[5].total} */}
+                    { data2.Informational }
                   </div>
                 </Link>
               </label>

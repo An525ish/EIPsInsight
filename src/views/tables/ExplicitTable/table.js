@@ -295,6 +295,8 @@ function table() {
     }
     return 'N/A'
   }
+
+  console.log(data)
   const eipData = (data) => {
     let arr = []
 
