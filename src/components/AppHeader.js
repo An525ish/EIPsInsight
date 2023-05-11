@@ -330,12 +330,14 @@ const AppHeader = (props) => {
           </svg>
         </CHeaderToggler>
         <CHeaderBrand className="">
+          <Link to="/">
           <img
             src={matches ? logoAndroid : logo}
             // height={48}
             alt="Logo"
             style={{ width: '8rem', height : '4rem' }}
           />
+          </Link>
         </CHeaderBrand>
 
         <CHeaderNav className="d-none d-md-flex m-auto items-center">

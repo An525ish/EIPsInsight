@@ -8,7 +8,7 @@ import { CBadge, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CRow } from '
 import { Link, useParams } from 'react-router-dom'
 import { ip, TypeColors } from 'src/constants'
 import useMediaQuery from 'src/scss/useMediaQuery'
-import { Column, Pie, G2, Line } from '@ant-design/plots'
+import { Column, Pie, G2, Line, Area, Sunburst } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
 import './Dashboard.css'
 
@@ -239,7 +239,7 @@ const Dashboard = ({ getAllData }) => {
         },
       )
     }
-    arr = arr.sort((a, b) => parseInt(b.year) - parseInt(a.year))
+    arr = arr.sort((a, b) => parseInt(a.year) - parseInt(b.year))
     // arr.reverse()
     return arr
   }
@@ -249,14 +249,14 @@ const Dashboard = ({ getAllData }) => {
     let arr = []
     // Types
     let coreData = data.filter(
-      (item) => item.category === 'Core' && item.type === 'Standards Track',
+      (item) => item.category === 'Core' && (item.type === 'Standards Track' || item.type === 'Standard Track' || item.type === 'Standard'),
     )
-    let ercData = data.filter((item) => item.category === 'ERC' && item.type === 'Standards Track')
+    let ercData = data.filter((item) => item.category === 'ERC' && (item.type === 'Standards Track' || item.type === 'Standard Track' || item.type === 'Standard'))
     let networkingData = data.filter(
-      (item) => item.category === 'Networking' && item.type === 'Standards Track',
+      (item) => item.category === 'Networking' && (item.type === 'Standards Track' || item.type === 'Standard Track' || item.type === 'Standard'),
     )
     let interfaceData = data.filter(
-      (item) => item.category === 'Interface' && item.type === 'Standards Track',
+      (item) => item.category === 'Interface' && (item.type === 'Standards Track' || item.type === 'Standard Track' || item.type === 'Standard'),
     )
     let metaData = data.filter((item) => item.type === 'Meta')
     let informationalData = data.filter((item) => item.type === 'Informational')
@@ -429,7 +429,7 @@ const Dashboard = ({ getAllData }) => {
         fontSize: 12,
         fill: 'rgba(0,0,0,0.4)',
       },
-      offsetY: -10,
+      offsetY: -5,
     })
   })
   const fetchAnnotations = (d) => {
@@ -454,11 +454,12 @@ const Dashboard = ({ getAllData }) => {
   const config = {
     data: d2,
     color: TypeColors,
+    // theme : 'dark',
     isStack: true,
     xField: 'year',
     yField: 'value',
     seriesField: 'type',
-    label: false,
+    label: true,
 
     annotations,
 
@@ -535,6 +536,7 @@ const Dashboard = ({ getAllData }) => {
     //
 
     const allMonths = [...new Set(AllMonthsGetAllAPI())]
+    // console.log(allMonths)
 
     // allMonths.reverse()
 
@@ -602,7 +604,7 @@ const Dashboard = ({ getAllData }) => {
           if (aYear === bYear) {
             return getMonthIndex(bMonth) - getMonthIndex(aMonth);
           }
-          return parseInt(bYear) - parseInt(aYear);
+          return parseInt(aYear) - parseInt(bYear);
         });
     return arr
   }
@@ -618,6 +620,7 @@ const Dashboard = ({ getAllData }) => {
       xField: 'year',
       yField: 'gdp',
       seriesField: 'name',
+      // theme: 'dark',
       color: TypeColors,
       // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
       yAxis: {
@@ -1164,10 +1167,10 @@ const Dashboard = ({ getAllData }) => {
                   style={{
                     // backgroundColor: '#fff9db',
                     height: '300px',
-                    // backgroundImage: `url(${github})`,
-                    // backgroundSize: '33% 30%',
+                    // backgroundImage: `url(https://plus.unsplash.com/premium_photo-1664478157873-50d4963c1d11?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2069&q=80)`,
+                    // backgroundSize: 'cover',
                     // backgroundRepeat: 'no-repeat',
-                    // backgroundPosition: 'right -12px bottom -40px',
+                    // backgroundPosition: 'center',
                   }}
                 >
                   <Column {...config} />
@@ -1484,7 +1487,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Living', data)} />
+                    <Area {...monthlyStatusConfig('Living', data)} />
                   </CCardBody>
                   {footer(date, 'Living')}
                 </CCard>
@@ -1516,7 +1519,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Final', data)} />
+                    <Area {...monthlyStatusConfig('Final', data)} />
                   </CCardBody>
                   {footer(date, 'Final')}
                 </CCard>
@@ -1549,7 +1552,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Last Call', data)} />
+                    <Area {...monthlyStatusConfig('Last Call', data)} />
                   </CCardBody>
                   {footer(date, 'Last_Call')}
                 </CCard>
@@ -1582,7 +1585,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Review', data)} />
+                    <Area {...monthlyStatusConfig('Review', data)} />
                   </CCardBody>
                   {footer(date, 'Review')}
                 </CCard>
@@ -1615,7 +1618,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Draft', data)} />
+                    <Area {...monthlyStatusConfig('Draft', data)} />
                   </CCardBody>
                   {footer(date, 'Draft')}
                 </CCard>
@@ -1648,7 +1651,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Stagnant', data)} />
+                    <Area {...monthlyStatusConfig('Stagnant', data)} />
                   </CCardBody>
                   {footer(date, 'Stagnant')}
                 </CCard>
@@ -1681,7 +1684,7 @@ const Dashboard = ({ getAllData }) => {
                       // backgroundPosition: 'right -12px bottom -40px',
                     }}
                   >
-                    <Line {...monthlyStatusConfig('Withdrawn', data)} />
+                    <Area {...monthlyStatusConfig('Withdrawn', data)} />
                   </CCardBody>
                   {footer(date, 'Withdrawn')}
                 </CCard>

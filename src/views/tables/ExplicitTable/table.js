@@ -34,7 +34,7 @@ function table() {
             {
               key: 'Number',
               _style: {
-                width: '5%',
+                width: '9%',
                 color: `${getBadgeColor(status)}`,
               },
               _props: { className: 'fw-semibold' },
@@ -58,12 +58,12 @@ function table() {
             {
               key: 'Draft Date',
               _style: {
-                width: '10%',
+                width: '11%',
                 color: `${getBadgeColor(status)}`,
               },
             },
 
-            { key: 'Type', _style: { width: '10%', color: `${getBadgeColor(status)}` } },
+            { key: 'Type', _style: { width: '8%', color: `${getBadgeColor(status)}` } },
             {
               key: 'Category',
               _style: {
@@ -78,7 +78,7 @@ function table() {
             {
               key: 'status',
               _style: {
-                width: '5%',
+                width: '12%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -99,7 +99,7 @@ function table() {
             {
               key: 'Number',
               _style: {
-                width: '5%',
+                width: '8%',
                 color: `${getBadgeColor(status)}`,
               },
               _props: { className: 'fw-semibold' },
@@ -108,7 +108,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '30%',
+                width: '25%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -138,13 +138,13 @@ function table() {
             {
               key: 'Category',
               _style: {
-                width: '5%',
+                width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'status',
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+              _style: { width: '7%', color: `${getBadgeColor(status)}` },
             },
             // {
             //   key: 'PR No.',
@@ -165,7 +165,7 @@ function table() {
             {
               key: 'Number',
               _style: {
-                width: '5%',
+                width: '8%',
                 color: `${getBadgeColor(status)}`,
               },
               _props: { className: 'fw-semibold' },
@@ -174,7 +174,7 @@ function table() {
             {
               key: 'Title',
               _style: {
-                width: '40%',
+                width: '25%',
                 color: `${getBadgeColor(status)}`,
               },
             },
@@ -197,13 +197,13 @@ function table() {
             {
               key: 'Category',
               _style: {
-                width: '5%',
+                width: '10%',
                 color: `${getBadgeColor(status)}`,
               },
             },
             {
               key: 'status',
-              _style: { width: '5%', color: `${getBadgeColor(status)}` },
+              _style: { width: '7%', color: `${getBadgeColor(status)}` },
             },
             // {
             //   key: 'PR No.',
