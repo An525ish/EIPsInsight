@@ -225,7 +225,7 @@ const EIPs = () => {
 
               <CTable align="middle" responsive bordered stripedColumns>
                 <CTableBody>
-                  <CTableRow>
+                  {/* <CTableRow>
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">Number</CTableDataCell>
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">Author</CTableDataCell>
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">Status</CTableDataCell>
@@ -233,7 +233,7 @@ const EIPs = () => {
                     <CTableDataCell className="bg-[#e9ecef] font-[900]">
                       Pull Request
                     </CTableDataCell>
-                  </CTableRow>
+                  </CTableRow> */}
                   {pastStatus == undefined
                     ? ''
                     : pastStatus.map((item, index) => {

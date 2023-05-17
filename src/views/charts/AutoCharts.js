@@ -126,7 +126,6 @@ const autoCharts = (props) => {
       setLoading(true)
     }
   }
-
   const dataCapture = (name, data) => {
     let arr = []
 
@@ -172,7 +171,6 @@ const autoCharts = (props) => {
     )
     return arr
   }
-
   const configColumnCharts = (name, data) => {
     const config = {
       data: dataCapture(name, data),
