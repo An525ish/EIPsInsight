@@ -1,3 +1,5 @@
+// const CompressionPlugin = require(‘compression-webpack-plugin’);
+
 {
   resolve: {
   modules: [...],
@@ -73,12 +75,26 @@
     new HtmlWebpackPlugin({
       template: "public/index-prod.html",
     }),
+    // new CompressionPlugin({
+    //   test: /\.js(\?.*)?$/i,
+    //   filename: "[path][query]",
+    //   algorithm: "gzip",
+    //   deleteOriginalAssets: false,
+    // }),
+    newCompressionPlugin(),
     new CompressionPlugin({
-      test: /\.js(\?.*)?$/i,
-      filename: "[path][query]",
-      algorithm: "gzip",
-      deleteOriginalAssets: false,
-    }),
+    filename: "[path][base].br",
+    algorithm: "brotliCompress",
+    test: /\.(js|css|html|svg)$/,
+    compressionOptions: {
+      params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+      },
+    },
+    threshold: 10240,
+    minRatio: 0.8,
+    deleteOriginalAssets: false,
+  }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),

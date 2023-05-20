@@ -23,18 +23,20 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/t_logo.gif" />
+    <!-- <link rel="shortcut icon" href="%PUBLIC_URL%/t_logo.gif" /> -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
+    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> -->
+
+    <link rel="preload" as="image" href="./static/media/logo3.60c66f0c5ffe422eccdf.gif">    
+    <!-- <link
       href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:wght@300&display=swap"
       rel="stylesheet"
-    />
+    /> -->
 
 
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet"> -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -59,7 +61,7 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js" async
       integrity="sha512-R/QOHLpV1Ggq22vfDAWYOaMd5RopHrJNMxi8/lJu8Oihwi4Ho4BRFeiMiCefn9rasajKjnx9/fTQ/xkWnkDACg=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
