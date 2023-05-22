@@ -209,6 +209,10 @@ function statusAll(props) {
           },
         },
       },
+      ...(name == 'Living') && { yAxis: {
+        minLimit: 0,
+        maxLimit: 4,
+      },},
       axis: {
         min: 0,
         max: data + 10,

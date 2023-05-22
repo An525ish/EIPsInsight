@@ -458,6 +458,10 @@ const Dashboard = ({ getAllData }) => {
     isStack: true,
     xField: 'year',
     yField: 'value',
+     yAxis: {
+      minLimit: 0,
+      maxLimit: Math.floor(data2.Standard_Track / 100) * 100 + 200,
+    },
     seriesField: 'type',
     label: true,
 
@@ -602,7 +606,7 @@ const Dashboard = ({ getAllData }) => {
       const [aMonth, aYear] = a.year.split(' ');
           const [bMonth, bYear] = b.year.split(' ');
           if (aYear === bYear) {
-            return getMonthIndex(bMonth) - getMonthIndex(aMonth);
+            return getMonthIndex(aMonth) - getMonthIndex(bMonth);
           }
           return parseInt(aYear) - parseInt(bYear);
         });
