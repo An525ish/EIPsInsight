@@ -351,38 +351,38 @@ const Dashboard = ({ getAllData }) => {
   }
   const annotations = []
 
-  const d1 = [
-    {
-      year: 'Standard Track',
-      value: distributeData(AllData)[0].total,
-      type: 'Core',
-    },
-    {
-      year: 'Standard Track',
-      value: distributeData(AllData)[1].total,
-      type: 'ERC',
-    },
-    {
-      year: 'Standard Track',
-      value: distributeData(AllData)[2].total,
-      type: 'Networking',
-    },
-    {
-      year: 'Standard Track',
-      value: distributeData(AllData)[3].total,
-      type: 'Interface',
-    },
-    {
-      year: 'Meta',
-      value: distributeData(AllData)[4].total,
-      type: 'Meta',
-    },
-    {
-      year: 'Informational',
-      value: distributeData(AllData)[5].total,
-      type: 'Informational',
-    },
-  ]
+  // const d1 = [
+  //   {
+  //     year: 'Standard Track',
+  //     value: distributeData(AllData)[0].total,
+  //     type: 'Core',
+  //   },
+  //   {
+  //     year: 'Standard Track',
+  //     value: distributeData(AllData)[1].total,
+  //     type: 'ERC',
+  //   },
+  //   {
+  //     year: 'Standard Track',
+  //     value: distributeData(AllData)[2].total,
+  //     type: 'Networking',
+  //   },
+  //   {
+  //     year: 'Standard Track',
+  //     value: distributeData(AllData)[3].total,
+  //     type: 'Interface',
+  //   },
+  //   {
+  //     year: 'Meta',
+  //     value: distributeData(AllData)[4].total,
+  //     type: 'Meta',
+  //   },
+  //   {
+  //     year: 'Informational',
+  //     value: distributeData(AllData)[5].total,
+  //     type: 'Informational',
+  //   },
+  // ]
 
   const d2 = [
     {
@@ -490,6 +490,7 @@ const Dashboard = ({ getAllData }) => {
       }
     })
   }
+
   function ExtraDataCollection(statusNum, allMonths, i, type) {
     return statusNum.filter((item) => {
       if (item.merge_date !== undefined) {
@@ -624,15 +625,16 @@ const Dashboard = ({ getAllData }) => {
       xField: 'year',
       yField: 'gdp',
       seriesField: 'name',
+      yAxis: {
+        ...name === 'Living' && {maxLimit : 4},
+        label: {
+          formatter: (text) => Math.round(text), // Format labels as integers
+          // formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)
+        },
+      },
       // theme: 'dark',
       color: TypeColors,
       // color: ['#1864ab', '#228be6', '#74c0fc', '#a5d8ff'],
-      yAxis: {
-        label: {
-          // 数值格式化为千分位
-          formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-        },
-      },
       legend: {
         position: 'top',
       },
@@ -717,6 +719,11 @@ const Dashboard = ({ getAllData }) => {
     isStack: true,
     xField: 'year',
     yField: 'value',
+    yAxis: {
+      label: {
+        formatter: (text) => Math.round(text), // Format labels as integers
+      },
+    },
     seriesField: 'type',
     label: false,
 
@@ -728,6 +735,9 @@ const Dashboard = ({ getAllData }) => {
     isStack: true,
     xField: 'year',
     yField: 'value',
+    yAxis: {
+      maxLimit: 4,
+    },
     seriesField: 'type',
     meta: {
       formatter({ value }) {
@@ -995,7 +1005,10 @@ const Dashboard = ({ getAllData }) => {
         layout: 'vertical',
         position: 'right',
       }
-      : false,
+      :{
+        layout: 'vertical',
+        position: 'right',
+      },
     color: ['#3bc9db', '#20c997', '#69db7c', '#339af0', '#fcc419', '#ffc078', '#ff6b6b'],
     label: matches1
       ? {
@@ -1109,36 +1122,36 @@ const Dashboard = ({ getAllData }) => {
   }
 
   // text animation
-  const container = {
-    hidden: { opacity: 0 },
-    visible: (i = 1) => ({
-      opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
-    }),
-  }
+  // const container = {
+  //   hidden: { opacity: 0 },
+  //   visible: (i = 1) => ({
+  //     opacity: 1,
+  //     transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
+  //   }),
+  // }
 
-  const child = {
-    visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        type: 'spring',
-        damping: 12,
-        stiffness: 100,
-      },
-    },
-    hidden: {
-      opacity: 0,
-      x: -20,
-      y: 10,
-      transition: {
-        type: 'spring',
-        damping: 12,
-        stiffness: 100,
-      },
-    },
-  }
+  // const child = {
+  //   visible: {
+  //     opacity: 1,
+  //     x: 0,
+  //     y: 0,
+  //     transition: {
+  //       type: 'spring',
+  //       damping: 12,
+  //       stiffness: 100,
+  //     },
+  //   },
+  //   hidden: {
+  //     opacity: 0,
+  //     x: -20,
+  //     y: 10,
+  //     transition: {
+  //       type: 'spring',
+  //       damping: 12,
+  //       stiffness: 100,
+  //     },
+  //   },
+  // }
 
   useEffect(() => {
     // fetchData()

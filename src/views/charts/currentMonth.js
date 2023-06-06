@@ -21,24 +21,13 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import {
-  CChartBar,
-  CChartDoughnut,
-  CChartLine,
-  CChartPie,
-  CChartPolarArea,
-  CChartRadar,
-} from '@coreui/react-chartjs'
-import { DocsCallout } from 'src/components'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { element } from 'prop-types'
-import { CanvasJS, CanvasJSChart } from 'canvasjs-react-charts'
 import useMediaQuery from 'src/scss/useMediaQuery'
 
 import { Column, Pie, G2, Line, Area, Bar, measureTextWidth } from '@ant-design/plots'
 import { each, groupBy } from '@antv/util'
-import { cilBold } from '@coreui/icons'
+
 import { CBadge, CCardFooter } from '@coreui/react-pro'
 import { useUserAuth } from 'src/Context/AuthContext'
 import Loading from '../theme/loading/loading'
@@ -51,33 +40,16 @@ const CurrentMonth = () => {
   const [year, setYear] = useState()
   const [date, setDate] = useState()
   const param = useParams()
-  const navigate = useNavigate()
+ 
   const [loading, setLoading] = useState(false)
 
   const G = G2.getEngine('canvas')
-  let location = useLocation()
+  
   const matches = useMediaQuery('(max-width: 767px)')
   const { click1, click2, click3, setClick1Function, setClick2Function, setClick3Function } =
     useUserAuth()
-  let [data, setData] = useState() // i set the data here
+  
   let [currentMonthData, setCurrentMonthData] = useState()
-
-  const headingResponse = useMediaQuery('(max-width: 450px)')
-
-  const monthNum = {
-    january: 1,
-    february: 2,
-    march: 3,
-    april: 4,
-    may: 5,
-    june: 6,
-    july: 7,
-    august: 8,
-    september: 9,
-    october: 10,
-    november: 11,
-    december: 12,
-  }
 
   const [eip, setEip] = useState()
 
@@ -155,6 +127,9 @@ const CurrentMonth = () => {
       xField: 'type',
       yField: 'value',
       seriesField: 'type',
+      yAxis:{
+
+      },
       label: {
         position: 'middle',
 
@@ -180,8 +155,11 @@ const CurrentMonth = () => {
       angleField: 'value',
       colorField: 'type',
       radius: 0.75,
-      legend: false,
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      legend: {
+        position : 'top',
+      },
+      // color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      color: TypeColors,
       label: {
         type: 'spider',
         labelHeight: 40,
@@ -256,7 +234,8 @@ const CurrentMonth = () => {
     const config = {
       appendPadding: 10,
       data: dataCapture(name, data),
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      // color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75', '#20c997'],
+      color: TypeColors,
       angleField: 'value',
       colorField: 'type',
       radius: 1,
@@ -337,41 +316,6 @@ const CurrentMonth = () => {
         color: '#862e9c',
       },
     }
-    return config
-  }
-
-  const configDraftvsPotentialCharts = (data) => {
-    const config = {
-      data: [
-        {
-          type: 'Draft',
-          value: parseInt(fetchStatusSum(data, 'Draft')),
-        },
-        {
-          type: 'Potential Proposal',
-          value: 12,
-        },
-      ],
-      color: ['#228be6', '#66d9e8', '#ffa8a8', '#ffe066', '#e599f7', '#c0eb75'],
-      isStack: true,
-      xField: 'type',
-      yField: 'value',
-      seriesField: 'type',
-      label: {
-        position: 'middle',
-
-        style: {
-          fill: '#FFFFFF',
-          opacity: 0.8,
-          fontSize: 14,
-          fontWeight: 800,
-        },
-      },
-      legend: {
-        position: 'top-right',
-      },
-    }
-
     return config
   }
 
@@ -592,17 +536,6 @@ const CurrentMonth = () => {
     }
   }
 
-  const coloring = (text) => {
-    switch (text) {
-      case 'text':
-        return '#1c7ed6'
-      case 'back':
-        return '#e7f5ff'
-      default:
-        return '#e7f5ff'
-    }
-  }
-
   // header
   const header = (text) => {
     return (
@@ -640,60 +573,18 @@ const CurrentMonth = () => {
       </CCardHeader>
     )
   }
-  const configgeneralStatsCharts = (data) => {
-    const config = {
-      data: [
-        {
-          type: 'Open PR',
-          value: 7,
-        },
-        {
-          type: 'Merged PR',
-          value: 18,
-        },
-        {
-          type: 'New Issues',
-          value: 4,
-        },
-        {
-          type: 'closed Issues',
-          value: 2,
-        },
-      ],
-      color: GeneralStatsColor,
-      isStack: true,
-      xField: 'type',
-      yField: 'value',
-      seriesField: 'type',
-      label: {
-        position: 'middle',
 
-        style: {
-          fill: '#FFFFFF',
-          opacity: 0.8,
-          fontSize: 14,
-          fontWeight: 800,
-        },
-      },
-      legend: {
-        position: 'top-right',
-      },
-    }
-
-    return config
-  }
-
-  const findTotalValueZero = (data, name) => {
-    if (data.length !== 0) {
-      return (
-        parseInt(data === undefined ? 0 : data[0][name].Core) +
-        parseInt(data === undefined ? 0 : data[0][name].ERC) +
-        parseInt(data === undefined ? 0 : data[0][name].Networking) +
-        parseInt(data === undefined ? 0 : data[0][name].Interface)
-      )
-    }
-    return 0
-  }
+  // const findTotalValueZero = (data, name) => {
+  //   if (data.length !== 0) {
+  //     return (
+  //       parseInt(data === undefined ? 0 : data[0][name].Core) +
+  //       parseInt(data === undefined ? 0 : data[0][name].ERC) +
+  //       parseInt(data === undefined ? 0 : data[0][name].Networking) +
+  //       parseInt(data === undefined ? 0 : data[0][name].Interface)
+  //     )
+  //   }
+  //   return 0
+  // }
   // for date fetching
   const fetchDate = () => {
     let date = new Date().toDateString()
@@ -783,6 +674,7 @@ const CurrentMonth = () => {
     )
   }
 
+  
   const statusChartTemplate = (status, ChartType, configChartType) => {
     return (
       <CCard
@@ -793,7 +685,7 @@ const CurrentMonth = () => {
       >
         <Link
           to={`/current-${status}`}
-          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3 }}
+          style={{ textDecoration: 'none', color: 'inherit', zIndex: 3, }}
           state={{
             type: '',
             status: status,
@@ -831,7 +723,7 @@ const CurrentMonth = () => {
           ) : (
             ''
           )}
-          <Column
+          <ChartType
             style={{
               visibility: `${
                 parseInt(
@@ -841,12 +733,13 @@ const CurrentMonth = () => {
                   : 'visible'
               }`,
             }}
-            {...configColumnCharts(status, currentMonthData === undefined ? [] : currentMonthData)}
+            {...configChartType(status, currentMonthData === undefined ? [] : currentMonthData)}
           />
         </CCardBody>
       </CCard>
     )
   }
+
   useEffect(() => {
     fetchDate()
     if (param['*'] === 'autoCharts') {
@@ -866,26 +759,6 @@ const CurrentMonth = () => {
           <Page404 />
         ) : (
           <div>
-            {/* <div className="flex justify-center items-center mb-[4rem]">
-              <div className="flex justify-center items-center flex-wrap">
-                <div
-                  className={`${
-                    !headingResponse ? 'rotate-[270deg] bg-white' : 'rotate-[0deg] bg-white '
-                  }bg-white text-[2rem] tracking-wider p-2 border-b-[#1c7ed6] border-b-[6px] `}
-                  style={{ fontFamily: 'Big Shoulders Display', backgroundColor: 'white' }}
-                >
-                  {param['*'].split('-')[1]}
-                </div>
-                <div
-                  className="flex justify-center items-center bg-[#e7f5ff] text-[#1c7ed6] p-2 px-6 text-[5.5rem] shadow-md flex-auto"
-                  style={{ fontFamily: 'Big Shoulders Display' }}
-                >
-                  {param['*'].split('-')[0][0].toUpperCase() +
-                    param['*'].split('-')[0].substring(1)}{' '}
-                </div>
-              </div>
-            </div> */}
-
             <CRow>
               <CCol xs={matches ? 12 : 6}>
                 <div className="p-2">
@@ -1009,119 +882,7 @@ const CurrentMonth = () => {
                     </CCardFooter>
                   </CCard>
                 </div>
-                {/* <div className="p-2" style={{ width: matches ? '100%' : '50%' }}>
-                <CCol xs={12} className="mb-4">
-                  <CCard>
-                    <CCardBody
-                      style={{
-                        overflowX: 'auto',
-                        overflowY: 'auto',
-                        width: '100%',
-                        fontFamily: 'Helvetica',
-                        fontSize: '15px',
-                        borderBottom: '2px solid #74c0fc',
-                      }}
-                    >
-                      <CTable align="middle" responsive>
-                        <CTableHead style={{ borderBottom: '2px solid #4dabf7' }}>
-                          <CTableRow>
-                            <CTableHeaderCell
-                              scope="col"
-                              style={{ width: '82%', fontFamily: 'Helvetica' }}
-                              className="tracking-wider text-[1.3rem]"
-                            >
-                              Other Stats
-                            </CTableHeaderCell>
-                            <CTableHeaderCell
-                              scope="col"
-                              style={{ width: '18%', fontFamily: 'Helvetica' }}
-                              className="tracking-wider text-[1.3rem]"
-                            >
-                              Number
-                            </CTableHeaderCell>
-                          </CTableRow>
-                        </CTableHead>
-                        <CTableBody>
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">Forks</CTableHeaderCell>
-                            <CTableDataCell
-                              style={{ fontFamily: 'Helvetica' }}
-                              className="text-[1rem] tracking-wider"
-                            >
-                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2  shadow-md rounded-[0.2rem]">
-                                4100
-                              </label>
-                            </CTableDataCell>
-                          </CTableRow>
-
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">Users</CTableHeaderCell>
-                            <CTableDataCell
-                              style={{ fontFamily: 'Helvetica' }}
-                              className="text-[1rem] tracking-wider"
-                            >
-                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                                932
-                              </label>
-                            </CTableDataCell>
-                          </CTableRow>
-
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">Authors</CTableHeaderCell>
-                            <CTableDataCell
-                              style={{ fontFamily: 'Helvetica' }}
-                              className="text-[1rem] tracking-wider"
-                            >
-                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                                10
-                              </label>
-                            </CTableDataCell>
-                          </CTableRow>
-
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">Files</CTableHeaderCell>
-                            <CTableDataCell
-                              style={{ fontFamily: 'Helvetica' }}
-                              className="text-[1rem] tracking-wider"
-                            >
-                              <label className="bg-[#e7f5ff] text-[#1c7ed6] px-2 py-1 shadow-md rounded-[0.2rem]">
-                                11
-                              </label>
-                            </CTableDataCell>
-                          </CTableRow>
-                        </CTableBody>
-                      </CTable>
-                    </CCardBody>
-                  </CCard>
-                  <CCardFooter
-                    className="cardFooter bg-[#e7f5ff] text-[#1c7ed6]"
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
-                  >
-                    <label></label>
-                    <label
-                      style={{
-                        color: '#1c7ed6',
-                        fontSize: '10px',
-                        fontFamily: 'Helvetica',
-                      }}
-                      className="tracking-widest text-[0.8rem]"
-                    >
-                      {date}
-                    </label>
-                  </CCardFooter>
-                </CCol>
-              </div> */}
               </CCol>
-
-              {/* <CCol xs={12}>
-                <CCard className="mb-4 cardBorder">
-                  {header('GeneralStats')}
-
-                  <CCardBody className="childChartContainer">
-                    <Column {...configgeneralStatsCharts(data === undefined ? [] : data)} />
-                  </CCardBody>
-                </CCard>
-              </CCol> */}
 
               {/* status Information */}
 
